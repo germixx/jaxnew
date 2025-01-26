@@ -63,11 +63,11 @@ const Navigation = () => {
                         </div>
                     </nav>
                     <div id="mobileMenu" className="md:hidden hidden bg-white dark:bg-gray-800 transition-colors duration-300">
-                        <a href="#about" className="w-full text-center block py-2 px-4 text-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300">Features</a>
-                        <a href="#about" className="w-full text-center block py-2 px-4 text-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300">About</a>
-                        <a href="#projects" className="w-full text-center block py-2 px-4 text-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300">Gallery</a>
-                        <a href="#contact" className="w-full text-center block py-2 px-4 text-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300">Contact</a>
-                        <a href="#contact" className="w-full text-center block py-2 px-4 text-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300">Login</a>
+                        <a href="#about" className="w-full text-center block py-2 px-4 text-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300 hover:text-red-300">Features</a>
+                        <a href="#about" className="w-full text-center block py-2 px-4 text-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300 hover:text-red-300">About</a>
+                        <a href="#projects" className="w-full text-center block py-2 px-4 text-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300 hover:text-red-300">Gallery</a>
+                        <a href="#contact" className="w-full text-center block py-2 px-4 text-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300 hover:text-red-300">Contact</a>
+                        <a href="#contact" className="w-full text-center block py-2 px-4 text-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300 hover:text-red-300">Login</a>
                     </div>
                 </header>
             </div>  
