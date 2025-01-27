@@ -4,8 +4,13 @@ import { useState, useEffect } from 'react';
 
 import Image from "next/image";
 import NAVIGATION from '../components/FrontPage/navigation';
-import FRONTIMAGE from '../components/FrontPage/ImageSection'
-import FEATURES from '../components/FrontPage/Features'
+import FRONTIMAGE from '../components/FrontPage/ImageSection';
+import FEATURES from '../components/FrontPage/Features';
+import ABOUT from '../components/FrontPage/About';
+import GALLERY from '../components/FrontPage/Gallery';
+import TESTIMONIALS from '../components/FrontPage/Testimonials';
+import LETUSKNOW from '../components/FrontPage/LetUsKnow';
+import FOOTER from '../components/FrontPage/Footer';
 
 import JsonData from '../data.json';
 
@@ -50,6 +55,11 @@ export default function Home() {
               <NAVIGATION />
               <FRONTIMAGE />
               <FEATURES data={JsonData.Features}/>
+              <ABOUT />
+              <GALLERY />
+              <TESTIMONIALS />
+              <LETUSKNOW />
+              <FOOTER />
             </div>
           )
         }
