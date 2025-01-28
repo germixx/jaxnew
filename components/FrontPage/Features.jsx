@@ -4,16 +4,16 @@
 const Features = () => {
     
     return (
-        <div id="features" className="text-center">
+        <div id="features">
           <div className="container">
             <div className="section-title mb-10">
-              <h2 id="ddd" className="text-3xl text-black font-semibold">FEATURES</h2>
+              <h2 className="text-3xl text-black ">FEATURES</h2>
             </div>
             <div className="grid sm:grid-cols-4 gap-4">
              
                   <div className="">
                     {" "}
-
+ 
                     <svg 
                     className="m-auto mb-6" 
                     width="125px" 
