@@ -41,9 +41,9 @@ const Navigation = () => {
                         <div className="flex justify-between items-center">
                             <a href="https://new.jacksonvillians.com" className="text-2xl font-bold text-primary-light dark:text-primary-dark">Jacksonvillians</a>
                             <div className="hidden md:flex space-x-6 text-center">
-                                <a href="#about" className="hover:text-primary-light dark:hover:text-primary-dark transition-colors duration-300">Features</a>
+                                <a href="#features" className="hover:text-primary-light dark:hover:text-primary-dark transition-colors duration-300">Features</a>
                                 <a href="#about" className="hover:text-primary-light dark:hover:text-primary-dark transition-colors duration-300">About</a>
-                                <a href="#projects" className="hover:text-primary-light dark:hover:text-primary-dark transition-colors duration-300">Projects</a>
+                                <a href="#gallery" className="hover:text-primary-light dark:hover:text-primary-dark transition-colors duration-300">Gallery</a>
                                 <a href="#contact" className="hover:text-primary-light dark:hover:text-primary-dark transition-colors duration-300">Contact</a>
                             </div>
                             

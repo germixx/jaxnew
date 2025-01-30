@@ -6,10 +6,11 @@ const Features = () => {
     return (
         <div id="features">
           <div className="container">
-            <div className="section-title mb-10">
-              <h2 className="text-3xl text-black ">FEATURES</h2>
+            
+            <div className="mb-10">
+              <h2 className="">FEATURES</h2>
             </div>
-            <div className="grid sm:grid-cols-4 gap-4">
+            <div className="grid md:grid-cols-4 gap-4">
              
                   <div className="">
                     {" "}
@@ -43,6 +44,7 @@ const Features = () => {
                   </div>
                 
             </div>
+            
           </div>
         </div>
       );

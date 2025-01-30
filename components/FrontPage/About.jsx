@@ -6,7 +6,7 @@ const About = (props) => {
     return (
         <div id="about">
           <div className="container">
-            <div className="grid sm:grid-cols-2 gap-4">
+            <div className="grid flex-col grid md:grid-cols-2 gap-4">
               <div> 
                 <img src="/assets/about.jpg" alt="" /> 
               </div>

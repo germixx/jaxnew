@@ -64,15 +64,14 @@ const Gallery = () => {
     }
 
   return (
-    <div id="gallery" >
-      <div className="container">
+    <div id="gallery">
+      <div className="container mb-10">
         <div className="grid">
           <div className="section-title">
             <h2>Gallery</h2>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit duis sed
-              dapibus leonec.
-              </p>
+            <p className='text-center'>
+            Discover the vibrant essence of Jacksonville through our curated collection of stunning images. From the iconic skyline to the serene beaches, our gallery showcases the diverse beauty of this dynamic city. Explore Jacksonville’s unique landmarks, rich culture, and picturesque views that make it truly one-of-a-kind
+            </p>
           </div>
           <div className="flex flex-col md:grid md:grid-cols-3 gap-1">
             <div className="relative rounded overflow-hidden gallery-item hover-bg">
