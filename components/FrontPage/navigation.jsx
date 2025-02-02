@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 
 import Loading from '../Loading';
 
-const Navigation = () => {
+const Navigation = (props) => {
 
     const [loading, setLoading] = useState(false);
     const [mobileShowing, setMobileShowing] = useState(true);
@@ -53,7 +53,7 @@ const Navigation = () => {
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
                                     </svg>
                                 </button> */}
-                                <div className='hidden md:flex float-right'>Login</div>
+                                <div onClick={()=> props.openLoginModal()} className='hidden md:flex float-right cursor-pointer'>Login</div>
                                 <button onClick={() => toggleMenu()} id="mobileMenuToggle" className="md:hidden focus:outline-none" aria-label="Toggle mobile menu">
                                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
@@ -67,7 +67,7 @@ const Navigation = () => {
                         <a href="#about" className="w-full text-center block py-2 px-4 text-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300 hover:text-red-300">About</a>
                         <a href="#gallery" className="w-full text-center block py-2 px-4 text-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300 hover:text-red-300">Gallery</a>
                         <a href="#contact" className="w-full text-center block py-2 px-4 text-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300 hover:text-red-300">Contact</a>
-                        <a href="#login" className="w-full text-center block py-2 px-4 text-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300 hover:text-red-300">Login</a>
+                        <a onClick={()=> props.openLoginModal()} href="#login" className="w-full text-center block py-2 px-4 text-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300 hover:text-red-300">Login</a>
                     </div>
                 </header>
             </div>  

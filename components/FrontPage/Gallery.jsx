@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 
-
 // import Lightbox from './lightbox';
 
 // https://tailwindflex.com/@r-thapa/image-grid
@@ -69,8 +68,8 @@ const Gallery = () => {
         <div className="grid">
           <div className="section-title">
             <h2>Gallery</h2>
-            <p className='text-center'>
-            Discover the vibrant essence of Jacksonville through our curated collection of stunning images. From the iconic skyline to the serene beaches, our gallery showcases the diverse beauty of this dynamic city. Explore Jacksonville’s unique landmarks, rich culture, and picturesque views that make it truly one-of-a-kind
+            <p className='text-center text-black'>
+            Discover the vibrant essence of Jacksonville through our curated collection of stunning images. From the iconic skyline to the serene beaches, our gallery showcases the diverse beauty of this dynamic city. Explore Jacksonville’s unique landmarks, rich culture, and picturesque views that make it truly one-of-a-kind.
             </p>
           </div>
           <div className="flex flex-col md:grid md:grid-cols-3 gap-1">

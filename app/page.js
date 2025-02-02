@@ -11,6 +11,7 @@ import GALLERY from '../components/FrontPage/Gallery';
 import TESTIMONIALS from '../components/FrontPage/Testimonials';
 import LETUSKNOW from '../components/FrontPage/LetUsKnow';
 import FOOTER from '../components/FrontPage/Footer';
+import AUTH from '../components/FrontPage/AuthModule';
 
 import JsonData from '../data.json';
 
@@ -18,6 +19,7 @@ export default function Home() {
   
   const [loading, setLoading] = useState(false);
   const [mobileShowing, setMobileShowing] = useState(true);
+  const [authModal, setAuthModal] = useState(false);
 
   const toggleMenu = () => {
 
@@ -43,6 +45,16 @@ export default function Home() {
 
   }
 
+  function openLoginModal () {
+    setAuthModal(true);
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeLoginModal () {
+    setAuthModal(false);
+    document.body.style.overflow = "auto";
+  }
+
   return (
     <div className="">
         {
@@ -52,7 +64,8 @@ export default function Home() {
             </div>
           ) : (
             <div>
-              <NAVIGATION />
+              <AUTH authModal={authModal} closeLoginModal={closeLoginModal} />
+              <NAVIGATION openLoginModal={openLoginModal} />
               <FRONTIMAGE />
               <FEATURES data={JsonData.Features}/>
               <ABOUT />
