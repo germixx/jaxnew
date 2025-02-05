@@ -1,5 +1,6 @@
 'use client';
-
+import dynamic from 'next/dynamic'
+ 
 import { useState, useEffect } from 'react';
 
 import Image from "next/image";
@@ -7,11 +8,12 @@ import NAVIGATION from '../components/FrontPage/navigation';
 import FRONTIMAGE from '../components/FrontPage/ImageSection';
 import FEATURES from '../components/FrontPage/Features';
 import ABOUT from '../components/FrontPage/About';
-import GALLERY from '../components/FrontPage/Gallery';
 import TESTIMONIALS from '../components/FrontPage/Testimonials';
 import LETUSKNOW from '../components/FrontPage/LetUsKnow';
 import FOOTER from '../components/FrontPage/Footer';
 import AUTH from '../components/FrontPage/AuthModule';
+
+const GALLERY = dynamic(() => import('../components/FrontPage/Gallery'), { ssr: false })
 
 import JsonData from '../data.json';
 
@@ -64,6 +66,7 @@ export default function Home() {
             </div>
           ) : (
             <div>
+              {/* <NoSSR /> */}
               <AUTH authModal={authModal} closeLoginModal={closeLoginModal} />
               <NAVIGATION openLoginModal={openLoginModal} />
               <FRONTIMAGE />

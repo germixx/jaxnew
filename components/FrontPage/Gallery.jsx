@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react';
 
 // https://tailwindflex.com/@r-thapa/image-grid
 //https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_js_lightbox
+
 const Gallery = () => {
   var slideIndex = 1;
   const [showModal, setShowModal] = useState(false);
@@ -21,7 +22,6 @@ const Gallery = () => {
   showSlides(slideIndex);
     
   function plusSlides(n) {
-    console.log('plus sides')
       showSlides(slideIndex += n);
   }
     
@@ -30,31 +30,32 @@ const Gallery = () => {
   }
     
     function showSlides(n) {
-      
-      var i;
-      var slides = document.getElementsByClassName("mySlides");
-      
-      var dots = document.getElementsByClassName("demo");
-      var captionText = document.getElementById("caption");
+      // if (typeof window !== "undefined") {
 
-      if(slides.length > 0 ) {
-        
-        if (n > slides.length) {slideIndex = 1}
-        if (n < 1) {slideIndex = slides.length}
-        for (i = 0; i < slides.length; i++) {
-            slides[i].style.display = "none";
-        }
-        for (i = 0; i < dots.length; i++) {
-            dots[i].className = dots[i].className.replace(" active", "");
-        }
-        console.log(slides,  'is slides now', slideIndex, ' is in')
-        slides[slideIndex-1].style.display = "block";
-        
-        dots[slideIndex-1].className += " active";
-        captionText.innerHTML = dots[slideIndex-1].alt;
-      }
+          var i;
+          var slides = document.getElementsByClassName("mySlides");
+          
+          var dots = document.getElementsByClassName("demo");
+          var captionText = document.getElementById("caption");
 
+          if(slides.length > 0 ) {
+            
+            if (n > slides.length) {slideIndex = 1}
+            if (n < 1) {slideIndex = slides.length}
+            for (i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+            }
+            for (i = 0; i < dots.length; i++) {
+                dots[i].className = dots[i].className.replace(" active", "");
+            }
+            
+            slides[slideIndex-1].style.display = "block";
+            
+            dots[slideIndex-1].className += " active";
+            captionText.innerHTML = dots[slideIndex-1].alt;
+          }
 
+      // }
     }
 
     function mainOpen (x) {
