@@ -1,8 +1,10 @@
-import React from 'react'
+import NavBar from '../../components/Client/Profile/navbar';
 
 const ProfilePage = () => {
   return (
-    <div>page</div>
+    <div>
+      <NavBar />
+    </div>
   )
 }
 

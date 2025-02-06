@@ -1,7 +1,11 @@
+import AdminNavBar from '../../components/Client/Admin/navbar';
+
 
 const admin = () => {
   return (
-    <div>agdmin</div>
+    <div>
+      <AdminNavBar />
+    </div>
   )
 }
 
