@@ -1,6 +1,28 @@
-import React from 'react'
+'use client';
 
 const AdminNavbar = () => {
+
+
+  const toggleDropdown = () => {
+
+    function resizeAutomatically (){
+      document.getElementById('dropdown-user').style.display = 'none';
+    }
+
+    let dropdown = document.getElementById('dropdown-user').style.display;
+
+    window.addEventListener("resize", resizeAutomatically);
+    
+    if(dropdown === '' || dropdown == 'none'){
+      document.getElementById('dropdown-user').style.display = 'block';
+    }
+
+    if(dropdown == 'block') {
+      document.getElementById('dropdown-user').style.display = 'none';
+    }
+
+  }
+
   return (
     <div>
       <nav className="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
@@ -18,12 +40,15 @@ const AdminNavbar = () => {
             <div className="flex items-center">
                 <div className="flex items-center ms-3">
                   <div>
-                    <button type="button" className="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" aria-expanded="false" data-dropdown-toggle="dropdown-user">
+                    <button onClick={() => toggleDropdown()} type="button" className="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" aria-expanded="false" data-dropdown-toggle="dropdown-user">
                       <span className="sr-only">Open user menu</span>
                       <img className="w-8 h-8 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="user photo" />
                     </button>
                   </div>
-                  <div className="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-sm shadow-sm dark:bg-gray-700 dark:divide-gray-600" id="dropdown-user">
+                  <div 
+                    className="z-500 absolute top-[32px] right-[10px] my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-sm shadow-sm dark:bg-gray-700 dark:divide-gray-600" 
+                    id="dropdown-user"
+                  >
                     <div className="px-4 py-3" role="none">
                       <p className="text-sm text-gray-900 dark:text-white" role="none">
                         Neil Sims
@@ -96,7 +121,7 @@ const AdminNavbar = () => {
                 <svg className="shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 20">
                     <path d="M17 5.923A1 1 0 0 0 16 5h-3V4a4 4 0 1 0-8 0v1H2a1 1 0 0 0-1 .923L.086 17.846A2 2 0 0 0 2.08 20h13.84a2 2 0 0 0 1.994-2.153L17 5.923ZM7 9a1 1 0 0 1-2 0V7h2v2Zm0-5a2 2 0 1 1 4 0v1H7V4Zm6 5a1 1 0 1 1-2 0V7h2v2Z"/>
                 </svg>
-                <span className="flex-1 ms-3 whitespace-nowrap">Products</span>
+                <span className="flex-1 ms-3 whitespace-nowrap">Places</span>
               </a>
           </li>
           <li>
@@ -107,7 +132,7 @@ const AdminNavbar = () => {
                 <span className="flex-1 ms-3 whitespace-nowrap">Sign In</span>
               </a>
           </li>
-          <li>
+          {/* <li>
               <a href="#" className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
                 <svg className="shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.96 2.96 0 0 0 .13 5H5Z"/>
@@ -116,7 +141,7 @@ const AdminNavbar = () => {
                 </svg>
                 <span className="flex-1 ms-3 whitespace-nowrap">Sign Up</span>
               </a>
-          </li>
+          </li> */}
         </ul>
     </div>
   </aside>
