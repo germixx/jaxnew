@@ -82,5 +82,31 @@
             "title": "Lorem ipsum",
             "text": "Lorem ipsum dolor sit amet placerat facilisis felis mi in tempus eleifend pellentesque natoque etiam."
         }
+    ],
+    "Places": [
+        {
+            "Neighborhoods": [
+                "Downtown",
+                "Riverside",
+                "Springfield",
+                "Eastside",
+                "Ortega",
+                "San Marco",
+                "Mandarin",
+                "Northside", 
+                "Westside", 
+                "Arlington", 
+                "Southside",
+                "Beaches"
+            ]
+        },
+        {
+            "Categories" : [
+                "Adult",
+                "Dining",
+                "Business",
+                "Nightlife"
+            ]
+        }
     ]
 }
