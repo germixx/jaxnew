@@ -1,7 +1,7 @@
 'use client';
 
 const SortBy = (props) => {
-    console.log(props, ' is props')
+    
   return <div className="">
         
         {
