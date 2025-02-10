@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 
 import Loading from '../../../components/Loading';
 import Locations from '../../../components/Client/Dashboard/Places/Locations';
+import BreadCrumb from '../../../components/Client/Breadcrumb';
 
 import { fetchLocations } from '../../../util/functions/client/functions';
 
@@ -32,11 +33,12 @@ const Places = () => {
           </div>
         </div>
       ) : (
-        <div className="antialiased">
-            <div className="p-4 md:ml-64 h-auto pt-20">
-              <Locations places={placess} />
-            </div>
-        </div>
+          <div className="antialiased">
+              <div className="p-4 md:ml-64 h-auto pt-20">
+                <BreadCrumb />
+                <Locations places={placess} />
+              </div>
+          </div>
       )}
     </div>
   )
