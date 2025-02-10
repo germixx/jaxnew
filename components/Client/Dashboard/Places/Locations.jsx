@@ -51,41 +51,25 @@ const Locations = ( locations ) => {
                           }
 
                          </div>
-                       </div>
-     
-           </div>
+                       </div> 
+                  </div>
+           
          </div>
- 
+
+          <div className="sticky bottom-4 flex justify-center">
+            <nav className="flex space-x-2 bg-white shadow-md rounded-lg p-2">
+              <button className="px-4 py-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300">&laquo;</button>
+              <button className="px-4 py-2 rounded-lg bg-blue-500 text-white font-semibold">1</button>
+              <button className="px-4 py-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300">2</button>
+              <button className="px-4 py-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300">3</button>
+              <button className="px-4 py-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300">&raquo;</button>
+            </nav>
+          </div>
+
+
+
     </div>
   )
 }
 
 export default Locations;
-
-
-
-
-        {/* <div className="max-w-sm rounded overflow-hidden shadow-lg">
-          <img className="w-full" src="https://old.jacksonvillians.com/api/image/4wnf3mb5u" alt="Sunset in the mountains" />
-          <div className="px-6 py-4">
-            <div className="font-bold text-xl mb-2">The Coldest Sunset</div>
-            <p className="text-gray-700 text-base">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus quia, nulla! Maiores et perferendis eaque, exercitationem praesentium nihil.
-            </p>
-          </div>
-          <div className="px-6 pt-4 pb-2">
-            <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">#photography</span>
-            <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">#travel</span>
-            <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">#winter</span>
-          </div>
-        </div> */}
-
-
-        {/* <div className="bg-white rounded-lg shadow-lg overflow-hidden dark:bg-gray-800 dark:border-gray-700">
-                          <img src="https://old.jacksonvillians.com/api/image/4wnf3mb5u" alt="Placeholder" className="w-full h-48 object-cover" />
-                          <div className="p-4">
-                              <h2 className="text-xl font-semibold mb-2">Card Title 3</h2>
-                              <p className="text-gray-600">This is a short description for the third card.</p>
-                              <button className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Learn More</button>
-                          </div>
-                      </div> */}

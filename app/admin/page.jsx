@@ -1,11 +1,13 @@
-import AdminNavBar from '../../components/Client/Admin/navbar';
-import BreadCrum from '../../components/Client/Breadcrumb';
+import BreadCrumb from '../../components/Client/Breadcrumb';
 
 const admin = () => {
   return (
-    <div>
-      <AdminNavBar />
-    </div>
+    <div className="antialiased">
+      <div className="p-4 md:ml-64 h-auto pt-20">
+        <BreadCrumb />
+        Admin Page
+      </div>
+  </div>
   )
 }
 
