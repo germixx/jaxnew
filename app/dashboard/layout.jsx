@@ -21,11 +21,12 @@ export const metadata = {
 export default function ProfileLayout({ children }) {
   return (
     <html lang="en">
-      <body>
+      <body className=''>
         <NavBar />
         {children}
+        <Footer />
+        
       </body>
-      <Footer />
     </html>
   );
 }
