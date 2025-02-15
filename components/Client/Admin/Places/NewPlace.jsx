@@ -87,10 +87,6 @@ const NewPlace = () => {
               [name]: type === "checkbox" ? checked : sanitizeInput(updatedValue),
             }));
 
-
-
-
-
           }
     };
 
@@ -151,19 +147,21 @@ const NewPlace = () => {
             method: "POST",
             body: formdata,
           }).then(response => response.json())
-          .then(data => console.log(data))
+          .then(data => {
+            
+            if(data.status) {
+              setIsSubmitting(false);
+              handleReset();
+            }
+          })
           .catch(error => console.error('Error:', error));
-
-        // setTimeout(() => {
-        //   console.log("Form Submitted:", formData);
-        //   setIsSubmitting(false);
-        //   handleReset();
-        // }, 10000);
 
     };
 
     const resizeImage = (file, maxWidth, maxHeight, callback) => {
+
         const reader = new FileReader();
+
         reader.readAsDataURL(file);
     
         reader.onload = (event) => {
@@ -204,7 +202,7 @@ const NewPlace = () => {
     };
    
   return (
-    <dialog id="roomModal" className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50 p-4">
+    <dialog id="roomModal" className="fixed hidden inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50 p-4">
         <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg md:max-w-xl lg:max-w-2xl sm:w-[90%] sm:max-w-none sm:h-auto">
             <h2 className="text-xl font-semibold mb-4">Add New Place</h2>
             

@@ -50,33 +50,32 @@ const getImage = async (localFilePath, emptyPath) => {
 
 }
 
-const uploadImage = async () => {
+// const uploadImage = async () => {
 
-  const form = new formidable.IncomingForm();
-  form.uploadDir = path.join(process.cwd(), 'public/uploads');
-  form.keepExtensions = true;
+//   const form = new formidable.IncomingForm();
+//   form.uploadDir = path.join(process.cwd(), 'public/uploads');
+//   form.keepExtensions = true;
 
-  form.parse(req, (err, fields, files) => {
-    if (err) {
-      res.status(500).json({ error: 'Error parsing the files' });
-      return;
-    }
-    const file = files.image;
-    const newPath = path.join(form.uploadDir, file.newFilename);
+//   form.parse(req, (err, fields, files) => {
+//     if (err) {
+//       res.status(500).json({ error: 'Error parsing the files' });
+//       return;
+//     }
+//     const file = files.image;
+//     const newPath = path.join(form.uploadDir, file.newFilename);
 
-    fs.rename(file.filepath, newPath, (err) => {
-      if (err) {
-        res.status(500).json({ error: 'Error saving the file' });
-        return;
-      }
-      res.status(200).json({ message: 'File uploaded successfully', path: `/uploads/${file.newFilename}` });
-    });
-  });
+//     fs.rename(file.filepath, newPath, (err) => {
+//       if (err) {
+//         res.status(500).json({ error: 'Error saving the file' });
+//         return;
+//       }
+//       res.status(200).json({ message: 'File uploaded successfully', path: `/uploads/${file.newFilename}` });
+//     });
+//   });
 
 
-}
+// }
 
 module.exports = {
-    getImage,
-    uploadImage
+    getImage
 }
