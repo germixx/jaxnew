@@ -24,9 +24,8 @@ async function getPlaceData (roomID) {
 
 }
 
-
- module.exports = {
+module.exports = {
     getAllPlaces,
     getPlaceData
- }
+}
 

@@ -32,7 +32,6 @@ const AdminPlaces = () => {
                 >New +</button>
                 <BreadCrumb />
                 <NewPlaceModal />
-                {/* <Locations places={placess} /> */}
                 
                 </div>
             </div>
