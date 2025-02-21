@@ -43,7 +43,7 @@ export function setupSocket(server) {
     // Assign username to socket
     socket.username = socket.handshake.query.username;
 
-    // Assign requested room
+    // Assign requested room ID
     socket.room = socket.handshake.query.roomID;
 
     // Assign request room name
@@ -59,7 +59,6 @@ export function setupSocket(server) {
 
     // Alert channel that new user joined the room
     io.sockets.in(socket.room).emit('intro', { username: socket.username, date: socket.date_joined });
-
 
     socket.on("message", (data) => {
       console.log("Message received:", data);

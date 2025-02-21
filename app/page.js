@@ -22,6 +22,7 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [mobileShowing, setMobileShowing] = useState(true);
   const [authModal, setAuthModal] = useState(false);
+  
 
   const toggleMenu = () => {
 
