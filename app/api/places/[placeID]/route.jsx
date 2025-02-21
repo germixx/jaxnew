@@ -12,9 +12,9 @@ export async function PUT(request, res) {
 }
 
 export async function GET(request, {params}) {
-    
-    if (params.placeID !== undefined || params.placeID !== 'undefined') {
-        const placeData = await getPlaceData(params.placeID);
+    const param = await params;
+    if (param.placeID !== undefined || param.placeID !== 'undefined') {
+        const placeData = await getPlaceData(param.placeID);
         return Response.json(placeData);
     } else {
         return Response.json({status: false, message: 'No param ID'})

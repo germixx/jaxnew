@@ -1,7 +1,58 @@
 'use client';
+
+import { useEffect, useState } from "react";
+
+// import * as socketIOClient from "socket.io-client";
+
+// import { socket } from "../../../../util/socket";
+import { io } from "socket.io-client";
+
+const ENDPOINT = "https://new.jacksonvillians.com";
+
 const Chatroom = (props) => {
+ 
+  const [isOpen, setIsOpen] = useState(false);
+  const [socket, setSocket] = useState(null);
+
+  const [cssColors, setCSScolors] = useState(['#F0FFFF', '#FF69B4', '#CD5C5C', '#DAA520', '#4B0082', '#ADD8E6', '#DB7093',
+    '#191970', '#C71585', '#48D1CC', '#7CFC00', '#32CD32', '#800000', '#00FA9A', '#FF00FF', '#BA55D3', '#9370DB',
+    '#663399', '#F4A460', '#FA8072', '#FFA500', '#4169E1', '#FF0000', '#800080', '#4169E1', '#00FF7F', '#9ACD32', '#EE82EE', '#40E0D0',
+    '#D8BFD8', '#FF6347', '#4682B4', '#008080', '#00BFFF', '#FF8C00', '#ADD8E6', '#B0E0E6', '#FF1493', '#F08080', '#0000CD', '#A0522D', '#DC143C'
+  ]);
+
+  useEffect( ()=>{
+    // socket = socketIOClient.io(ENDPOINT + "?username=" + (props.user ? props.user.username : '') + "&roomID=" + router.query.id + "&business_name=" + router.query.name, { secure: true })
+    // socket = socketIOClient.io(ENDPOINT + "?username=test" , { secure: true })
+
+    if (props.chatIsOpen && !socket) {
+        
+        const newSocket = io(ENDPOINT+"?username=testy" + "&roomID=" + props.placeData.room_id + "&business_name=" + props.placeData.locationName, {
+          transports: ["websocket"],
+        });
+  
+        newSocket.on("connect", () => {
+          console.log("Connected to WebSocket");
+        });
+  
+        newSocket.on("message", (data) => {
+          console.log("New message:", data);
+        });
+  
+        setSocket(newSocket);
+        setIsOpen(props.chatIsOpen);
+  
+        return () => {
+          newSocket.disconnect();
+          setSocket(null);
+          console.log(socket, ' is socket disecon')
+        };
+    }
+
+  }, [props.chatIsOpen]);
+
 
   const closeModal = () => {
+    props.disconnectChat();
     document.getElementById('chatModal').style.display = 'none';
   }
 

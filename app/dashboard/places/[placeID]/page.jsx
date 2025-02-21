@@ -18,6 +18,7 @@ export default function Place () {
    const [isLoading, setIsLoading] = useState(false);
    const [placeData, setPlaceData] = useState({});
    const [imageLoaded, setImageLoaded] = useState(false);
+   const [chatOpen, setChatOpen] = useState(false);
 
     useEffect(() => {
         
@@ -45,6 +46,11 @@ export default function Place () {
 
     const openChatModal = () => {
         document.getElementById('chatModal').style.display = 'flex';
+        setChatOpen(true);
+    }
+
+    const disconnectChat = () => {
+        setChatOpen(false);
     }
     
     return (
@@ -197,7 +203,7 @@ export default function Place () {
                             </button>
                         </div>
                     </div>
-                    <ChatRoom placeData={placeData}/>
+                    <ChatRoom placeData={placeData} chatIsOpen={chatOpen} disconnectChat={disconnectChat} />
                 </div>
 
 
