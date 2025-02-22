@@ -1,3 +1,5 @@
+const bcrypt = require('bcrypt');
+
 const connection = require('../../db');
 
 async function getAllPlaces () {
@@ -48,9 +50,35 @@ async function addNewPlace (roomid, name, address, city, state, zip, phone, neig
     })
 }
 
+async function registerUser (username, password, email)  {
+    
+    const saltRounds = 10;
+    console.log(email, 'is email')
+    return new Promise((resolve, reject) => { 
+        
+        connection.query('SELECT * FROM tblUsers WHERE email = ?', [email], (err, rows) => { 
+
+            if (err) throw err;
+            
+            if (rows.length > 0) {
+                console.log(rows, ' is rowsssss')
+                resolve({ status: false, errorMessage: 'Email is already in use. Please try again.' });
+                return;
+            }
+
+        })
+
+
+
+        // resolve({status: true, data: 'data'})
+    })
+
+}
+
 module.exports = {
     getAllPlaces,
     getPlaceData,
-    addNewPlace
+    addNewPlace,
+    registerUser
 }
 

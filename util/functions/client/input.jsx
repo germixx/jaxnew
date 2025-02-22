@@ -36,9 +36,48 @@ const sanitizeInput = (name, value, setemail, setpassword, setconfirmpass,setuse
     }
 };
 
-const Register = (setloading) => {
-  setloading(true);
-  
+const Register = (setloading, username, password, confirmPassword, email, cb) => {
+  return new Promise((resolve, reject) => {
+    setloading(true);
+    if (username !== '' && email !== '' && password !== '' && confirmPassword !== '') { 
+      if (password === confirmPassword) { 
+          fetch(`/api/users/register`, {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                username,
+                email,
+                password,
+                // userLocation: location
+            })
+        }).then(res => res.json())
+            .then((json) => {
+              
+                if (json.status) {
+                    console.log(json, ' is jsons')
+                    // cb({ status: true, userDetails: json.userDetails })
+                    resolve(true)
+                } else {
+                    console.log(json, ' is jsons1')
+                    cb(json.errorMessage )
+                    setloading(false);
+                    resolve(true)
+                    return
+                }
+            })
+            .catch(err => {
+                throw err
+
+            })
+      } else {
+        cb('Passwords do not match.')
+        setloading(false);
+        return;
+      }
+    }
+  }).catch(e => console.log(e))
 }
 
 const Login = (setloading) => {
