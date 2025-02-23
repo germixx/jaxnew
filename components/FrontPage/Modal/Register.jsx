@@ -1,6 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+
+import { useUser } from "@/context/UserContext";
+import { useLocation } from "@/context/LocationContext";
 
 import LoadingInfinity from '../../LoadingInfinity';
 
@@ -10,6 +13,13 @@ const Register = (props) => {
     const [passwordError, setPasswordError] = useState('');
     const [usernameError, setUsernameError] = useState('');
     const [emailError, setEmailError] = useState('');
+
+    const { user, login, logout } = useUser();
+    const { location, locationError } = useLocation();
+
+    // useEffect(()=>{
+    //     login({username: 'test', email: 'aol@aol.com', location: location})
+    // }, [])
 
     const handleError = (type, message) => {
 
@@ -34,7 +44,7 @@ const Register = (props) => {
             setUsernameError('');
         }
     }
-  
+   
     return (
         <div>
             <div className="p-4 md:p-5">

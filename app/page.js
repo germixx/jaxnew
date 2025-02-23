@@ -1,4 +1,5 @@
 'use client';
+
 import dynamic from 'next/dynamic'
  
 import { useState, useEffect } from 'react';
@@ -13,17 +14,16 @@ import LETUSKNOW from '../components/FrontPage/LetUsKnow';
 import FOOTER from '../components/FrontPage/Footer';
 import AUTH from '../components/FrontPage/AuthModule';
 
-const GALLERY = dynamic(() => import('../components/FrontPage/Gallery'), { ssr: false })
+const GALLERY = dynamic(() => import('../components/FrontPage/Gallery'), { ssr: false });
 
 import JsonData from '../data.json';
 
-export default function Home() {
-  
+export default function Home(props) {
+    
   const [loading, setLoading] = useState(false);
   const [mobileShowing, setMobileShowing] = useState(true);
   const [authModal, setAuthModal] = useState(false);
   
-
   const toggleMenu = () => {
 
     function resizeAutomatically (){
