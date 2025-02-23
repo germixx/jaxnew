@@ -62,11 +62,28 @@ async function registerUser (username, password, email)  {
             
             if (rows.length > 0) {
                 console.log(rows, ' is rowsssss')
-                resolve({ status: false, errorMessage: 'Email is already in use. Please try again.' });
+                resolve({ status: false, errorType: 'email', errorMessage: 'Email is already in use. Please try again.' });
                 return;
             }
 
-        })
+            connection.query('SELECT * FROM tblUsers WHERE username = ?', [username], (err, rows) => { 
+
+                if (err) throw err;
+            
+                if (rows.length > 0) {
+                    console.log(rows, ' is rowsssss')
+                    resolve({ status: false, errorType: 'username', errorMessage: 'Username is already in use. Please try again.' });
+                    return;
+                }
+
+                // bcrypt.hash(password, saltRounds, function (err, hash) { 
+
+
+                // });
+
+            });
+
+        });
 
 
 

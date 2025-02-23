@@ -61,7 +61,8 @@ const Register = (setloading, username, password, confirmPassword, email, cb) =>
                     resolve(true)
                 } else {
                     console.log(json, ' is jsons1')
-                    cb(json.errorMessage )
+
+                    cb(json.errorType, json.errorMessage )
                     setloading(false);
                     resolve(true)
                     return
@@ -72,7 +73,7 @@ const Register = (setloading, username, password, confirmPassword, email, cb) =>
 
             })
       } else {
-        cb('Passwords do not match.')
+        cb('password','Passwords do not match.')
         setloading(false);
         return;
       }

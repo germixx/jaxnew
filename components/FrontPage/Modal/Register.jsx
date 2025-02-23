@@ -7,9 +7,32 @@ import LoadingInfinity from '../../LoadingInfinity';
 const Register = (props) => {
   
     const [error, setError] = useState('');
+    const [passwordError, setPasswordError] = useState('');
+    const [usernameError, setUsernameError] = useState('');
+    const [emailError, setEmailError] = useState('');
 
-    const handleError = (message) => {
-        setError(message);
+    const handleError = (type, message) => {
+
+        if(type === 'email') {
+            setError(message);
+            setEmailError(true);
+            setUsernameError('');
+            setPasswordError('');
+        }
+
+        if(type === 'username') {
+            setError(message);
+            setUsernameError(true);
+            setPasswordError('');
+            setEmailError('');
+        }
+
+        if(type === 'password') {
+            setError(message);
+            setPasswordError(true);
+            setEmailError('');
+            setUsernameError('');
+        }
     }
   
     return (
@@ -22,7 +45,7 @@ const Register = (props) => {
                             type="email" name="email" id="emailForm" 
                             onChange={props.handleInputChange} 
                             value={props.email} 
-                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="name@company.com" required />
+                            className={`bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:placeholder-gray-400 dark:text-white ${emailError ? "border-red-500" : "border-gray-300"}`} placeholder="name@company.com" required />
                     </div>
                     <div>
                         <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your password</label>
@@ -40,7 +63,7 @@ const Register = (props) => {
                             onChange={props.handleInputChange} 
                             value={props.confirmPassword} 
                             maxLength={30}
-                            className={`bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:placeholder-gray-400 dark:text-white ${error ? "border-red-500" : "border-gray-300"}`} required />
+                            className={`bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:placeholder-gray-400 dark:text-white ${passwordError ? "border-red-500" : "border-gray-300"}`} required />
                     </div>
                     
                     <div>
@@ -50,7 +73,7 @@ const Register = (props) => {
                             onChange={props.handleInputChange} 
                             value={props.username}
                             maxLength={17}
-                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:placeholder-gray-400 dark:text-white" required />
+                            className={`bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:placeholder-gray-400 dark:text-white ${usernameError ? "border-red-500" : "border-gray-300"}`} required />
                     </div>
                     {error && <p className="text-center text-red-500 text-sm mt-1">{error}</p>}
                     <div className="flex justify-between">
