@@ -36,7 +36,7 @@ const sanitizeInput = (name, value, setemail, setpassword, setconfirmpass,setuse
     }
 };
 
-const Register = (setloading, username, password, confirmPassword, email, cb) => {
+const Register = (setloading, username, password, confirmPassword, email, latitude, longitude, cb) => {
   return new Promise((resolve, reject) => {
     setloading(true);
     if (username !== '' && email !== '' && password !== '' && confirmPassword !== '') { 
@@ -50,6 +50,8 @@ const Register = (setloading, username, password, confirmPassword, email, cb) =>
                 username,
                 email,
                 password,
+                latitude,
+                longitude
                 // userLocation: location
             })
         }).then(res => res.json())

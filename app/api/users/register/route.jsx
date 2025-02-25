@@ -10,8 +10,10 @@ export async function POST(request, res) {
     const username = data.username;
     const password = data.password;
     const email = data.email;
+    const lon = data.longitude;
+    const lat = data.latitude;
 
-    let returnData = await registerUser(username, password, email);
+    let returnData = await registerUser(username, password, email, lat, lon);
 
     return Response.json(returnData , { status: 200});
 }
