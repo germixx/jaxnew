@@ -91,11 +91,68 @@ async function registerUser(username, password, email, latitude, longitude) {
         return { status: false, errorType: 'username', errorMessage: 'Username is already in use. Please try again.' };
     }
 
-    const locationAddress = await returnAddress(latitude, longitude);
-
     const hashedPassword = await hashPass(password, 10);
-    console.log(hashedPassword, ' is hashed')
 
+    let locationNumber = null;
+    let locationRoad = null;
+    let locationNeighborhood = null;
+    let locationCity = null;
+    let locationCounty = null;
+    let locationState = null;
+    let locationZipCode = null;
+    let locationCountry = null;
+    let locationCountryCode = null;
+    let locationSet = null;
+    let locationLat = latitude;
+    let locationLon = longitude;
+    let timeSignedUp = new Date().toISOString().slice(0, 19).replace('T', ' ');
+    let verified = 0;
+    let banned = 0;
+    let isAdmin = 0;
+    let emlMarketing = 0;
+    let deleted = 0;
+    let password = hashedPassword;
+    let profileImage = 'https://jacksonvillians.com/api/image/users?uID=';
+
+    if (latitude !== null && longitude !== null) {
+        try {
+            const locationAddress = await returnAddress(latitude, longitude);
+            locationNumber = locationAddress.house_number;
+            locationRoad = locationAddress.road;
+            locationNeighborhood = locationAddress.neighbourhood;
+            locationCity = locationAddress.city;
+            locationCounty = locationAddress.county;
+            locationState = locationAddress.state;
+            locationZipCode = locationAddress.postcode;
+            locationCountry = locationAddress.country;
+            locationCountryCode = locationAddress.country_code;
+            locationSet = 1;
+        } catch (error) {
+            console.error("Geocoding error:", error);
+        }
+
+    }
+
+    // // insert into Database here, received ID
+    // [rows] = await con2.execute(
+    //     "INSERT INTO tblUsers (email, password, username, profileImage, timeSignedUp, locationNumber, locationRoad, locationNeighborhood, locationCity, locationCounty, locationState, locationZipCode, locationCountry, locationCountryCode, locationLat, locationLon, locationSet, emlMarketing, deleted, verified, banned, isAdmin) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+    //     [email, password, username, profileImage, timeSignedUp, locationNumber, locationRoad, locationNeighborhood, locationCity, locationCounty, locationState, locationZipCode, locationCountry, locationCountryCode, locationLat, locationLon, locationSet, emlMarketing, deleted, verified, banned, isAdmin]
+    // );
+
+    // if (rows.length > 0) {
+    //     return { status: false, errorType: 'signup', errorMessage: 'Error Signing Up. Please try again.' };
+    // }
+
+    // profileImage = `https://jacksonvillians.com/images/users?uID=${rows.id}`;
+    // // update user with updated profile image link here
+    // [rows] = await con2.execute(
+    //     "UPDATE tblUsers SET profileImage = ? WHERE id = ?",
+    //     [profileImage]
+    // );
+
+
+
+    return ({ status: true }); //userdetails here after DB input
 }
 
 module.exports = {
