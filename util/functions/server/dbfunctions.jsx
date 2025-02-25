@@ -111,7 +111,7 @@ async function registerUser(username, password, email, latitude, longitude) {
     let isAdmin = 0;
     let emlMarketing = 0;
     let deleted = 0;
-    let password = hashedPassword;
+    let passwords = hashedPassword;
     let profileImage = 'https://jacksonvillians.com/api/image/users?uID=';
 
     if (latitude !== null && longitude !== null) {
@@ -136,7 +136,7 @@ async function registerUser(username, password, email, latitude, longitude) {
     // // insert into Database here, received ID
     // [rows] = await con2.execute(
     //     "INSERT INTO tblUsers (email, password, username, profileImage, timeSignedUp, locationNumber, locationRoad, locationNeighborhood, locationCity, locationCounty, locationState, locationZipCode, locationCountry, locationCountryCode, locationLat, locationLon, locationSet, emlMarketing, deleted, verified, banned, isAdmin) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-    //     [email, password, username, profileImage, timeSignedUp, locationNumber, locationRoad, locationNeighborhood, locationCity, locationCounty, locationState, locationZipCode, locationCountry, locationCountryCode, locationLat, locationLon, locationSet, emlMarketing, deleted, verified, banned, isAdmin]
+    //     [email, passwords, username, profileImage, timeSignedUp, locationNumber, locationRoad, locationNeighborhood, locationCity, locationCounty, locationState, locationZipCode, locationCountry, locationCountryCode, locationLat, locationLon, locationSet, emlMarketing, deleted, verified, banned, isAdmin]
     // );
 
     // if (rows.length > 0) {
