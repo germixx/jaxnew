@@ -50,6 +50,19 @@ const getImage = async (localFilePath, emptyPath) => {
 
 }
 
+const createUsersFolderUponRegister = (id) => {
+
+  const imageDirectory = path.join(process.cwd(), '/public/users/');
+  
+  const ImgFolderLocale = path.join(imageDirectory, id.toString());
+  
+  if (!fs.existsSync(ImgFolderLocale)) {
+    fs.mkdirSync(ImgFolderLocale)
+  }
+
+  return;
+}
+
 // const uploadImage = async () => {
 
 //   const form = new formidable.IncomingForm();
@@ -77,5 +90,6 @@ const getImage = async (localFilePath, emptyPath) => {
 // }
 
 module.exports = {
-    getImage
+    getImage,
+    createUsersFolderUponRegister
 }

@@ -1,6 +1,10 @@
 const {
     registerUser
-} = require('../../../../util/functions/server/dbfunctions')
+} = require('../../../../util/functions/server/dbfunctions');
+
+const {
+    createUsersFolderUponRegister
+} = require('../../../../util/functions/server/images/functions');
 
 
 export async function POST(request, res) {
@@ -14,6 +18,8 @@ export async function POST(request, res) {
     const lat = data.latitude;
 
     let returnData = await registerUser(username, password, email, lat, lon);
+    
+    createUsersFolderUponRegister(returnData.ID);
 
     return Response.json(returnData , { status: 200});
 }

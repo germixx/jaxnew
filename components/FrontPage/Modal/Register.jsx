@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 import { useUser } from "@/context/UserContext";
 import { useLocation } from "@/context/LocationContext";
@@ -9,6 +10,8 @@ import LoadingInfinity from '../../LoadingInfinity';
 
 const Register = (props) => {
   
+    const router = useRouter();
+
     const [error, setError] = useState('');
     const [passwordError, setPasswordError] = useState('');
     const [usernameError, setUsernameError] = useState('');
@@ -44,6 +47,14 @@ const Register = (props) => {
             setPasswordError(true);
             setEmailError('');
             setUsernameError('');
+        }
+    }
+
+    const handleRegister = async () => {
+        let result = await props.Register(props.setLoading, props.username, props.password, props.confirmPassword, props.email, locationCoords.latitude, locationCoords.longitude, handleError)
+        console.log(result, ' very good');
+        if(result) {
+            router.push('/dashboard');
         }
     }
    
@@ -104,7 +115,8 @@ const Register = (props) => {
                     ) : (
                         <button 
                             type="submit" 
-                            onClick={() => props.Register(props.setLoading, props.username, props.password, props.confirmPassword, props.email, locationCoords.latitude, locationCoords.longitude, handleError)}
+                            // onClick={() => props.Register(props.setLoading, props.username, props.password, props.confirmPassword, props.email, locationCoords.latitude, locationCoords.longitude, handleError)}
+                            onClick={() => handleRegister(props.setLoading, props.username, props.password, props.confirmPassword, props.email, locationCoords.latitude, locationCoords.longitude, handleError)}
                             className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Register</button>
                     )}
                     <div className="text-sm font-medium text-gray-500 dark:text-gray-300">

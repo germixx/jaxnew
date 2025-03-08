@@ -54,7 +54,7 @@
         }
     ],
     "Contact": {
-        "address": "Baymeadows Jacksonville, Fl 32256 ",
+        "address": "Jacksonville, Florida ",
         "phone": "(904) 385-0377",
         "email": "hello@jacksonvillians.com",
         "facebook": "fb.com",
@@ -93,15 +93,15 @@
                 "Ortega",
                 "San Marco",
                 "Mandarin",
-                "Northside", 
-                "Westside", 
-                "Arlington", 
+                "Northside",
+                "Westside",
+                "Arlington",
                 "Southside",
                 "Beaches"
             ]
         },
         {
-            "Categories" : [
+            "Categories": [
                 "Adult",
                 "Dining",
                 "Business",

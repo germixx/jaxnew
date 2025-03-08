@@ -133,26 +133,25 @@ async function registerUser(username, password, email, latitude, longitude) {
 
     }
 
-    // // insert into Database here, received ID
-    // [rows] = await con2.execute(
-    //     "INSERT INTO tblUsers (email, password, username, profileImage, timeSignedUp, locationNumber, locationRoad, locationNeighborhood, locationCity, locationCounty, locationState, locationZipCode, locationCountry, locationCountryCode, locationLat, locationLon, locationSet, emlMarketing, deleted, verified, banned, isAdmin) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-    //     [email, passwords, username, profileImage, timeSignedUp, locationNumber, locationRoad, locationNeighborhood, locationCity, locationCounty, locationState, locationZipCode, locationCountry, locationCountryCode, locationLat, locationLon, locationSet, emlMarketing, deleted, verified, banned, isAdmin]
-    // );
+    // insert into Database here, received ID
+    [rows] = await con2.execute(
+        "INSERT INTO tblUsers (email, password, username, profileImage, timeSignedUp, locationNumber, locationRoad, locationNeighborhood, locationCity, locationCounty, locationState, locationZipCode, locationCountry, locationCountryCode, locationLat, locationLon, locationSet, emlMarketing, deleted, verified, banned, isAdmin) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        [email, passwords, username, profileImage, timeSignedUp, locationNumber, locationRoad, locationNeighborhood, locationCity, locationCounty, locationState, locationZipCode, locationCountry, locationCountryCode, locationLat, locationLon, locationSet, emlMarketing, deleted, verified, banned, isAdmin]
+    );
+    
+    let DBID = rows.insertId;
+    if (rows.length > 0) {
+        return { status: false, errorType: 'signup', errorMessage: 'Error Signing Up. Please try again.' };
+    }
 
-    // if (rows.length > 0) {
-    //     return { status: false, errorType: 'signup', errorMessage: 'Error Signing Up. Please try again.' };
-    // }
+    profileImage = `https://jacksonvillians.com/api/image/users?uID=${DBID}`;
+    // update user with updated profile image link here
+    [rows] = await con2.execute(
+        "UPDATE tblUsers SET profileImage = ? WHERE id = ?",
+        [profileImage, DBID]
+    );
 
-    // profileImage = `https://jacksonvillians.com/images/users?uID=${rows.id}`;
-    // // update user with updated profile image link here
-    // [rows] = await con2.execute(
-    //     "UPDATE tblUsers SET profileImage = ? WHERE id = ?",
-    //     [profileImage]
-    // );
-
-
-
-    return ({ status: true }); //userdetails here after DB input
+    return ({ status: true, ID: DBID }); //userdetails here after DB input
 }
 
 module.exports = {

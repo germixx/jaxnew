@@ -19,14 +19,11 @@ export const metadata = {
 };
 
 export default function ProfileLayout({ children }) {
-  return (
-    <html lang="en">
-      <body className=''>
+  return (    
+      <div className=''>
         <NavBar />
         {children}
         <Footer />
-        
-      </body>
-    </html>
+      </div>
   );
 }

@@ -9,7 +9,7 @@ import path from 'path';
 const imageDirectory = path.join(process.cwd(), '/public/images/');
 
 export async function GET(request, res) {
-    //Example: https://new.jacksonvillians.com/api/image/places?roomID=qXBDZGiVV
+    //Example: https://www.jacksonvillians.com/api/image/places?roomID=qXBDZGiVV
     const { searchParams } = new URL(request.url);
 
     const roomID = searchParams.get("roomID");
