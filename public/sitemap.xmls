@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    
+            <url>
+                <loc>https://jacksonvillians.com/</loc>
+                <changefreq>daily</changefreq>
+                <priority>1</priority>
+            </url>
+            <url>
+                <loc>https://jacksonvillians.com/about</loc>
+                <changefreq>daily</changefreq>
+                <priority>0.8</priority>
+            </url>
+            <url>
+                <loc>https://jacksonvillians.com/blog</loc>
+                <changefreq>daily</changefreq>
+                <priority>0.8</priority>
+            </url>
+            <url>
+                <loc>https://jacksonvillians.com/contact</loc>
+                <changefreq>daily</changefreq>
+                <priority>0.8</priority>
+            </url>
+            <url>
+                <loc>https://jacksonvillians.com/blog/post-1</loc>
+                <changefreq>daily</changefreq>
+                <priority>0.8</priority>
+            </url>
+            <url>
+                <loc>https://jacksonvillians.com/blog/post-2</loc>
+                <changefreq>daily</changefreq>
+                <priority>0.8</priority>
+            </url>
+            <url>
+                <loc>https://jacksonvillians.com/blog/post-3</loc>
+                <changefreq>daily</changefreq>
+                <priority>0.8</priority>
+            </url>
+</urlset>

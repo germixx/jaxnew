@@ -5,7 +5,7 @@ export function middleware(req) {
     const isMaintenanceMode = process.env.NEXT_PUBLIC_MAINTENANCE_MODE === 'true';
 
     // Allow access to these paths even during maintenance
-    const allowedPaths = ['/maintenance', '/api', '/admin', '/_next', '/favicon.ico'];
+    const allowedPaths = ['/maintenance', '/api', '/admin', '/_next', '/favicon.ico', '/sitemap.xml'];
 
     if (allowedPaths.some((path) => url.pathname.startsWith(path))) {
         return NextResponse.next();

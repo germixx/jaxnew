@@ -1,9 +1,14 @@
-'use client';
+"use client";
+
+import { useUser } from "@/context/UserContext";
+
 
 import Link from 'next/link';
 
-const Navbar = () => {
-
+const Navbar = (props) => {
+  const context = useUser();
+  console.log("Navbar Context:", context); // 🔍 Check if this logs `null` or `undefined`
+  
   const toggleDropdown = () => {
 
     function resizeAutomatically (){
@@ -27,7 +32,7 @@ const Navbar = () => {
   const toggleSideDrawer = () => {
     document.getElementById('logo-sidebar').classList.toggle('-translate-x-full');
   }
-
+  
   return (
     <div className=''>
       <nav className="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700 ">
@@ -40,7 +45,7 @@ const Navbar = () => {
                     <path clipRule="evenodd" fillRule="evenodd" d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"></path>
                   </svg>
               </button>
-              <a href="https://new.jacksonvillians.com" className="text-2xl font-bold text-primary-light dark:text-primary-dark ml-4">Jacksonvillians</a>
+              <a href="https://www.jacksonvillians.com" className="text-2xl font-bold text-primary-light dark:text-primary-dark ml-4">Jacksonvillians</a>
             </div>
             <div className="flex items-center">
                 <div className="flex items-center ms-3">
@@ -60,7 +65,7 @@ const Navbar = () => {
                           Neil Sims
                         </p>
                         <p className="text-sm font-medium text-gray-900 truncate dark:text-gray-300" role="none">
-                          neil.sims@flowbite.com
+                          { props?.user?.email ?? ''}
                         </p>
                       </div>
                     </Link>
@@ -291,53 +296,7 @@ const Navbar = () => {
                 role="menuitem"
               >
                 <div className="inline-flex items-center">
-                  {/* <svg
-                    aria-hidden="true"
-                    className="h-3.5 w-3.5 rounded-full mr-2"
-                    xmlns="http://www.w3.org/2000/svg"
-                    xmlns:xlink="http://www.w3.org/1999/xlink"
-                    id="flag-icon-css-cn"
-                    viewBox="0 0 512 512"
-                  >
-                    <defs>
-                      <path
-                        id="a"
-                        fill="#ffde00"
-                        d="M1-.3L-.7.8 0-1 .6.8-1-.3z"
-                      />
-                    </defs>
-                    <path fill="#de2910" d="M0 0h512v512H0z" />
-                    <use
-                      width="30"
-                      height="20"
-                      transform="matrix(76.8 0 0 76.8 128 128)"
-                      xlink:href="#a"
-                    />
-                    <use
-                      width="30"
-                      height="20"
-                      transform="rotate(-121 142.6 -47) scale(25.5827)"
-                      xlink:href="#a"
-                    />
-                    <use
-                      width="30"
-                      height="20"
-                      transform="rotate(-98.1 198 -82) scale(25.6)"
-                      xlink:href="#a"
-                    />
-                    <use
-                      width="30"
-                      height="20"
-                      transform="rotate(-74 272.4 -114) scale(25.6137)"
-                      xlink:href="#a"
-                    />
-                    <use
-                      width="30"
-                      height="20"
-                      transform="matrix(16 -19.968 19.968 16 256 230.4)"
-                      xlink:href="#a"
-                    />
-                  </svg> */}
+
                   
                 </div>
               </a>

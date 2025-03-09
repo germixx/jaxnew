@@ -151,7 +151,7 @@ async function registerUser(username, password, email, latitude, longitude) {
         [profileImage, DBID]
     );
 
-    return ({ status: true, ID: DBID }); //userdetails here after DB input
+    return ({ status: true, ID: DBID, email, username }); //userdetails here after DB input
 }
 
 module.exports = {

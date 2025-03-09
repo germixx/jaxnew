@@ -58,12 +58,8 @@ const Register = (setloading, username, password, confirmPassword, email, latitu
             .then((json) => {
               
                 if (json.status) {
-                    console.log(json, ' is jsons')
-                    // cb({ status: true, userDetails: json.userDetails })
-                    resolve(true)
+                    resolve(json);
                 } else {
-                    console.log(json, ' is jsons1')
-
                     cb(json.errorType, json.errorMessage )
                     setloading(false);
                     resolve(true)

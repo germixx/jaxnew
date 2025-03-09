@@ -51,9 +51,11 @@ const Register = (props) => {
     }
 
     const handleRegister = async () => {
+        
         let result = await props.Register(props.setLoading, props.username, props.password, props.confirmPassword, props.email, locationCoords.latitude, locationCoords.longitude, handleError)
-        console.log(result, ' very good');
-        if(result) {
+        
+        if(result.status) {
+            login({ id: result.ID, username: result.username, email: result.email, location: location})
             router.push('/dashboard');
         }
     }
