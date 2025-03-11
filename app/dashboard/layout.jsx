@@ -13,12 +13,12 @@ import Footer from "@/components/Client/Dashboard/Footer";
 export default function ProfileLayout({ children }) {
 
   const { user, login, logout } = useUser();
-  
-  return (    
-      <div>
-        <NavBar user={user} logout={logout} />
-          <main>{children}</main>
-        <Footer />
-      </div>
+  // console.log(sessionStorage.getItem('accessToken'), ' is token');
+  return (
+    <div>
+      <NavBar user={user} logout={logout} />
+      <main>{children}</main>
+      <Footer />
+    </div>
   );
 }

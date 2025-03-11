@@ -9,11 +9,11 @@ const getLocationFromCoords = require('./location');
 // Function to sanitize username (disallow @ for usernames)
 const sanitizeIdentifier = (input) => {
     const trimmed = input.trim();
-  
+
     if (/\S+@\S+\.\S+/.test(trimmed)) {
-      return trimmed; // Return as-is if it's an email
+        return trimmed; // Return as-is if it's an email
     } else {
-      return trimmed.replace(/[^a-zA-Z0-9._-]/g, ""); // Remove unwanted chars for username
+        return trimmed.replace(/[^a-zA-Z0-9._-]/g, ""); // Remove unwanted chars for username
     }
 };
 
@@ -149,7 +149,7 @@ async function registerUser(username, password, email, latitude, longitude) {
         "INSERT INTO tblUsers (email, password, username, profileImage, timeSignedUp, locationNumber, locationRoad, locationNeighborhood, locationCity, locationCounty, locationState, locationZipCode, locationCountry, locationCountryCode, locationLat, locationLon, locationSet, emlMarketing, deleted, verified, banned, isAdmin) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
         [email, passwords, username, profileImage, timeSignedUp, locationNumber, locationRoad, locationNeighborhood, locationCity, locationCounty, locationState, locationZipCode, locationCountry, locationCountryCode, locationLat, locationLon, locationSet, emlMarketing, deleted, verified, banned, isAdmin]
     );
-    
+
     let DBID = rows.insertId;
     if (rows.length > 0) {
         return { status: false, errorType: 'signup', errorMessage: 'Error Signing Up. Please try again.' };
@@ -165,20 +165,20 @@ async function registerUser(username, password, email, latitude, longitude) {
     return ({ status: true, ID: DBID, email, username, profileImage }); //userdetails here after DB input
 }
 
-async function checkUser (identifier, password, type, NextResponse) {
+async function checkUser(identifier, password, type) {
 
     const con2 = await connection2();
 
-    const sanitized = sanitizeIdentifier(identifier);
-    
-    const isEmail = /\S+@\S+\.\S+/.test(sanitized);
+    // const sanitized = sanitizeIdentifier(identifier);
+
+    const isEmail = /\S+@\S+\.\S+/.test(identifier);
 
     const query = isEmail
-      ? "SELECT id, email, username, password, isAdmin, verified, banned, profileImage FROM tblUsers WHERE email = ?"
-      : "SELECT id, email, username, password, isAdmin, verified, banned, profileImage FROM tblUsers WHERE username = ?";
-    
-    const [rows] = await con2.execute(query, [sanitized]);
-    
+        ? "SELECT id, email, username, password, isAdmin, verified, banned, profileImage FROM tblUsers WHERE email = ?"
+        : "SELECT id, email, username, password, isAdmin, verified, banned, profileImage FROM tblUsers WHERE username = ?";
+
+    const [rows] = await con2.execute(query, [identifier]);
+
     return rows;
 
 }
@@ -188,6 +188,7 @@ module.exports = {
     getPlaceData,
     addNewPlace,
     registerUser,
-    checkUser
+    checkUser,
+    sanitizeIdentifier
 }
 

@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 
 export default function MaintenancePage() {
-    const targetDate = new Date("2025-03-01T00:00:00"); // Set your maintenance end time
+    const targetDate = new Date("2025-03-15T00:00:00"); // Set your maintenance end time
     const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
 
     function calculateTimeLeft() {
