@@ -6,13 +6,14 @@ import { createContext, useContext, useState, useEffect } from "react";
 const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
+  
   const [user, setUser] = useState(null);
-  console.log('normals contentprivuder user')
+  
   // Example: Fetch user from localStorage (or an API)
   useEffect(() => {
-    console.log('is this not running?')
+    
     const savedUser = localStorage.getItem("user");
-    console.log(savedUser, ' is saved')
+    
     if (savedUser) {
       setUser(JSON.parse(savedUser));
     }

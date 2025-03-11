@@ -84,11 +84,7 @@ const AuthModule = (props) => {
                                     <LoginModal 
                                         showRegister={showRegister} 
                                         showForgot={showForgot} 
-                                        setEmail={setEmail}
                                         email={email}
-                                        setPassword={setPassword}
-                                        password={password}
-                                        handleInputChange={handleInputChange}
                                         loading={loading}
                                         setLoading={setLoading}
                                         Login={Login}

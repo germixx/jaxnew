@@ -1,13 +1,13 @@
 "use client";
 
 import { useUser } from "@/context/UserContext";
-
+import { useRouter } from 'next/navigation';
 
 import Link from 'next/link';
 
 const Navbar = (props) => {
-  const context = useUser();
-  console.log("Navbar Context:", context); // 🔍 Check if this logs `null` or `undefined`
+
+  const router = useRouter();
   
   const toggleDropdown = () => {
 
@@ -27,6 +27,11 @@ const Navbar = (props) => {
       document.getElementById('dropdown-user').style.display = 'none';
     }
 
+  }
+
+  const LogOut = () => {
+    props.logout();
+    router.push('/');
   }
 
   const toggleSideDrawer = () => {
@@ -52,7 +57,12 @@ const Navbar = (props) => {
                   <div>
                     <button onClick={() => toggleDropdown()} type="button" className="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" aria-expanded="false" data-dropdown-toggle="dropdown-user">
                       <span className="sr-only">Open user menu</span>
-                      <img className="w-8 h-8 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="user photo" />
+                      <img 
+                        className="w-8 h-8 rounded-full" 
+                        // src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" 
+                        src={ props?.user?.profileImage ?? 'https://flowbite.com/docs/images/people/profile-picture-5.jpg'}
+                        alt="user photo" 
+                      />
                     </button>
                   </div>
                   <div 
@@ -71,16 +81,20 @@ const Navbar = (props) => {
                     </Link>
                     <ul className="py-1" role="none">
                       <li>
-                        <Link href="/dashboard" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Dashboard</Link>
+                        <Link href="/dashboard" className="text-center block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white w-full">Dashboard</Link>
                       </li>
                       <li>
-                        <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Settings</a>
+                        <button href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white w-full">Settings</button>
                       </li>
                       <li>
-                        <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Earnings</a>
+                        <button href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white w-full">Earnings</button>
                       </li>
                       <li>
-                        <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Sign out</a>
+                        <button
+                          onClick={() => LogOut()} 
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white w-full">
+                            Sign out
+                        </button>
                       </li>
                     </ul>
                   </div>

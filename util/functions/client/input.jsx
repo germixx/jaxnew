@@ -79,8 +79,56 @@ const Register = (setloading, username, password, confirmPassword, email, latitu
   }).catch(e => console.log(e))
 }
 
-const Login = (setloading) => {
+ // Check if the input is an email
+ const isEmail = (input) => /\S+@\S+\.\S+/.test(input);
+
+ // Sanitize email/username input
+ const sanitizeIdentifier = (input) => {
+
+  let sanitizedInput = input.trim();
+
+  if (isEmail(sanitizedInput)) {
+      return sanitizedInput; // Return as-is if it's a valid email
+  } else {
+      return sanitizedInput.replace(/[^a-zA-Z0-9._-]/g, ""); // Remove everything except allowed chars
+  }
+};  
+
+// Validate password (Allow all symbols but ensure length)
+const validatePassword = (input) => input.length >= 8;
+
+const Login = async (e, setloading, identifier, password, cbError, cbSuccess) => {
+  e.preventDefault();
   setloading(true);
+
+  const sanitizedIdentifier = sanitizeIdentifier(identifier);
+  const isValidPassword = validatePassword(password);
+
+  if (!sanitizedIdentifier || !isValidPassword) {
+    alert("Invalid input. Username must not contain '@', and password must be at least 8 characters.");
+    return;
+  }
+
+  const response = await fetch("/api/users/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      identifier: sanitizedIdentifier,
+      password, 
+      type: isEmail(sanitizedIdentifier) ? "email" : "username",
+    }),
+  });
+
+  const data = await response.json();
+  
+  if(data.status) {
+    cbSuccess(data)
+    return true;
+  } else {
+    cbError(data.type, data.error);
+    return false;
+  }
+
 }
 
 const ForgotPassword = (setloading) => {

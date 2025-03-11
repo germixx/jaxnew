@@ -1,15 +1,3 @@
-// import { Geist, Geist_Mono } from "next/font/google";
-// import "./globals.css";
-
-// const geistSans = Geist({
-//   variable: "--font-geist-sans",
-//   subsets: ["latin"],
-// });
-
-// const geistMono = Geist_Mono({
-//   variable: "--font-geist-mono",
-//   subsets: ["latin"],
-// });
 'use client';
 
 import { useUser } from "@/context/UserContext";
@@ -28,7 +16,7 @@ export default function ProfileLayout({ children }) {
   
   return (    
       <div>
-        <NavBar user={user} />
+        <NavBar user={user} logout={logout} />
           <main>{children}</main>
         <Footer />
       </div>

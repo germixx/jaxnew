@@ -24,13 +24,6 @@ export async function POST(request, res) {
     return Response.json(returnData , { status: 200});
 }
 
-
-
-
-
-
-
-
 export async function PUT(request, res) {
     return Response.json({ message: 'Method Not Allowed' }, { status: 405});
 }
