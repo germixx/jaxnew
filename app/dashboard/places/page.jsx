@@ -14,14 +14,16 @@ const Places = () => {
   const [placess, setPlaces] = useState([]);
 
   useEffect(() => {
-
+    
+    
     (async () => {
 
       setPlaces(await fetchLocations())
       SetIsLoading(false);
 
     })()
-
+    let x = sessionStorage.getItem("accessToken");
+    console.log(x, ' is token')
   }, [])
 
   return (

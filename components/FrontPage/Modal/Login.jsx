@@ -60,13 +60,13 @@ const LoginModal = (props) => {
             location: location,
             profileImage: data.user.profileImage
         });
+        // console.log(data.accessToken, ' is access token')
         sessionStorage.setItem("accessToken", data.accessToken);
         router.push('/dashboard');
     }
 
     useEffect(() => {
         setLocationCoords(location ? location : { latitude: null, longitude: null });
-        console.log(localStorage.getItem('token'))
     }, []);
 
     return (

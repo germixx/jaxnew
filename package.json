@@ -15,6 +15,7 @@
     "dompurify": "^3.2.4",
     "formidable": "^3.5.2",
     "fs-extra": "^11.3.0",
+    "jose": "^6.0.9",
     "jsonwebtoken": "^9.0.2",
     "mysql": "^2.18.1",
     "mysql2": "^3.12.0",

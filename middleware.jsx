@@ -1,6 +1,101 @@
 import { NextRequest, NextResponse } from 'next/server';
-import jwt from 'jsonwebtoken';
+
+import { jwtVerify } from 'jose';
+
 import { cookies } from 'next/headers';
+
+
+const PUBLIC_ROUTES = ['/', '/api/users/login', '/api/auth/logout',];
+
+export async function middleware(req) {
+
+    const { pathname } = req.nextUrl;
+
+    // const url = req.nextUrl;
+
+    const maintenanceMode = process.env.NEXT_PUBLIC_MAINTENANCE_MODE === 'true';
+
+    // Maintenance mode enabled
+    if (maintenanceMode && !PUBLIC_ROUTES.includes(pathname)) {
+        return new NextResponse(JSON.stringify({ message: 'Site is under maintenance' }), {
+            status: 503,
+            headers: { 'Content-Type': 'application/json' }
+        });
+    }
+
+    // const allowedPaths = ['/maintenance', '/api', '/admin', '/_next', '/favicon.ico', '/sitemap.xml'];
+    // console.log(maintenanceMode, ' is mainten')
+    // if (maintenanceMode) {
+    //     return NextResponse.rewrite(new URL('/maintenance', req.url));
+    // }
+
+    // if (allowedPaths.some((path) => url.pathname.startsWith(path))) {
+    //     return NextResponse.next();
+    // }
+
+    // ✅ Allow requests to /assets/*
+    if (pathname.startsWith('/assets/')) {
+        return NextResponse.next();
+    }
+
+    // Skip auth check for public routes
+    if (PUBLIC_ROUTES.includes(pathname)) {
+        return NextResponse.next();
+    }
+
+    // Authentication check
+    const token = req.cookies.get('token')?.value;
+    console.log(token, ' si le token')
+    if (!token) {
+        return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    }
+
+    const secretKey =  new TextEncoder().encode(process.env.JWT_SECRET);
+
+    try {
+        const { payload } = await jwtVerify(token, secretKey, { algorithms: ['HS256'] });
+        console.log('TOKEN DECODED:', payload); // Debugging: Check if decoding works
+        return NextResponse.next();
+    } catch (error) {
+        console.log('JWT ERROR:', error.message); // Debugging: Log error details
+        return NextResponse.json({ message: 'Invalid token' }, { status: 401 });
+    }
+}
+
+// Apply middleware to all routes
+// export const config = {
+//     matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
+// };
+
+// ✅ Only protect API routes that require authentication
+export const config = {
+    matcher: ['/dashboard', '/profile', '/api/protected/:path*'], 
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // const SECRET_KEY = process.env.JWT_SECRET;
 // const MAINTENANCE_MODE = process.env.NEXT_PUBLIC_MAINTENANCE_MODE == true;
@@ -61,62 +156,29 @@ import { cookies } from 'next/headers';
 
 
 
+
+
+
+
+
+
 //working below
-export function middleware(req) {
-
-    const url = req.nextUrl;
-
-    const isMaintenanceMode = process.env.NEXT_PUBLIC_MAINTENANCE_MODE === 'true';
-
-    // Allow access to these paths even during maintenance
-    const allowedPaths = ['/maintenance', '/api', '/admin', '/_next', '/favicon.ico', '/sitemap.xml'];
-
-    if (allowedPaths.some((path) => url.pathname.startsWith(path))) {
-        return NextResponse.next();
-    }
-
-    // Redirect all users to maintenance page if mode is enabled
-    if (isMaintenanceMode) {
-        return NextResponse.rewrite(new URL('/maintenance', req.url));
-    }
-
-    return NextResponse.next();
-}
-
-// Apply middleware to all routes except maintenance and login
-export const config = {
-    matcher: "/((?!maintenance|login).*)",
-};
-// // working above here
-
-
-// const maintenancePath = "/maintenance";
 // export function middleware(req) {
-//     const maintenanceMode = process.env.NEXT_PUBLIC_MAINTENANCE_MODE === 'true'
-//     const maintenancePath = "/maintenance";
-//     const loginPath = "/";
-//     const currentPath = req.nextUrl.pathname;
 
-//     // Redirect to maintenance page if maintenance mode is enabled
-//     if (maintenanceMode && currentPath !== maintenancePath) {
-//         return NextResponse.redirect(new URL(maintenancePath, req.url));
+//     const url = req.nextUrl;
+
+//     const isMaintenanceMode = process.env.NEXT_PUBLIC_MAINTENANCE_MODE === 'true';
+
+//     // Allow access to these paths even during maintenance
+//     const allowedPaths = ['/maintenance', '/api', '/admin', '/_next', '/favicon.ico', '/sitemap.xml'];
+
+//     if (allowedPaths.some((path) => url.pathname.startsWith(path))) {
+//         return NextResponse.next();
 //     }
 
-//     // Define protected routes
-//     const protectedRoutes = ["/dashboard", "/admin", "/profile"];
-
-//     if (protectedRoutes.includes(currentPath)) {
-//         const token = req.cookies.get("token")?.value;
-//         console.log(token, ' is tokens')
-//         if (!token) {
-//             return NextResponse.redirect(new URL(loginPath, req.url));
-//         }
-
-//         try {
-//             jwt.verify(token, SECRET_KEY);
-//         } catch (error) {
-//             return NextResponse.redirect(new URL(loginPath, req.url));
-//         }
+//     // Redirect all users to maintenance page if mode is enabled
+//     if (isMaintenanceMode) {
+//         return NextResponse.rewrite(new URL('/maintenance', req.url));
 //     }
 
 //     return NextResponse.next();
@@ -124,26 +186,19 @@ export const config = {
 
 // // Apply middleware to all routes except maintenance and login
 // export const config = {
-//     matcher: "/((?!maintenance|/).*)",
+//     matcher: "/((?!maintenance|login).*)",
 // };
+// // working above here
 
-// protected routes working below
-// export function middleware(req) {
-//     const token = req.headers.get("Authorization")?.split(" ")[1];
-//     console.log(token, ' is token')
-//     if (!token) {
-//         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-//     }
 
-//     try {
-//         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-//         req.user = decoded;
-//         return NextResponse.next();
-//     } catch (error) {
-//         return NextResponse.json({ error: "Invalid token" }, { status: 403 });
-//     }
-// }
 
-// export const config = {
-//     matcher: "/api/protected/:path*", // Apply to protected routes
-// };
+
+
+
+
+
+
+
+
+
+

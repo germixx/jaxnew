@@ -15,6 +15,17 @@ const RATE_LIMIT = 5; // Max attempts per 15 minutes
 const ATTEMPT_RESET_TIME = 15 * 60 * 1000; // 15 minutes
 const failedLoginAttempts = new Map(); // Track failed login attempts
 
+async function setCookie(refreshToken) {
+    await (await cookies()).set("refreshToken", refreshToken, {
+        httpOnly: true,
+        // secure: process.env.NODE_ENV === "production",
+        secure: true,
+        sameSite: "strict",
+        path: "/",
+    });
+
+}
+
 export async function POST(request, res) {
     try {
         // const data = await request.json(); // or request.text()
@@ -65,13 +76,16 @@ export async function POST(request, res) {
         const accessToken = jwt.sign({ userId: user.id, username: user.username }, process.env.JWT_SECRET, { expiresIn: "15m" });
         const refreshToken = jwt.sign({ userId: user.id }, process.env.REFRESH_SECRET, { expiresIn: "7d" });
 
-        // Set HTTP-only cookie with Refresh Token
-        cookies().set("refreshToken", refreshToken, {
+        // setCookie(refreshToken)
+        // Set HttpOnly cookie
+        cookies().set({
+            name: 'token',
+            value: accessToken,
             httpOnly: true,
-            // secure: process.env.NODE_ENV === "production",
+            // secure: process.env.NODE_ENV === 'production',
             secure: true,
-            sameSite: "strict",
-            path: "/",
+            sameSite: 'strict',
+            path: '/',
         });
 
         // Success response (consider JWT for authentication)
