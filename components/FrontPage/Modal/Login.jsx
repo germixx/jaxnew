@@ -22,7 +22,7 @@ const LoginModal = (props) => {
 
     const { user, login, logout } = useUser();
     const { location, locationError } = useLocation();
-    console.log(user, ' is user')
+    // console.log(user, ' is user')
     const handleError = (type, message) => {
 
         if (type === 'identifier') {
@@ -60,7 +60,7 @@ const LoginModal = (props) => {
             location: location,
             profileImage: data.user.profileImage
         });
-        // console.log(data.accessToken, ' is access token')
+        console.log(data.accessToken, ' is access token')
         sessionStorage.setItem("accessToken", data.accessToken);
         router.push('/dashboard');
     }

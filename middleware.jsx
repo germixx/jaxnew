@@ -4,7 +4,6 @@ import { jwtVerify } from 'jose';
 
 import { cookies } from 'next/headers';
 
-
 export async function middleware(req) {
     const { pathname } = req.nextUrl;
     // console.log(`Middleware running on: ${process.env.NEXT_RUNTIME}`);
@@ -39,7 +38,7 @@ export async function middleware(req) {
     // Authentication check for protected routes
     const cookieStore = await cookies();
     const token = cookieStore.get('token')?.value;
-    // console.log('TOKEN IN MIDDLEWARE:', token); // Debugging
+    console.log('TOKEN IN MIDDLEWARE:', token); // Debugging
     if (!token) {
         return NextResponse.redirect(new URL('/', req.url)); // ⬅️ Redirect to home page
     }

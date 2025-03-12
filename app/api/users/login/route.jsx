@@ -89,20 +89,21 @@ export async function POST(request, res) {
         failedLoginAttempts.delete(sanitizedIdentifier);
 
         // Generate JWT Tokens
-        const accessToken = jwt.sign({ userId: user.id, username: user.username }, process.env.JWT_SECRET, { expiresIn: "15m" });
+        const accessToken = jwt.sign({ userId: user.id, username: user.username }, process.env.JWT_SECRET, { expiresIn: "1d" });
         const refreshToken = jwt.sign({ userId: user.id }, process.env.REFRESH_SECRET, { expiresIn: "7d" });
 
-        setCookie(accessToken)
+        // setCookie(accessToken)
         // Set HttpOnly cookie
-        // cookies().set({
-        //     name: 'token',
-        //     value: accessToken,
-        //     httpOnly: true,
-        //     // secure: process.env.NODE_ENV === 'production',
-        //     secure: true,
-        //     sameSite: 'strict',
-        //     path: '/',
-        // });
+        const cookieStore = await cookies();
+        cookieStore.set({ //cookies().set({
+            name: 'token',
+            value: accessToken,
+            httpOnly: true,
+            // secure: process.env.NODE_ENV === 'production',
+            secure: true,
+            sameSite: 'strict',
+            path: '/',
+        });
 
         // Success response (consider JWT for authentication)
         return NextResponse.json({
