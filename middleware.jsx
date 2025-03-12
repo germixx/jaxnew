@@ -37,7 +37,7 @@ export async function middleware(req) {
     }
 
     // Authentication check for protected routes
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const token = cookieStore.get('token')?.value;
     // console.log('TOKEN IN MIDDLEWARE:', token); // Debugging
     if (!token) {
