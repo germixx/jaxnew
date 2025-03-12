@@ -99,8 +99,7 @@ export async function POST(request, res) {
             name: 'token',
             value: accessToken,
             httpOnly: true,
-            // secure: process.env.NODE_ENV === 'production',
-            secure: true,
+            secure: process.env.NODE_ENV === 'production',
             sameSite: 'strict',
             path: '/',
         });

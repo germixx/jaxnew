@@ -1,12 +1,13 @@
 import * as LINKS from '../links'
 
-function fetchLocations () {
+function fetchLocations() {
     return new Promise((resolve, reject) => {
         fetch(`${LINKS.PLACES}`, {
             method: 'GET',
+            credentials: 'include'
         }).then(res => res.json())
             .then((json) => {
-                
+
                 if (json.status) {
                     resolve({ locations: json.rows, status: true })
                 } else {
@@ -21,14 +22,15 @@ function fetchLocations () {
     }).catch(e => console.log(e))
 }
 
-function fetchPlaceData (id) {
-    
+function fetchPlaceData(id) {
+
     return new Promise((resolve, reject) => {
         fetch(`${LINKS.PLACES + "/" + id}`, {
             method: 'GET',
+            credentials: 'include'
         }).then(res => res.json())
             .then((json) => {
-                
+
                 if (json.status) {
                     resolve({ locations: json.rows, status: true })
                 } else {
@@ -42,7 +44,7 @@ function fetchPlaceData (id) {
     }).catch(e => console.log(e))
 }
 
-module.exports = { 
+module.exports = {
     fetchLocations,
     fetchPlaceData
 }

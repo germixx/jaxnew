@@ -6,6 +6,7 @@ import { cookies } from 'next/headers';
 
 export async function middleware(req) {
     const { pathname } = req.nextUrl;
+    console.log('Middleware triggered for:', pathname); // Debugging
     // console.log(`Middleware running on: ${process.env.NEXT_RUNTIME}`);
     const maintenanceMode = process.env.NEXT_PUBLIC_MAINTENANCE_MODE === 'true';
 
@@ -37,6 +38,7 @@ export async function middleware(req) {
 
     // Authentication check for protected routes
     const cookieStore = await cookies();
+    console.log('All Cookies:', cookieStore.getAll()); // ✅ Debugging cookies
     const token = cookieStore.get('token')?.value;
     console.log('TOKEN IN MIDDLEWARE:', token); // Debugging
     if (!token) {
@@ -55,8 +57,12 @@ export async function middleware(req) {
 }
 
 // Apply middleware to all routes except Next.js static files
+// export const config = {
+//     matcher: '/((?!_next/static|_next/image|favicon.ico).*)',
+// };
+
 export const config = {
-    matcher: '/((?!_next/static|_next/image|favicon.ico).*)',
+    matcher: ['/dashboard/:path*', '/api/protected-data'], // ✅ Ensure it applies to all subroutes
 };
 
 
