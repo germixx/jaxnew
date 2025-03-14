@@ -1,9 +1,11 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
-const AdminNavbar = () => {
+const AdminNavbar = (props) => {
 
+  const router = useRouter();
 
   const toggleDropdown = () => {
 
@@ -29,6 +31,12 @@ const AdminNavbar = () => {
     document.getElementById('logo-sidebar').classList.toggle('-translate-x-full');
   }
 
+  const LogOut = () => {
+    router.push('/');
+    props.logout();
+    
+  }
+
   return (
     <div>
       <nav className="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
@@ -48,7 +56,12 @@ const AdminNavbar = () => {
                   <div>
                     <button onClick={() => toggleDropdown()} type="button" className="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" aria-expanded="false" data-dropdown-toggle="dropdown-user">
                       <span className="sr-only">Open user menu</span>
-                      <img className="w-8 h-8 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="user photo" />
+                      <img 
+                        className="w-8 h-8 rounded-full" 
+                        // src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" 
+                        src={ props?.user?.profileImage ?? 'https://flowbite.com/docs/images/people/profile-picture-5.jpg'}
+                        alt="user photo" 
+                      />
                     </button>
                   </div>
                   <div 
@@ -57,10 +70,10 @@ const AdminNavbar = () => {
                   >
                     <div className="px-4 py-3" role="none">
                       <p className="text-sm text-gray-900 dark:text-white" role="none">
-                        Neil Sims
+                      { props?.user?.username ?? ''}
                       </p>
                       <p className="text-sm font-medium text-gray-900 truncate dark:text-gray-300" role="none">
-                        neil.sims@flowbite.com
+                      { props?.user?.email ?? ''}
                       </p>
                     </div>
                     <ul className="py-1" role="none">
@@ -74,7 +87,11 @@ const AdminNavbar = () => {
                         <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Earnings</a>
                       </li>
                       <li>
-                        <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Sign out</a>
+                        <button
+                          onClick={() => LogOut()} 
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white w-full">
+                            Sign out
+                        </button>
                       </li>
                     </ul>
                   </div>
