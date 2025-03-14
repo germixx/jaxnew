@@ -23,7 +23,7 @@ CREATE TABLE tblUsers (
     email VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
     username VARCHAR(255) NOT NULL,
-    fullname VARCHAR(35) NOT NULL,
+    fullname VARCHAR(55) NOT NULL,
     profileImage VARCHAR(255) NOT NULL,
     timeSignedUp DATETIME NOT NULL,
     locationNumber VARCHAR(255),
@@ -42,5 +42,5 @@ CREATE TABLE tblUsers (
     deleted TINYINT(1) NOT NULL,
     verified TINYINT(1) NOT NULL,
     banned TINYINT(1) NOT NULL,
-    isAdmin TINYINT(1) NOT NULL,  
+    role VARCHAR(10) NOT NULL,  
 );

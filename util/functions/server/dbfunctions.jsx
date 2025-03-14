@@ -119,10 +119,11 @@ async function registerUser(username, password, email, latitude, longitude) {
     let timeSignedUp = new Date().toISOString().slice(0, 19).replace('T', ' ');
     let verified = 0;
     let banned = 0;
-    let isAdmin = 0;
+    let role = 'user';
     let emlMarketing = 0;
     let deleted = 0;
     let passwords = hashedPassword;
+    let fullname = '';
     let profileImage = 'https://jacksonvillians.com/api/image/users?uID=';
 
     if (latitude !== null && longitude !== null) {
@@ -146,8 +147,8 @@ async function registerUser(username, password, email, latitude, longitude) {
 
     // insert into Database here, received ID
     [rows] = await con2.execute(
-        "INSERT INTO tblUsers (email, password, username, profileImage, timeSignedUp, locationNumber, locationRoad, locationNeighborhood, locationCity, locationCounty, locationState, locationZipCode, locationCountry, locationCountryCode, locationLat, locationLon, locationSet, emlMarketing, deleted, verified, banned, isAdmin) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-        [email, passwords, username, profileImage, timeSignedUp, locationNumber, locationRoad, locationNeighborhood, locationCity, locationCounty, locationState, locationZipCode, locationCountry, locationCountryCode, locationLat, locationLon, locationSet, emlMarketing, deleted, verified, banned, isAdmin]
+        "INSERT INTO tblUsers (email, password, username, fullname, profileImage, timeSignedUp, locationNumber, locationRoad, locationNeighborhood, locationCity, locationCounty, locationState, locationZipCode, locationCountry, locationCountryCode, locationLat, locationLon, locationSet, emlMarketing, deleted, verified, banned, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        [email, passwords, username, fullname,profileImage, timeSignedUp, locationNumber, locationRoad, locationNeighborhood, locationCity, locationCounty, locationState, locationZipCode, locationCountry, locationCountryCode, locationLat, locationLon, locationSet, emlMarketing, deleted, verified, banned, role]
     );
 
     let DBID = rows.insertId;
@@ -174,8 +175,8 @@ async function checkUser(identifier, password, type) {
     const isEmail = /\S+@\S+\.\S+/.test(identifier);
 
     const query = isEmail
-        ? "SELECT id, email, username, password, isAdmin, verified, banned, profileImage FROM tblUsers WHERE email = ?"
-        : "SELECT id, email, username, password, isAdmin, verified, banned, profileImage FROM tblUsers WHERE username = ?";
+        ? "SELECT id, email, username, password, role, verified, banned, profileImage FROM tblUsers WHERE email = ?"
+        : "SELECT id, email, username, password, role, verified, banned, profileImage FROM tblUsers WHERE username = ?";
 
     const [rows] = await con2.execute(query, [identifier]);
 
