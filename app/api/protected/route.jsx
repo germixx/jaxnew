@@ -1,7 +1,22 @@
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
 
 export async function GET(req) {
-    return NextResponse.json({ message: "This is protected data" });
+    // 🔍 Extract user data from headers
+    const userDataHeader = req.headers.get('x-user-data');
+
+    if (!userDataHeader) {
+        return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    }
+
+    // ✅ Parse the JSON string back into an object
+    const userData = JSON.parse(userDataHeader);
+
+    console.log('🔑 User Data:', userData);
+
+    return NextResponse.json({
+        message: 'Protected data accessed!',
+        user: userData,
+    });
 }
 
 export async function POST(request, res) {

@@ -4,6 +4,9 @@ import { jwtVerify } from 'jose';
 
 import { cookies } from 'next/headers';
 
+// ✅ Define admin-only routes
+const ADMIN_ROUTES = ['/admin', '/admin/dashboard', '/admin/settings'];
+
 export async function middleware(req) {
     const { pathname } = req.nextUrl;
     console.log('Middleware triggered for:', pathname); // Debugging
@@ -38,77 +41,45 @@ export async function middleware(req) {
 
     // Authentication check for protected routes
     const cookieStore = await cookies();
-    console.log('All Cookies:', cookieStore.getAll()); // ✅ Debugging cookies
+    // console.log('All Cookies:', cookieStore.getAll()); // ✅ Debugging cookies
     const token = cookieStore.get('token')?.value;
-    console.log('TOKEN IN MIDDLEWARE:', token); // Debugging
+    // console.log('TOKEN IN MIDDLEWARE:', token); // Debugging
     if (!token) {
+        console.warn('🚨 No token found! Redirecting to home.');
         return NextResponse.redirect(new URL('/', req.url)); // ⬅️ Redirect to home page
     }
 
-    const secretKey = new TextEncoder().encode(process.env.JWT_SECRET);
-
     try {
-        await jwtVerify(token, secretKey, { algorithms: ['HS256'] });
-        return NextResponse.next();
+
+        const secretKey = new TextEncoder().encode(process.env.JWT_SECRET);
+        const { payload } = await jwtVerify(token, secretKey, { algorithms: ['HS256'] });
+
+        // console.log('✅ Decoded User Data:', payload);
+
+        const userRole = payload.role || 'user'; // Default to 'user' if no role
+        // console.log(userRole, ' is the role: ');
+        // console.log(`👤 User Role: ${userRole}`);
+
+        // 🚨 Restrict access to admin-only pages
+        if (ADMIN_ROUTES.includes(pathname) && userRole !== 'admin') {
+            console.warn('⛔ Access Denied: Non-admin trying to access admin page!');
+            return NextResponse.redirect(new URL('/', req.url));
+        }
+
+    
+        // ✅ Attach user data to request headers (so API routes can use it)
+        const requestHeaders = new Headers(req.headers);
+
+        requestHeaders.set('x-user-data', JSON.stringify(payload));
+        
+        return NextResponse.next({ request: { headers: requestHeaders } });
+
     } catch (error) {
         console.log('JWT ERROR:', error.message);
         return NextResponse.redirect(new URL('/', req.url)); // ⬅️ Redirect to home page on invalid token
     }
 }
 
-// Apply middleware to all routes except Next.js static files
-// export const config = {
-//     matcher: '/((?!_next/static|_next/image|favicon.ico).*)',
-// };
-
 export const config = {
-    matcher: ['/dashboard/:path*', '/api/protected-data'], // ✅ Ensure it applies to all subroutes
+    matcher: ['/dashboard(.*)', '/admin(.*)', '/api/protected(.*)'],
 };
-
-
-
-
-
-
-
-
-//working below
-// export function middleware(req) {
-
-//     const url = req.nextUrl;
-
-//     const isMaintenanceMode = process.env.NEXT_PUBLIC_MAINTENANCE_MODE === 'true';
-
-//     // Allow access to these paths even during maintenance
-//     const allowedPaths = ['/maintenance', '/api', '/admin', '/_next', '/favicon.ico', '/sitemap.xml'];
-
-//     if (allowedPaths.some((path) => url.pathname.startsWith(path))) {
-//         return NextResponse.next();
-//     }
-
-//     // Redirect all users to maintenance page if mode is enabled
-//     if (isMaintenanceMode) {
-//         return NextResponse.rewrite(new URL('/maintenance', req.url));
-//     }
-
-//     return NextResponse.next();
-// }
-
-// // Apply middleware to all routes except maintenance and login
-// export const config = {
-//     matcher: "/((?!maintenance|login).*)",
-// };
-// // working above here
-
-
-
-
-
-
-
-
-
-
-
-
-

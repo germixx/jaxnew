@@ -89,7 +89,7 @@ export async function POST(request, res) {
         failedLoginAttempts.delete(sanitizedIdentifier);
 
         // Generate JWT Tokens
-        const accessToken = jwt.sign({ userId: user.id, username: user.username }, process.env.JWT_SECRET, { expiresIn: "1d" });
+        const accessToken = jwt.sign({ userId: user.id, username: user.username, role: user.role }, process.env.JWT_SECRET, { expiresIn: "1d" });
         const refreshToken = jwt.sign({ userId: user.id }, process.env.REFRESH_SECRET, { expiresIn: "7d" });
 
         // setCookie(accessToken)
