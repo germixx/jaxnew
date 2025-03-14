@@ -19,6 +19,7 @@ export async function middleware(req) {
     }
 
     // Maintenance mode: Block all pages except maintenance page
+    console.log('Maintenace Mode:', maintenanceMode)
     if (maintenanceMode) {
         return NextResponse.rewrite(new URL('/maintenance', req.url));
     }
@@ -81,5 +82,5 @@ export async function middleware(req) {
 }
 
 export const config = {
-    matcher: ['/dashboard(.*)', '/admin(.*)', '/api/protected(.*)'],
+    matcher: ['/', '/dashboard(.*)', '/admin(.*)', '/api/protected(.*)'],
 };
