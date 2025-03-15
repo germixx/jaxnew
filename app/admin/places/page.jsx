@@ -11,7 +11,7 @@ import { fetchLocations } from '../../../util/functions/client/functions';
 
 const AdminPlaces = () => {
 
-  const [isLoading, SetIsLoading] = useState(false);
+  const [isLoading, SetIsLoading] = useState(true);
   const [placess, setPlaces] = useState([]);
 
   function newPlaceModal () {
@@ -26,6 +26,10 @@ const AdminPlaces = () => {
 
     })();
   }, []);
+
+  const updatePlacesData = (newData) => {
+
+  }
 
   return (
     <div>
@@ -44,7 +48,10 @@ const AdminPlaces = () => {
                 >New +</button>
                 <BreadCrumb />
                 <NewPlaceModal />
-                <Locations places={placess.locations} />
+                <Locations 
+                    places={placess.locations} 
+                    updatePlaces={updatePlacesData}
+                />
                 </div>
             </div>
         )}

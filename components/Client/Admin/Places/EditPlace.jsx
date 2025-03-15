@@ -1,0 +1,135 @@
+import { useState } from 'react';
+
+export default function EditLocationModal({ location, onClose, onSave }) {
+  const [formData, setFormData] = useState({ ...location });
+  const [activeTab, setActiveTab] = useState("form");
+  const [chatMessages, setChatMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState("");
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData({
+      ...formData,
+      [name]: type === "checkbox" ? checked : value,
+    });
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFormData({
+        ...formData,
+        locationImage: URL.createObjectURL(file),
+      });
+    }
+  };
+
+  const handleSendMessage = () => {
+    if (newMessage.trim() !== "") {
+      setChatMessages([...chatMessages, { text: newMessage, sender: "You" }]);
+      setNewMessage("");
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 p-4" onClick={(e) => onClose()}>
+      <div className="bg-white p-6 rounded-lg shadow-lg max-w-2xl w-full" onClick={(e) => e.stopPropagation()}>
+        <h2 className="text-xl font-bold mb-4 text-center text-black">{formData.locationName}</h2>
+         {/* Tab Navigation */}
+         <div className="flex border-b mb-4">
+          <button
+            className={` text-black px-4 py-2 ${activeTab === "form" ? "border-b-2 border-blue-500 font-bold" : "text-gray-500"}`}
+            onClick={() => setActiveTab("form")}
+          >
+            Edit Details
+          </button>
+          <button
+            className={`text-black px-4 py-2 ${activeTab === "map" ? "border-b-2 border-blue-500 font-bold" : "text-gray-500"}`}
+            onClick={() => setActiveTab("map")}
+          >
+            View on Map
+          </button>
+          <button
+            className={` text-black px-4 py-2 ${activeTab === "chat" ? "border-b-2 border-blue-500 font-bold" : "text-gray-500"}`}
+            onClick={() => setActiveTab("chat")}
+          >
+            Chatroom
+          </button>
+        </div>
+
+
+        {/* Tab Content */}
+        {activeTab === "form" ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <input type="text" name="locationName" value={formData.locationName} onChange={handleChange} placeholder="Location Name" className="p-2 border rounded text-black" />
+            <input type="text" name="locationAddress" value={formData.locationAddress} onChange={handleChange} placeholder="Address" className="p-2 border rounded text-black" />
+            <input type="text" name="locationCity" value={formData.locationCity} onChange={handleChange} placeholder="City" className="p-2 border rounded text-black" />
+            <input type="text" name="locationZipCode" value={formData.locationZipCode} onChange={handleChange} placeholder="Zip Code" className="p-2 border rounded text-black" />
+            <input type="text" name="locationPhoneNumber" value={formData.locationPhoneNumber} onChange={handleChange} placeholder="Phone Number" className="p-2 border rounded text-black" />
+            <input type="text" name="locationCategory" value={formData.locationCategory} onChange={handleChange} placeholder="Category" className="p-2 border rounded text-black" />
+            <input type="text" name="locationLatitude" value={formData.locationLatitude} onChange={handleChange} placeholder="Latitude" className="p-2 border rounded text-black" />
+            <input type="text" name="locationLongitude" value={formData.locationLongitude} onChange={handleChange} placeholder="Longitude" className="p-2 border rounded text-black" />
+            <textarea name="description" value={formData.description} onChange={handleChange} placeholder="Description" className="p-2 border rounded col-span-1 md:col-span-2 text-black"></textarea>
+            <div className="col-span-1 md:col-span-2">
+              <input type="file" onChange={handleImageChange} className="p-2 border rounded w-full" />
+              {formData.locationImage && <img src={formData.locationImage} alt="Preview" className="mt-2 w-full h-32 object-cover rounded" />}
+            </div>
+            <div className="flex gap-4 col-span-1 md:col-span-2">
+              <label className="flex items-center text-black">
+                <input type="checkbox" name="active" checked={formData.active} onChange={handleChange} className="mr-2" /> Active
+              </label>
+              <label className="flex items-center text-black">
+                <input type="checkbox" name="deleted" checked={formData.deleted} onChange={handleChange} className="mr-2" /> Deleted
+              </label>
+            </div>
+          </div>
+        ) : activeTab === "map" ? (
+          <div className="h-72 w-full bg-gray-200 rounded-md overflow-hidden">
+            <iframe
+              className="w-full h-full"
+              src={`https://maps.google.com/maps?q=${formData.locationLatitude},${formData.locationLongitude}&z=15&output=embed`}
+              title="Google Map"
+              allowFullScreen
+            />
+          </div> ) : (
+            <div className="flex flex-col h-72">
+              <div className="flex-1 overflow-y-auto bg-gray-100 p-4 rounded-md">
+                {chatMessages.length === 0 ? (
+                  <p className="text-gray-500 text-center">No messages yet.</p>
+                ) : (
+                  chatMessages.map((msg, index) => (
+                    <div
+                      key={index}
+                      className={`p-2 my-1 rounded-lg ${msg.sender === "You" ? "bg-blue-500 text-white self-end" : "bg-gray-300 text-black"}`}
+                    >
+                      <strong>{msg.sender}:</strong> {msg.text}
+                    </div>
+                  ))
+                )}
+              </div>
+              <div className="mt-4 flex">
+                <input
+                  type="text"
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  placeholder="Type a message..."
+                  className="flex-1 p-2 border rounded-l-md text-black"
+                />
+                <button
+                  onClick={handleSendMessage}
+                  className="px-4 bg-blue-500 text-white rounded-r-md"
+                >
+                  Send
+                </button>
+              </div>
+            </div>
+        )}
+
+        <div className="flex justify-end mt-4 gap-2">
+          <button onClick={(e) => onClose()} className="px-4 py-2 bg-gray-500 text-white rounded">Cancel</button>
+          <button onClick={() => onSave(formData)} className="px-4 py-2 bg-blue-600 text-white rounded">Save</button>
+        </div>
+      </div>
+    </div>
+  );
+}
