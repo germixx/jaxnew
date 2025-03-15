@@ -113,7 +113,7 @@ export async function POST(request, res) {
                 id: user.id,
                 email: user.email,
                 username: user.username,
-                isAdmin: user.isAdmin,
+                role: user.role,
                 verified: user.verified,
                 banned: user.banned,
                 profileImage: user.profileImage

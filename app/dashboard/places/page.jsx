@@ -18,12 +18,12 @@ const Places = () => {
     
     (async () => {
 
-      setPlaces(await fetchLocations())
+      setPlaces(await fetchLocations());
       SetIsLoading(false);
 
     })()
     let x = sessionStorage.getItem("accessToken");
-    console.log(x, ' is token')
+    // console.log(x, ' is token')
   }, [])
 
   return (

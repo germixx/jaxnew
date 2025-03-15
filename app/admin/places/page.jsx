@@ -5,15 +5,27 @@ import { useEffect, useState } from 'react';
 import BreadCrumb from '../../../components/Client/Breadcrumb';
 import Loading from '../../../components/Loading';
 import NewPlaceModal from '../../../components/Client/Admin/Places/NewPlace';
+import Locations from '../../../components/Client/Admin/Places/Listings';
 
+import { fetchLocations } from '../../../util/functions/client/functions';
 
 const AdminPlaces = () => {
 
   const [isLoading, SetIsLoading] = useState(false);
+  const [placess, setPlaces] = useState([]);
 
   function newPlaceModal () {
     document.getElementById('roomModal').style.display = 'flex';
   }
+  
+  useEffect( ()=>{
+    (async ()=> {
+
+        setPlaces(await fetchLocations());
+        SetIsLoading(false);
+
+    })();
+  }, []);
 
   return (
     <div>
@@ -32,7 +44,7 @@ const AdminPlaces = () => {
                 >New +</button>
                 <BreadCrumb />
                 <NewPlaceModal />
-                
+                <Locations places={placess.locations} />
                 </div>
             </div>
         )}

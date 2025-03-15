@@ -163,7 +163,7 @@ async function registerUser(username, password, email, latitude, longitude) {
         [profileImage, DBID]
     );
 
-    return ({ status: true, ID: DBID, email, username, profileImage }); //userdetails here after DB input
+    return ({ status: true, ID: DBID, role: 'user', email, username, profileImage }); //userdetails here after DB input
 }
 
 async function checkUser(identifier, password, type) {

@@ -49,20 +49,28 @@ const LoginModal = (props) => {
     }
 
     const handleSuccess = (data) => {
-
+        
         login({
             id: data.user.id,
             username: data.user.username,
             email: data.user.email,
             banned: data.user.banned,
             verified: data.user.verified,
-            isAdmin: data.user.isAdmin,
+            role: data.user.role,
             location: location,
             profileImage: data.user.profileImage
         });
-        console.log(data.accessToken, ' is access token')
+        // console.log(data.accessToken, ' is access token')
         sessionStorage.setItem("accessToken", data.accessToken);
-        router.push('/dashboard');
+        
+        if (data.user.role == 'user') {
+            router.push('/dashboard');
+        }
+
+        if (data.user.role == 'admin') {
+            router.push('/admin');
+        }
+        
     }
 
     useEffect(() => {

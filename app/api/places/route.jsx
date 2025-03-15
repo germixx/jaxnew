@@ -28,7 +28,7 @@ export async function GET(request, res) {
         const { payload } = await jwtVerify(token, secretKey, { algorithms: ['HS256'] });
 
         const places = await getAllPlaces();
-        console.log('places here')
+        console.log(places, 'places here')
         return Response.json(places);
         // return NextResponse.json({
         //     status: true,
