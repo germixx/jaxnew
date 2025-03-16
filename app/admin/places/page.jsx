@@ -13,6 +13,7 @@ const AdminPlaces = () => {
 
   const [isLoading, SetIsLoading] = useState(true);
   const [placess, setPlaces] = useState([]);
+  const [selectedBusiness, setSelectedBusiness] = useState(null);
 
   function newPlaceModal () {
     document.getElementById('roomModal').style.display = 'flex';
@@ -21,24 +22,36 @@ const AdminPlaces = () => {
   useEffect( ()=>{
     (async ()=> {
 
-        setPlaces(await fetchLocations());
-        SetIsLoading(false);
+        let rr = await fetchLocations();
+        
+        if(rr.status ){
+            
+            setPlaces(rr.locations);
+            // setPlaces(await fetchLocations());
+            SetIsLoading(false);
+        }
 
     })();
   }, []);
 
   const updatePlacesData = (newData) => {
-
+    
+    // Update database here with all values of newData
+    console.log(newData, ' is new daty')
+    setPlaces((prev) => {
+        return prev.map((biz) => (biz.id === newData.id ? newData : biz))
+    });
+    setSelectedBusiness(null);
   }
 
   return (
     <div>
         {isLoading ? (
-        <div className="antialiased flex flex-row min-h-screen justify-center items-center">
-            <div className=" md:ml-64 h-auto">
-        <Loading />
+            <div className="antialiased flex flex-row min-h-screen justify-center items-center">
+                <div className=" md:ml-64 h-auto">
+                    <Loading />
+                </div>
             </div>
-        </div>
         ) : (
             <div className="antialiased">
                 <div className="p-4 md:ml-64 h-auto pt-20">
@@ -49,8 +62,11 @@ const AdminPlaces = () => {
                 <BreadCrumb />
                 <NewPlaceModal />
                 <Locations 
-                    places={placess.locations} 
+                    places={placess} 
                     updatePlaces={updatePlacesData}
+                    setPlaces={setPlaces}
+                    selectedBusiness={selectedBusiness}
+                    setSelectedBusiness={setSelectedBusiness}
                 />
                 </div>
             </div>

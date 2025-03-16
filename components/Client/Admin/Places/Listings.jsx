@@ -5,8 +5,8 @@ import { useState } from 'react';
 import EditListing from './EditPlace';
 
 const Listings = (props) => {
-    console.log(props, ' is loc')
-     const [selectedBusiness, setSelectedBusiness] = useState(null);
+
+    const [selectedBusiness, setSelectedBusiness] = useState(props.selectedBusiness);
 
     if(props.places) {
         if (props.places.length === 0) {
@@ -30,12 +30,12 @@ const Listings = (props) => {
                         props.places ? (
                             props.places.map((biz, index) => (
                                 <tr 
-                                    onClick={() => setSelectedBusiness(biz)}
+                                    onClick={() => props.setSelectedBusiness(biz)}
                                     key={biz.id} 
                                     className={` cursor-pointer text-gray-900 ${index % 2 === 0 ? 'bg-gray-100' : 'bg-white'} hover:bg-gray-200 transition-all duration-300 ease-in-out transform hover:scale-[1.02] hover:shadow-md`}
                                 >                         
-                                <td className="p-3 border">{biz.id}</td>
-                                <td className="p-3 border font-semibold">{biz.locationName}</td>
+                                  <td className="p-3 border">{biz.id}</td>
+                                  <td className="p-3 border font-semibold">{biz.locationName}</td>
                                 </tr>
                             ))
                         ) : ('')
@@ -43,16 +43,11 @@ const Listings = (props) => {
                 </tbody>
             </table>
         </div>
-        {selectedBusiness && (
+        {props.selectedBusiness && (
         <EditListing
-          location={selectedBusiness}
-          onClose={() => setSelectedBusiness(null)}
-          onSave={(updatedData) => {
-            setBusinesses((prev) =>
-              prev.map((biz) => (biz.id === updatedData.id ? updatedData : biz))
-            );
-            setSelectedBusiness(null);
-          }}
+          location={props.selectedBusiness}
+          onClose={() => props.setSelectedBusiness(null)}
+          onSave={props.updatePlaces}
         />
       )}
     </div>
@@ -60,18 +55,3 @@ const Listings = (props) => {
 }
 
 export default Listings;
-
-
-
-
-// {
-//     locations.places ? (
-//         locations.places.map((biz) => (
-//             console.log(biz, ' is biz'),
-//             <li key={biz.id} className="bg-white text-black p-4 rounded-lg shadow-md transition-transform transform hover:scale-105">
-//             <h3 className="text-lg font-semibold">{biz.locationName}</h3>
-            
-//             </li>
-//         ))
-//     ) : ('')
-// }
