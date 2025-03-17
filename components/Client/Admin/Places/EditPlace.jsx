@@ -60,7 +60,6 @@ export default function EditLocationModal({ location, onClose, onSave }) {
         {/* Tab Content */}
         {activeTab === "form" ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* <input type="text" name="roomID" value={formData.room_id} onChange={handleChange} placeholder="Room ID" className="p-2 border rounded text-black" disabled /> */}
             <input type="text" name="locationName" value={formData.locationName} onChange={handleChange} placeholder="Location Name" className="p-2 border rounded text-black" />
             <input type="text" name="locationAddress" value={formData.locationAddress} onChange={handleChange} placeholder="Address" className="p-2 border rounded text-black" />
             <input type="text" name="locationCity" value={formData.locationCity} onChange={handleChange} placeholder="City" className="p-2 border rounded text-black" />

@@ -44,7 +44,35 @@ function fetchPlaceData(id) {
     }).catch(e => console.log(e))
 }
 
+async function editPlaceData (data) {
+    return new Promise((resolve, reject) => {
+        fetch(`${LINKS.PLACE }`, {
+            method: 'PUT',
+            credentials: 'include',
+            headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify({
+                data
+              })
+        }).then(res => res.json())
+            .then((json) => {
+
+                if (json.status) {
+                    resolve({ status: true })
+                } else {
+                    reject({ status: false })
+                    return false;
+                }
+            })
+            .catch(err => {
+                throw err
+            });
+    }).catch(e => console.log(e))
+}
+
 module.exports = {
     fetchLocations,
-    fetchPlaceData
+    fetchPlaceData,
+    editPlaceData
 }

@@ -7,7 +7,10 @@ import Loading from '../../../components/Loading';
 import NewPlaceModal from '../../../components/Client/Admin/Places/NewPlace';
 import Locations from '../../../components/Client/Admin/Places/Listings';
 
-import { fetchLocations } from '../../../util/functions/client/functions';
+import { 
+    fetchLocations, 
+    editPlaceData 
+} from '../../../util/functions/client/functions';
 
 const AdminPlaces = () => {
 
@@ -35,14 +38,18 @@ const AdminPlaces = () => {
     })();
   }, []);
 
-  const updatePlacesData = (newData) => {
+  const updatePlacesData = async (newData) => {
 
     // Update database here with all values of newData
-    console.log(newData, ' is new daty')
-    setPlaces((prev) => {
-        return prev.map((biz) => (biz.id === newData.id ? newData : biz))
-    });
-    setSelectedBusiness(null);
+    let result = await editPlaceData(newData);
+    if(result.status) {
+        console.log(newData, ' is new daty')
+        setPlaces((prev) => {
+            return prev.map((biz) => (biz.id === newData.id ? newData : biz))
+        });
+        setSelectedBusiness(null);
+    }
+
   }
 
   return (

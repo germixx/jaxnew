@@ -20,7 +20,7 @@ export async function GET(request, res) {
     try {
         const cookieStore = await cookies();
         const token = cookieStore.get('token')?.value;
-        console.log(token, ' is places toens')
+        // console.log(token, ' is places toens')
         // if (!token) {
         //     return NextResponse.json({ status: false, message: 'Unauthorized' }, { status: 401 });
         // }
@@ -28,7 +28,7 @@ export async function GET(request, res) {
         const { payload } = await jwtVerify(token, secretKey, { algorithms: ['HS256'] });
 
         const places = await getAllPlaces();
-        console.log(places, 'places here')
+        // console.log(places, 'places here')
         return Response.json(places);
         // return NextResponse.json({
         //     status: true,

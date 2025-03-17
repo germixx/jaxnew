@@ -184,9 +184,26 @@ async function checkUser(identifier, password, type) {
 
 }
 
+async function updatePlaceData (dataa) {
+    console.log('aklsdjalkdjalkdjklsj', dataa);
+    const data = dataa.data
+    const con2 = await connection2();
+
+    let [rows] = await con2.execute(
+        "UPDATE tblLocations SET locationName = ?, locationAddress = ?, locationCity = ?, locationZipCode = ?, locationPhoneNumber = ?, locationLatitude = ?, locationLongitude = ?, locationCategory = ?, neighborhood = ?, description = ?, active = ?, deleted = ? WHERE id = ?",
+        [data.locationName, data.locationAddress, data.locationCity, data.locationZipCode, data.locationPhoneNumber, data.locationLatitude, data.locationLongitude, data.locationCategory, data.neighborhood, data.description, data.active, data.deleted, data.id]
+    );
+
+    console.log(rows, ' is da rows')
+
+
+
+}
+
 module.exports = {
     getAllPlaces,
     getPlaceData,
+    updatePlaceData,
     addNewPlace,
     registerUser,
     checkUser,

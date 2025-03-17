@@ -43,6 +43,7 @@ const Register = (setloading, username, password, confirmPassword, email, latitu
       if (password === confirmPassword) {
         fetch(`/api/users/register`, {
           method: 'POST',
+          credentials: 'include',
           headers: {
             "Content-Type": "application/json"
           },

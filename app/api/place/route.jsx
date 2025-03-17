@@ -1,6 +1,7 @@
 const {
     getPlaceData,
-    addNewPlace
+    addNewPlace,
+    updatePlaceData
 } = require('../../../util/functions/server/dbfunctions');
 
 import { NextResponse } from "next/server";
@@ -62,15 +63,16 @@ export async function POST(request, res) {
     //   });
 }
 
+export async function PUT(request, res) {
+    
+    let data = await request.json();
 
+    let updateDB = await updatePlaceData(data);
 
-
-
-
-
-
-
-
+    return Response.json({status: true}, { status: 200 });
+    
+    // return Response.json({ message: 'Method Not Allowed' }, { status: 405});
+}
 
 
 
@@ -82,6 +84,3 @@ export async function GET(request, res) {
 
 }
 
-export async function PUT(request, res) {
-    return Response.json({ message: 'Method Not Allowed' }, { status: 405});
-}
