@@ -20,6 +20,7 @@ const AdminPlaces = () => {
   }
   
   useEffect( ()=>{
+    
     (async ()=> {
 
         let rr = await fetchLocations();
@@ -35,7 +36,7 @@ const AdminPlaces = () => {
   }, []);
 
   const updatePlacesData = (newData) => {
-    
+
     // Update database here with all values of newData
     console.log(newData, ' is new daty')
     setPlaces((prev) => {

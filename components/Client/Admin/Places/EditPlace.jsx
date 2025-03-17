@@ -30,7 +30,7 @@ export default function EditLocationModal({ location, onClose, onSave }) {
       setNewMessage("");
     }
   };
-  
+    console.log(formData, ' is dorm da')
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 p-4" onClick={(e) => onClose()}>
       <div className="bg-white p-6 rounded-lg shadow-lg max-w-2xl w-full" onClick={(e) => e.stopPropagation()}>
@@ -60,12 +60,33 @@ export default function EditLocationModal({ location, onClose, onSave }) {
         {/* Tab Content */}
         {activeTab === "form" ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* <input type="text" name="roomID" value={formData.room_id} onChange={handleChange} placeholder="Room ID" className="p-2 border rounded text-black" disabled /> */}
             <input type="text" name="locationName" value={formData.locationName} onChange={handleChange} placeholder="Location Name" className="p-2 border rounded text-black" />
             <input type="text" name="locationAddress" value={formData.locationAddress} onChange={handleChange} placeholder="Address" className="p-2 border rounded text-black" />
             <input type="text" name="locationCity" value={formData.locationCity} onChange={handleChange} placeholder="City" className="p-2 border rounded text-black" />
             <input type="text" name="locationZipCode" value={formData.locationZipCode} onChange={handleChange} placeholder="Zip Code" className="p-2 border rounded text-black" />
+            <input type="text" name="locationState" value={formData.locationState} onChange={handleChange} placeholder="State" className="p-2 border rounded text-black" disabled />
             <input type="text" name="locationPhoneNumber" value={formData.locationPhoneNumber} onChange={handleChange} placeholder="Phone Number" className="p-2 border rounded text-black" />
-            <input type="text" name="locationCategory" value={formData.locationCategory} onChange={handleChange} placeholder="Category" className="p-2 border rounded text-black" />
+            <select value={formData.locationCategory} name="locationCategory" className="p-2 border rounded text-black"  onChange={handleChange} >
+              <option value="adult">Adult</option>
+              <option value="dining">Dining</option>
+              <option value="business">Business</option>
+              <option value="nightlife">Nightlife</option>
+            </select>
+            <select value={formData.neighborhood} name="neighborhood" className="p-2 border rounded text-black"  onChange={handleChange} >
+                    <option value="Downtown">Downtown</option>
+                    <option value="Riverside">Riverside</option>
+                    <option value="Springfield">Springfield</option>
+                    <option value="Eastside">Eastside</option>
+                    <option value="Ortega">Ortega</option>
+                    <option value="San Marco">San Marco</option>
+                    <option value="Mandarin">Mandarin</option>
+                    <option value="Northside">Northside</option>
+                    <option value="Westside">Westside</option>
+                    <option value="Arlington">Arlington</option>
+                    <option value="Southside">Southside</option>
+                    <option value="Beaches">Beaches</option>
+            </select>
             <input type="text" name="locationLatitude" value={formData.locationLatitude} onChange={handleChange} placeholder="Latitude" className="p-2 border rounded text-black" />
             <input type="text" name="locationLongitude" value={formData.locationLongitude} onChange={handleChange} placeholder="Longitude" className="p-2 border rounded text-black" />
             <textarea name="description" value={formData.description} onChange={handleChange} placeholder="Description" className="p-2 border rounded col-span-1 md:col-span-2 text-black"></textarea>
@@ -124,10 +145,20 @@ export default function EditLocationModal({ location, onClose, onSave }) {
             </div>
         )}
 
-        <div className="flex justify-end mt-4 gap-2">
-          <button onClick={(e) => onClose()} className="px-4 py-2 bg-gray-500 text-white rounded">Cancel</button>
-          <button onClick={() => onSave(formData)} className="px-4 py-2 bg-blue-600 text-white rounded">Save</button>
-        </div>
+<div className="flex justify-between items-center mt-4">
+  {/* Room ID on the left */}
+  <div className='text-black'>#{formData.room_id}</div>
+
+  {/* Buttons on the right */}
+  <div className="flex gap-2">
+    <button onClick={onClose} className="px-4 py-2 bg-gray-500 text-white rounded">
+      Cancel
+    </button>
+    <button onClick={() => onSave(formData)} className="px-4 py-2 bg-blue-600 text-white rounded">
+      Save
+    </button>
+  </div>
+</div>
       </div>
     </div>
   );

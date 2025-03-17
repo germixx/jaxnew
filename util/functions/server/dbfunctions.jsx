@@ -50,7 +50,7 @@ async function addNewPlace(roomid, name, address, city, state, zip, phone, neigh
 
     active = active === 'true' ? '1' : '0';
 
-    const imageLink = 'https://new.jacksonvillians.com/api/image?roomID=' + roomid;
+    const imageLink = 'https://jacksonvillians.com/api/image?roomID=' + roomid;
 
     return new Promise((resolve, reject) => {
 
