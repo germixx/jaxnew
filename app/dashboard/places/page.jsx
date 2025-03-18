@@ -14,8 +14,8 @@ const Places = () => {
   const [placess, setPlaces] = useState([]);
 
   useEffect(() => {
-    
-    
+
+
     (async () => {
 
       setPlaces(await fetchLocations());
@@ -29,18 +29,18 @@ const Places = () => {
   return (
     <div>
       {isLoading ? (
-        <div className="antialiased flex flex-row min-h-screen justify-center items-center">
+        <div className="antialiased flex flex-row min-h-screen justify-center items-center overflow-auto">
           <div className=" md:ml-64 h-auto">
-        <Loading />
+            <Loading />
           </div>
         </div>
       ) : (
-          <div className="antialiased">
-              <div className="p-4 md:ml-64 h-auto pt-20">
-                <BreadCrumb />
-                <Locations places={placess} />
-              </div>
+        <div className="antialiased">
+          <div className="p-4 md:ml-64 h-auto pt-20">
+            <BreadCrumb />
+            <Locations places={placess} />
           </div>
+        </div>
       )}
     </div>
   )

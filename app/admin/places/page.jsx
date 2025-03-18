@@ -31,7 +31,6 @@ const AdminPlaces = () => {
         if(rr.status ){
             
             setPlaces(rr.locations);
-            // setPlaces(await fetchLocations());
             SetIsLoading(false);
         }
 
@@ -43,7 +42,7 @@ const AdminPlaces = () => {
     // Update database here with all values of newData
     let result = await editPlaceData(newData);
     if(result.status) {
-        console.log(newData, ' is new daty')
+        
         setPlaces((prev) => {
             return prev.map((biz) => (biz.id === newData.id ? newData : biz))
         });
@@ -68,7 +67,10 @@ const AdminPlaces = () => {
                     className="float-right bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-all duration-300 transform hover:scale-105"
                 >New +</button>
                 <BreadCrumb />
-                <NewPlaceModal />
+                <NewPlaceModal 
+                    places={placess} 
+                    setPlaces={setPlaces} 
+                />
                 <Locations 
                     places={placess} 
                     updatePlaces={updatePlacesData}

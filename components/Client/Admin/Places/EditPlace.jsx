@@ -1,5 +1,8 @@
 import { useState } from 'react';
 
+import placeCategories from '../../../../public/data/placeCategories.json';
+import placeNeighborhoods from '../../../../public/data/placeNeighborhoods.json';
+
 export default function EditLocationModal({ location, onClose, onSave }) {
   const [formData, setFormData] = useState({ ...location });
   const [activeTab, setActiveTab] = useState("form");
@@ -30,7 +33,7 @@ export default function EditLocationModal({ location, onClose, onSave }) {
       setNewMessage("");
     }
   };
-    console.log(formData, ' is dorm da')
+    
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 p-4" onClick={(e) => onClose()}>
       <div className="bg-white p-6 rounded-lg shadow-lg max-w-2xl w-full" onClick={(e) => e.stopPropagation()}>
@@ -67,24 +70,18 @@ export default function EditLocationModal({ location, onClose, onSave }) {
             <input type="text" name="locationState" value={formData.locationState} onChange={handleChange} placeholder="State" className="p-2 border rounded text-black" disabled />
             <input type="text" name="locationPhoneNumber" value={formData.locationPhoneNumber} onChange={handleChange} placeholder="Phone Number" className="p-2 border rounded text-black" />
             <select value={formData.locationCategory} name="locationCategory" className="p-2 border rounded text-black"  onChange={handleChange} >
-              <option value="adult">Adult</option>
-              <option value="dining">Dining</option>
-              <option value="business">Business</option>
-              <option value="nightlife">Nightlife</option>
+              { placeCategories.map((category) => (
+                    <option key={category} value={category}>
+                      {category}
+                    </option>
+              ))}
             </select>
             <select value={formData.neighborhood} name="neighborhood" className="p-2 border rounded text-black"  onChange={handleChange} >
-                    <option value="Downtown">Downtown</option>
-                    <option value="Riverside">Riverside</option>
-                    <option value="Springfield">Springfield</option>
-                    <option value="Eastside">Eastside</option>
-                    <option value="Ortega">Ortega</option>
-                    <option value="San Marco">San Marco</option>
-                    <option value="Mandarin">Mandarin</option>
-                    <option value="Northside">Northside</option>
-                    <option value="Westside">Westside</option>
-                    <option value="Arlington">Arlington</option>
-                    <option value="Southside">Southside</option>
-                    <option value="Beaches">Beaches</option>
+                    {placeNeighborhoods.map((neighborhood) => (
+                      <option key={neighborhood} value={neighborhood}>
+                        {neighborhood}
+                      </option>
+                    ))}
             </select>
             <input type="text" name="locationLatitude" value={formData.locationLatitude} onChange={handleChange} placeholder="Latitude" className="p-2 border rounded text-black" />
             <input type="text" name="locationLongitude" value={formData.locationLongitude} onChange={handleChange} placeholder="Longitude" className="p-2 border rounded text-black" />
@@ -144,20 +141,20 @@ export default function EditLocationModal({ location, onClose, onSave }) {
             </div>
         )}
 
-<div className="flex justify-between items-center mt-4">
-  {/* Room ID on the left */}
-  <div className='text-black'>#{formData.room_id}</div>
+        <div className="flex justify-between items-center mt-4">
+          {/* Room ID on the left */}
+          <div className='text-black'>#{formData.room_id}</div>
 
-  {/* Buttons on the right */}
-  <div className="flex gap-2">
-    <button onClick={onClose} className="px-4 py-2 bg-gray-500 text-white rounded">
-      Cancel
-    </button>
-    <button onClick={() => onSave(formData)} className="px-4 py-2 bg-blue-600 text-white rounded">
-      Save
-    </button>
-  </div>
-</div>
+          {/* Buttons on the right */}
+          <div className="flex gap-2">
+            <button onClick={onClose} className="px-4 py-2 bg-gray-500 text-white rounded">
+              Cancel
+            </button>
+            <button onClick={() => onSave(formData)} className="px-4 py-2 bg-blue-600 text-white rounded">
+              Save
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

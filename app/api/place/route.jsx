@@ -48,19 +48,20 @@ export async function POST(request, res) {
         
         fs.writeFileSync(filePath, buffer);
 
-        addNewPlace(roomID, locationName, locationAddress, locationCity, locationState, locationZipcode, locationPhoneNumber, locationNeighborhood, locationLatitude, locationLongitude, locationDescription, locationCategory, active);
+        let resultz = await addNewPlace(roomID, locationName, locationAddress, locationCity, locationState, locationZipcode, locationPhoneNumber, locationNeighborhood, locationLatitude, locationLongitude, locationDescription, locationCategory, active);
+        console.log(resultz.rows.insertId, ' is ID')
+        
+        return Response.json({ 
+            status: true, 
+            id: resultz.rows.insertId, 
+            message: 'Successfully added.' 
+        });
 
     } catch (error) {
         return NextResponse.json({ error: "Upload failed" }, { status: 500 });
     }
 
-    return Response.json({ status: true, message: 'Successfully added.' });
-    // return NextResponse.json({
-    //     message: "Upload successful",
-    //     name,
-    //     email,
-    //     imageUrl: `/uploads/${file.name}`, // Local URL
-    //   });
+    
 }
 
 export async function PUT(request, res) {

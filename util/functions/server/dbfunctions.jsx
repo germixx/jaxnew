@@ -50,7 +50,7 @@ async function addNewPlace(roomid, name, address, city, state, zip, phone, neigh
 
     active = active === 'true' ? '1' : '0';
 
-    const imageLink = 'https://jacksonvillians.com/api/image?roomID=' + roomid;
+    const imageLink = 'https://jacksonvillians.com/api/image/places?roomID=' + roomid;
 
     return new Promise((resolve, reject) => {
 
@@ -148,7 +148,7 @@ async function registerUser(username, password, email, latitude, longitude) {
     // insert into Database here, received ID
     [rows] = await con2.execute(
         "INSERT INTO tblUsers (email, password, username, fullname, profileImage, timeSignedUp, locationNumber, locationRoad, locationNeighborhood, locationCity, locationCounty, locationState, locationZipCode, locationCountry, locationCountryCode, locationLat, locationLon, locationSet, emlMarketing, deleted, verified, banned, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-        [email, passwords, username, fullname,profileImage, timeSignedUp, locationNumber, locationRoad, locationNeighborhood, locationCity, locationCounty, locationState, locationZipCode, locationCountry, locationCountryCode, locationLat, locationLon, locationSet, emlMarketing, deleted, verified, banned, role]
+        [email, passwords, username, fullname, profileImage, timeSignedUp, locationNumber, locationRoad, locationNeighborhood, locationCity, locationCounty, locationState, locationZipCode, locationCountry, locationCountryCode, locationLat, locationLon, locationSet, emlMarketing, deleted, verified, banned, role]
     );
 
     let DBID = rows.insertId;
@@ -184,8 +184,7 @@ async function checkUser(identifier, password, type) {
 
 }
 
-async function updatePlaceData (dataa) {
-    console.log('aklsdjalkdjalkdjklsj', dataa);
+async function updatePlaceData(dataa) {
     const data = dataa.data
     const con2 = await connection2();
 
@@ -194,10 +193,7 @@ async function updatePlaceData (dataa) {
         [data.locationName, data.locationAddress, data.locationCity, data.locationZipCode, data.locationPhoneNumber, data.locationLatitude, data.locationLongitude, data.locationCategory, data.neighborhood, data.description, data.active, data.deleted, data.id]
     );
 
-    console.log(rows, ' is da rows')
-
-
-
+    return;
 }
 
 module.exports = {

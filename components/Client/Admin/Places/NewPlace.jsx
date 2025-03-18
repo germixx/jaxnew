@@ -1,17 +1,20 @@
 import React, { useState } from "react";
 import DOMPurify from "dompurify";
 
-const NewPlace = () => {
+import placeCategories from '../../../../public/data/placeCategories.json';
+import placeNeighborhoods from '../../../../public/data/placeNeighborhoods.json';
 
-    const initialState = {
+const NewPlace = (props) => {
+  
+  const initialState = {
         roomID :"",
         locationName: "",
         locationAddress: "",
-        locationCity: "",
+        locationCity: "Jacksonville",
         locationState: "Florida",
         locationZipcode: "",
         locationPhoneNumber: "",
-        locationNeighborhood: "",
+        locationNeighborhood: "Downtown",
         locationLatitude: "",
         locationLongitude: "",
         locationDescription: "",
@@ -125,6 +128,48 @@ const NewPlace = () => {
         return Object.keys(newErrors).length === 0;
     };
 
+    const updateTheArray = (data, theID) => {
+      
+      const id = theID;
+      const roomID = data.get('roomID');
+      const locationName = data.get('locationName');
+      const locationAddress = data.get('locationAddress');
+      const locationCity = data.get('locationCity');
+      const locationState = data.get('locationState');
+      const locationZipcode = data.get('locationZipcode');
+      const locationPhoneNumber = data.get('locationPhoneNumber');
+      const locationNeighborhood = data.get('locationNeighborhood');
+      const locationLatitude = data.get('locationLatitude');
+      const locationLongitude = data.get('locationLatitude');
+      const locationDescription = data.get('locationDescription');
+      const locationCategory = data.get('locationCategory');
+      const active = data.get('active');
+      const locationImage = 'https://jacksonvillians.com/api/image/places?roomID=' + roomID;
+
+      const newPlace = {
+        id,
+        active: Boolean(active),
+        deleted: 0,
+        description: locationDescription,
+        locationAddress,
+        locationCategory,
+        locationCity,
+        locationImage, 
+        locationLatitude,
+        locationLongitude,
+        locationName,
+        locationPhoneNumber,
+        locationRating: 0,
+        locationState: 'FL',
+        locationZipcode,
+        neighborhood: locationNeighborhood,
+        room_id: roomID
+      }
+      
+      props.setPlaces((prevListings) => [...prevListings, newPlace]);
+
+    }
+
     const handleSubmit = async () => {
 
         if (!validateForm()) return;
@@ -151,6 +196,7 @@ const NewPlace = () => {
             
             if(data.status) {
               setIsSubmitting(false);
+              updateTheArray(formdata, data.id);
               handleReset();
             }
           })
@@ -226,18 +272,11 @@ const NewPlace = () => {
                 {errors.locationPhoneNumber && <p className="error float-right">{errors.locationPhoneNumber}</p>}
                 <div>
                 <select value={formData.locationNeighborhood} name="locationNeighborhood" onChange={handleChange} className="border p-2 rounded w-full">
-                    <option>Downtown</option>
-                    <option>Riverside</option>
-                    <option>Springfield</option>
-                    <option>Eastside</option>
-                    <option>Ortega</option>
-                    <option>San Marco</option>
-                    <option>Mandarin</option>
-                    <option>Northside</option>
-                    <option>Westside</option>
-                    <option>Arlington</option>
-                    <option>Southside</option>
-                    <option>Beaches</option>
+                    {placeNeighborhoods.map((neighborhood) => (
+                      <option key={neighborhood} value={neighborhood}>
+                        {neighborhood}
+                      </option>
+                    ))}
                 </select>
                 </div>
                 {/* <input type="text" placeholder="Neighborhood" className="border p-2 rounded w-full" /> */}
@@ -269,11 +308,17 @@ const NewPlace = () => {
             
             <div>
                 <label className="block text-sm font-medium">Category</label>
-                <select value={formData.locationCategory} name="locationCategory" onChange={handleChange} className="border p-2 rounded w-full">
-                    <option>Adult</option>
-                    <option>Dining</option>
-                    <option>Business</option>
-                    <option>Nightlife</option>
+                <select
+                  value={formData.locationCategory}
+                  name="locationCategory"
+                  onChange={handleChange}
+                  className="border p-2 rounded w-full"
+                >
+                  {placeCategories.map((category) => (
+                    <option key={category} value={category}>
+                      {category}
+                    </option>
+                  ))}
                 </select>
             </div>
             
