@@ -15,8 +15,7 @@ import { useUser } from "@/context/UserContext";
 
     const { user, login, logout } = useUser();
     const [username, setUsername] = useState("Loading..."); 
-    console.log(user, ' uis user')
-
+    
     useEffect(() => {
       document.title = "Admin | Dashboard"; // Updates the browser tab title
     }, []);

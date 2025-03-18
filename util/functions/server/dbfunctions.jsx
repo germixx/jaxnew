@@ -17,6 +17,11 @@ const sanitizeIdentifier = (input) => {
     }
 };
 
+function cleanPhoneNumber(input) {
+    console.log(input, ' is da inputs')
+    return input.replace(/\D/g, "");
+}
+
 async function getAllPlaces() {
     return new Promise((resolve, reject) => {
         connection.query('SELECT * FROM tblLocations WHERE deleted = 0 AND active = 1', [], (err, rows) => {
@@ -185,12 +190,15 @@ async function checkUser(identifier, password, type) {
 }
 
 async function updatePlaceData(dataa) {
-    const data = dataa.data
+    const data = dataa.data;
+
     const con2 = await connection2();
+
+    let updatedPhone = cleanPhoneNumber(data.locationPhoneNumber);
 
     let [rows] = await con2.execute(
         "UPDATE tblLocations SET locationName = ?, locationAddress = ?, locationCity = ?, locationZipCode = ?, locationPhoneNumber = ?, locationLatitude = ?, locationLongitude = ?, locationCategory = ?, neighborhood = ?, description = ?, active = ?, deleted = ? WHERE id = ?",
-        [data.locationName, data.locationAddress, data.locationCity, data.locationZipCode, data.locationPhoneNumber, data.locationLatitude, data.locationLongitude, data.locationCategory, data.neighborhood, data.description, data.active, data.deleted, data.id]
+        [data.locationName, data.locationAddress, data.locationCity, data.locationZipCode, updatedPhone, data.locationLatitude, data.locationLongitude, data.locationCategory, data.neighborhood, data.description, data.active, data.deleted, data.id]
     );
 
     return;
