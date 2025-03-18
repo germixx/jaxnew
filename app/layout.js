@@ -10,16 +10,16 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
-  
+
   return (
-      <html lang="en">
-        <body>
-            <UserProvider>
-              <LocationProvider>
-                {children}
-              </LocationProvider>
-            </UserProvider>
-        </body>
-      </html>
+    <html lang="en" className="overflow-y-auto">
+      <body>
+        <UserProvider>
+          <LocationProvider>
+            {children}
+          </LocationProvider>
+        </UserProvider>
+      </body>
+    </html>
   );
 }

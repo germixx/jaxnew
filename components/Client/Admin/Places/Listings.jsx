@@ -17,7 +17,7 @@ const Listings = (props) => {
     return (
         <div className="w-full min-h-screen flex flex-col items-center p-5 bg-gray-100">
             <h2 className="text-center text-3xl font-bold mb-5 text-black">Listings</h2>
-            <div className="w-full bg-white shadow-lg rounded-lg overflow-auto overflow-x-hidden">
+            <div className="w-full bg-white shadow-lg rounded-lg overflow-x-hidden">
                 <table className="w-full table-auto border-collapse">
                     <thead>
                         <tr className="bg-gray-200 text-gray-700 uppercase text-sm">
