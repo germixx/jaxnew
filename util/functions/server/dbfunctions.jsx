@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 
-const connection = require('../../db');
+// const connection = require('../../db');
 
 import { connection2 } from '../../db2';
 
@@ -18,36 +18,46 @@ const sanitizeIdentifier = (input) => {
 };
 
 function cleanPhoneNumber(input) {
-    console.log(input, ' is da inputs')
     return input.replace(/\D/g, "");
 }
 
 async function getAllPlaces() {
-    return new Promise((resolve, reject) => {
-        connection.query('SELECT * FROM tblLocations WHERE deleted = 0 AND active = 1', [], (err, rows) => {
-            if (err) throw err;
-            resolve({ status: true, rows })
-        })
 
-    })
+    const con2 = await connection2();
+
+    let [rows] = await con2.execute(
+        "SELECT * FROM tblLocations WHERE deleted = 0 AND active = 1",
+        []
+    );
+
+    // if (rows.length > 0) {
+    //     return { status: false, errorMessage: 'Unable to get location data.' };
+    // }
+    
+    return {status: true, rows};
 
 }
 
 async function getPlaceData(roomID) {
 
-    return new Promise((resolve, reject) => {
-        connection.query('SELECT * FROM tblLocations WHERE room_id = ?', [roomID], (err, rows) => {
+    const con2 = await connection2();
 
-            if (err) throw err;
+    let [rows] = await con2.execute(
+        "SELECT * FROM tblLocations WHERE room_id = ?",
+        [roomID]
+    );
+    
+    if (rows.length === 0) {
+        return { status: false, errorMessage: 'Unable to get location data' };
+    }
 
-            resolve({ status: true, rows })
-        })
-
-    })
+    return { status: true, rows };
 
 }
 
 async function addNewPlace(roomid, name, address, city, state, zip, phone, neighborhood, latitude, longitude, description, category, active) {
+
+    const con2 = await connection2();
 
     function formatPhoneNumber(phoneNumber) {
         return phoneNumber.replace(/\D/g, '');
@@ -57,17 +67,13 @@ async function addNewPlace(roomid, name, address, city, state, zip, phone, neigh
 
     const imageLink = 'https://jacksonvillians.com/api/image/places?roomID=' + roomid;
 
-    return new Promise((resolve, reject) => {
+    let [rows] = await con2.execute(
+        "INSERT INTO tblLocations(room_id, locationName, locationAddress, locationCity, locationState, locationZipCode, locationPhoneNumber, locationLatitude, locationLongitude, locationCategory, locationImage, neighborhood, description, locationRating, active, deleted) VALUES ( ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ?)",
+        [roomid, name, address, city, state, zip, formatPhoneNumber(phone), latitude, longitude, category, imageLink, neighborhood, description, '0', active, '0']
 
-        connection.query('INSERT INTO tblLocations(room_id, locationName, locationAddress, locationCity, locationState, locationZipCode, locationPhoneNumber, locationLatitude, locationLongitude, locationCategory, locationImage, neighborhood, description, locationRating, active, deleted) VALUES ( ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ?)',
-            [roomid, name, address, city, state, zip, formatPhoneNumber(phone), latitude, longitude, category, imageLink, neighborhood, description, '0', active, '0'], (err, rows) => {
+    );
 
-                if (err) throw err;
-
-                resolve({ status: true, rows })
-
-            })
-    })
+    return { status: true, rows };
 }
 
 const returnAddress = async (latitude, longitude) => {

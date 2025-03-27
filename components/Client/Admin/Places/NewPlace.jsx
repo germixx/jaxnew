@@ -247,9 +247,6 @@ const NewPlace = (props) => {
     };
   };
 
-
-  console.log(formatPhoneNumber('9999999999'), ' is numbe')
-
   return (
     <dialog id="roomModal" className="fixed hidden inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50 p-4">
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg md:max-w-xl lg:max-w-2xl sm:w-[90%] sm:max-w-none sm:h-auto">

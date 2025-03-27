@@ -27,9 +27,12 @@ export default function EditLocationModal({ location, onClose, onSave }) {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setFormData({
-        ...formData,
-        locationImage: URL.createObjectURL(file),
+      resizeImage(file, 300, 300, (resizedFile) => {
+        setFormData({
+          ...formData,
+          image: resizedFile,
+          locationImage: URL.createObjectURL(file),
+        });
       });
     }
   };
@@ -50,6 +53,49 @@ export default function EditLocationModal({ location, onClose, onSave }) {
       return `(${match[1]}) ${match[2]} - ${match[3]}`;
     }
     return cleaned; // Return raw digits if not complete
+  };
+
+  const resizeImage = (file, maxWidth, maxHeight, callback) => {
+
+    const reader = new FileReader();
+
+    reader.readAsDataURL(file);
+
+    reader.onload = (event) => {
+      const img = new Image();
+      img.src = event.target.result;
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+
+        let width = img.width;
+        let height = img.height;
+
+        // Maintain aspect ratio
+        if (width > maxWidth || height > maxHeight) {
+          if (width > height) {
+            height *= maxWidth / width;
+            width = maxWidth;
+          } else {
+            width *= maxHeight / height;
+            height = maxHeight;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        ctx.drawImage(img, 0, 0, width, height);
+
+        // Convert canvas to Blob
+        canvas.toBlob((blob) => {
+          const resizedFile = new File([blob], file.name, {
+            type: "image/jpeg",
+            lastModified: Date.now(),
+          });
+          callback(resizedFile);
+        }, "image/jpeg", 0.7); // Adjust quality (0.7 = 70%)
+      };
+    };
   };
 
   return (

@@ -4,7 +4,7 @@ import next from "next";
 
 const dev = process.env.NODE_ENV !== "production";
 const hostname = "localhost";
-const port = 3001;
+const port = dev ? 3001 : 3002;
 
 import https from 'https';
 import fs from 'fs';
@@ -29,7 +29,7 @@ app.prepare().then(() => {
 
   // Start the server
   server.listen(port, () => {
-    console.log('> Ready on https://localhost:3001');
+    console.log(`> Ready on https://localhost:${port}`);
   });
 });
 
