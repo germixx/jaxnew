@@ -2,10 +2,12 @@
 
 import { useState, useEffect } from 'react';
 
+import Link from 'next/link';
+
 import Loading from '../Loading';
 
 const Navigation = (props) => {
-
+  
     const [loading, setLoading] = useState(false);
     const [mobileShowing, setMobileShowing] = useState(true);
   
@@ -32,6 +34,7 @@ const Navigation = (props) => {
       }
   
     }
+    console.log(props.user, ' is usersz')
 
     return (
         <div className="">
@@ -53,7 +56,11 @@ const Navigation = (props) => {
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
                                     </svg>
                                 </button> */}
-                                <div onClick={()=> props.openLoginModal()} className='hidden md:flex float-right cursor-pointer'>Login</div>
+                                {
+                                  !props?.user ? (<div onClick={()=> props.openLoginModal()} className='hidden md:flex float-right cursor-pointer'>Login</div>) 
+                                  : props?.user.role == 'admin' ? (<Link href={'/admin'} className='hidden md:flex float-right cursor-pointer'>Dashboard</Link>) : (<Link href={'/dashboard'} className='hidden md:flex float-right cursor-pointer'>Dashboard</Link>)
+                                }
+
                                 <button onClick={() => toggleMenu()} id="mobileMenuToggle" className="md:hidden focus:outline-none" aria-label="Toggle mobile menu">
                                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
@@ -67,7 +74,13 @@ const Navigation = (props) => {
                         <a href="#about" className="w-full text-center block py-2 px-4 text-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300 hover:text-red-300">About</a>
                         <a href="#gallery" className="w-full text-center block py-2 px-4 text-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300 hover:text-red-300">Gallery</a>
                         <a href="#contact" className="w-full text-center block py-2 px-4 text-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300 hover:text-red-300">Contact</a>
-                        <a onClick={()=> props.openLoginModal()} href="#login" className="w-full text-center block py-2 px-4 text-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300 hover:text-red-300">Login</a>
+                        
+                        {!props?.user ? (
+                          <a onClick={()=> props.openLoginModal()} href="#login" className="w-full text-center block py-2 px-4 text-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300 hover:text-red-300">Login</a>
+                        ) : (
+                          <a onClick={()=> props.openLoginModal()} href="#login" className="w-full text-center block py-2 px-4 text-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300 hover:text-red-300">Dashboard</a>
+                        )}
+                                  
                     </div>
                 </header>
             </div>  

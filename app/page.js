@@ -4,6 +4,8 @@ import dynamic from 'next/dynamic'
  
 import { useState, useEffect } from 'react';
 
+import { useUser } from "@/context/UserContext";
+
 import Image from "next/image";
 import NAVIGATION from '../components/FrontPage/navigation';
 import FRONTIMAGE from '../components/FrontPage/ImageSection';
@@ -19,7 +21,9 @@ const GALLERY = dynamic(() => import('../components/FrontPage/Gallery'), { ssr: 
 import JsonData from '../data.json';
 
 export default function Home(props) {
-    
+
+  const { user, login, logout } = useUser();
+  
   const [loading, setLoading] = useState(false);
   const [mobileShowing, setMobileShowing] = useState(true);
   const [authModal, setAuthModal] = useState(false);
@@ -69,7 +73,7 @@ export default function Home(props) {
             <div>
               {/* <NoSSR /> */}
               <AUTH authModal={authModal} closeLoginModal={closeLoginModal} />
-              <NAVIGATION openLoginModal={openLoginModal} />
+              <NAVIGATION openLoginModal={openLoginModal} user={user} />
               <FRONTIMAGE />
               <FEATURES data={JsonData.Features}/>
               <ABOUT />
