@@ -4,7 +4,8 @@ import next from "next";
 
 const dev = process.env.NODE_ENV !== "production";
 const hostname = "localhost";
-const port = dev ? 3001 : 3002;
+// const port = dev ? 3001 : 3002;
+const port = 3002;
 
 import https from 'https';
 import fs from 'fs';

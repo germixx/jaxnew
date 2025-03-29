@@ -1,13 +1,13 @@
 const {
     getPlaceData
-} = require('../../../../util/functions/server/dbfunctions')
+} = require('../../../../util/functions/server/dbfunctions');
 
 const corsHeaders = {
     "Access-Control-Allow-Origin": "*", // ✅ Change * to your frontend URL in production
     "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type, Authorization",
     "Access-Control-Allow-Credentials": "true",
-  };
+};
 
 export async function POST(request, res) {
     return Response.json({ message: 'Method Not Allowed' }, { status: 405});

@@ -48,13 +48,11 @@ async function editPlaceData (data) {
     return new Promise((resolve, reject) => {
         fetch(`${LINKS.PLACE }`, {
             method: 'PUT',
-            credentials: 'include',
-            headers: {
-                "Content-Type": "application/json"
-              },
-              body: JSON.stringify({
-                data
-              })
+            // credentials: 'include',
+            // headers: {
+            //     "Content-Type": "multipart/form-data"
+            //   },
+              body: data
         }).then(res => res.json())
             .then((json) => {
 

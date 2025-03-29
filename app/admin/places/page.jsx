@@ -38,9 +38,22 @@ const AdminPlaces = () => {
     }, []);
 
     const updatePlacesData = async (newData) => {
+        
+        const formdata = new FormData();
 
+        Object.keys(newData).forEach((key) => {
+            
+          if (key === "image" && newData.image) {
+            formdata.append("image", newData.image);
+          } else {
+            formdata.append(key, newData[key]);
+          }
+    
+        });
+
+        
         // Update database here with all values of newData
-        let result = await editPlaceData(newData);
+        let result = await editPlaceData(formdata);
         if (result.status) {
 
             setPlaces((prev) => {

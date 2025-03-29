@@ -158,7 +158,7 @@ export default function EditLocationModal({ location, onClose, onSave }) {
             <input type="text" name="locationLongitude" value={formData.locationLongitude} onChange={handleChange} placeholder="Longitude" className="p-2 border rounded text-black" />
             <textarea name="description" value={formData.description} onChange={handleChange} placeholder="Description" className="p-2 border rounded col-span-1 md:col-span-2 text-black"></textarea>
             <div className="col-span-1 md:col-span-2">
-              <input type="file" onChange={handleImageChange} className="p-2 border rounded w-full" />
+              <input type="file" name="image" onChange={handleImageChange} className="p-2 border rounded w-full" accept="image/*"  />
               {formData.locationImage && <img src={formData.locationImage} alt="Preview" className="mt-2 w-full h-32 object-cover rounded" />}
             </div>
             <div className="flex gap-4 col-span-1 md:col-span-2">

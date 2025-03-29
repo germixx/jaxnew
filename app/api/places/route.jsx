@@ -8,6 +8,13 @@ const {
     getAllPlaces
 } = require('../../../util/functions/server/dbfunctions')
 
+const corsHeaders = {
+    "Access-Control-Allow-Origin": "https://www.jacksonvillians.com", // ✅ Change * to your frontend URL in production
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    "Access-Control-Allow-Credentials": "true",
+  };
+
 export async function POST(request, res) {
     return Response.json({ message: 'Method Not Allowed' }, { status: 405 });
 }
@@ -29,7 +36,10 @@ export async function GET(request, res) {
 
         const places = await getAllPlaces();
         // console.log(places, 'places here')
-        return Response.json(places);
+        return Response.json(places, {
+            status: 200,
+            headers: corsHeaders
+        });
         // return NextResponse.json({
         //     status: true,
         //     locations: places,

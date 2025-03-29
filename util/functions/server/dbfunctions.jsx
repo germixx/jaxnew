@@ -195,16 +195,17 @@ async function checkUser(identifier, password, type) {
 
 }
 
-async function updatePlaceData(dataa) {
-    const data = dataa.data;
-
+async function updatePlaceData(locationName, locationAddress, locationCity, locationState, locationZipCode, locationPhoneNumber, locationNeighborhood, locationLatitude, locationLongitude, locationCategory, locationDescription, locationRating, active, deleted, ID) {
+    
     const con2 = await connection2();
 
-    let updatedPhone = cleanPhoneNumber(data.locationPhoneNumber);
+    let updatedPhone = cleanPhoneNumber(locationPhoneNumber);
+
+    active = active === 'true' ? '1' : '0';
 
     let [rows] = await con2.execute(
         "UPDATE tblLocations SET locationName = ?, locationAddress = ?, locationCity = ?, locationZipCode = ?, locationPhoneNumber = ?, locationLatitude = ?, locationLongitude = ?, locationCategory = ?, neighborhood = ?, description = ?, active = ?, deleted = ? WHERE id = ?",
-        [data.locationName, data.locationAddress, data.locationCity, data.locationZipCode, updatedPhone, data.locationLatitude, data.locationLongitude, data.locationCategory, data.neighborhood, data.description, data.active, data.deleted, data.id]
+        [locationName, locationAddress, locationCity, locationZipCode, updatedPhone, locationLatitude, locationLongitude, locationCategory, locationNeighborhood, locationDescription, active, deleted, ID]
     );
 
     return;

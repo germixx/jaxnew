@@ -39,7 +39,7 @@ const Navigation = (props) => {
                   <header className="bg-white dark:bg-gray-800 shadow-md fixed w-full z-10 transition-colors duration-300">
                     <nav className="container mx-auto px-6 py-3">
                         <div className="flex justify-between items-center">
-                            <a href="https://new.jacksonvillians.com" className="text-2xl font-bold text-primary-light dark:text-primary-dark">Jacksonvillians</a>
+                            <a href="https://jacksonvillians.com" className="text-2xl font-bold text-primary-light dark:text-primary-dark">Jacksonvillians</a>
                             <div className="hidden md:flex space-x-6 text-center">
                                 <a href="#features" className="hover:text-primary-light dark:hover:text-primary-dark transition-colors duration-300">Features</a>
                                 <a href="#about" className="hover:text-primary-light dark:hover:text-primary-dark transition-colors duration-300">About</a>
