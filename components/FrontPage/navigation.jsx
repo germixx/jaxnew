@@ -75,8 +75,9 @@ const Navigation = (props) => {
                         <a href="#contact" className="w-full text-center block py-2 px-4 text-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300 hover:text-red-300">Contact</a>
                         
                         {!props?.user ? (
-                          <a onClick={()=> props.openLoginModal()} href="#login" className="w-full text-center block py-2 px-4 text-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300 hover:text-red-300">Login</a>
-                        ) : props?.user.role == 'admin' ? (<Link href={'/admin'} className='w-full text-center block py-2 px-4 text-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300 hover:text-red-300'>Dashboard</Link>) : (<Link href={'/dashboard'} className='w-full text-center block py-2 px-4 text-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300 hover:text-red-300'>Dashboard</Link>)
+                          <div onClick={()=> props.openLoginModal()} className="w-full text-center block py-2 px-4 text-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300 hover:text-red-300">Login</div>
+                        ) : props?.user.role == 'admin' ? (<Link href={'/admin'} className='w-full text-center block py-2 px-4 text-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300 hover:text-red-300'>Dashboard</Link>) 
+                        : (<Link href={'/dashboard'} className='w-full text-center block py-2 px-4 text-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300 hover:text-red-300'>Dashboard</Link>)
                         }
                                   
                     </div>

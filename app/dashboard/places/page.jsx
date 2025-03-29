@@ -23,7 +23,7 @@ const Places = () => {
 
     })()
     let x = sessionStorage.getItem("accessToken");
-    // console.log(x, ' is token')
+    
   }, [])
 
   return (
