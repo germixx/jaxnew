@@ -7,7 +7,7 @@ import Link from 'next/link';
 import Loading from '../Loading';
 
 const Navigation = (props) => {
-  
+    console.log(props, ' is da propys')
     const [loading, setLoading] = useState(false);
     const [mobileShowing, setMobileShowing] = useState(true);
   
@@ -35,6 +35,9 @@ const Navigation = (props) => {
   
     }
 
+    const les = sessionStorage.getItem("accessToken");
+    console.log(les, ' is navigations fron page');
+
     return (
         <div className="">
             <div className="antialiased">
@@ -55,10 +58,20 @@ const Navigation = (props) => {
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
                                     </svg>
                                 </button> */}
+                                {/* here, if token is null, show login, else check role and show correct link to */}
                                 {
-                                  !props?.user ? (<div onClick={()=> props.openLoginModal()} className='hidden md:flex float-right cursor-pointer'>Login</div>) 
+                                  !props?.accessToken ? (<div onClick={()=> props.openLoginModal()} className='hidden md:flex float-right cursor-pointer'>Login</div>) : !props?.user ? (<div onClick={()=> props.openLoginModal()} className='hidden md:flex float-right cursor-pointer'>Login</div>) 
                                   : props?.user.role == 'admin' ? (<Link href={'/admin'} className='hidden md:flex float-right cursor-pointer'>Dashboard</Link>) : (<Link href={'/dashboard'} className='hidden md:flex float-right cursor-pointer'>Dashboard</Link>)
                                 }
+
+                                {/* Working below */}
+                                {/* {
+                                  !props?.user ? (<div onClick={()=> props.openLoginModal()} className='hidden md:flex float-right cursor-pointer'>Login</div>) 
+                                  : props?.user.role == 'admin' ? (<Link href={'/admin'} className='hidden md:flex float-right cursor-pointer'>Dashboard</Link>) : (<Link href={'/dashboard'} className='hidden md:flex float-right cursor-pointer'>Dashboard</Link>)
+                                } */}
+
+                                {/* Login link escape */}
+                                {/* <div onClick={()=> props.openLoginModal()} className='hidden md:flex float-right cursor-pointer'>Login</div> */}
 
                                 <button onClick={() => toggleMenu()} id="mobileMenuToggle" className="md:hidden focus:outline-none" aria-label="Toggle mobile menu">
                                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

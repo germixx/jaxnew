@@ -62,6 +62,9 @@ export default function Home(props) {
     document.body.style.overflow = "auto";
   }
 
+  const accessToken = sessionStorage.getItem("accessToken");
+  // console.log(les, ' is ls');
+
   return (
     <div className="">
         {
@@ -73,7 +76,7 @@ export default function Home(props) {
             <div>
               {/* <NoSSR /> */}
               <AUTH authModal={authModal} closeLoginModal={closeLoginModal} />
-              <NAVIGATION openLoginModal={openLoginModal} user={user} />
+              <NAVIGATION openLoginModal={openLoginModal} user={user} accessToken={accessToken} />
               <FRONTIMAGE />
               <FEATURES data={JsonData.Features}/>
               <ABOUT />

@@ -55,7 +55,7 @@ export async function middleware(req) {
         const secretKey = new TextEncoder().encode(process.env.JWT_SECRET);
         const { payload } = await jwtVerify(token, secretKey, { algorithms: ['HS256'] });
 
-        // console.log('✅ Decoded User Data:', payload);
+        console.log('✅ Decoded User Data:', payload);
 
         const userRole = payload.role || 'user'; // Default to 'user' if no role
         // console.log(userRole, ' is the role: ');

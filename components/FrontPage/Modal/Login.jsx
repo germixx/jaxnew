@@ -22,7 +22,7 @@ const LoginModal = (props) => {
 
     const { user, login, logout } = useUser();
     const { location, locationError } = useLocation();
-    // console.log(user, ' is user')
+    console.log(user, ' is user')
     const handleError = (type, message) => {
 
         if (type === 'identifier') {
