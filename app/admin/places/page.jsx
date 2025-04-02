@@ -8,9 +8,9 @@ import NewPlaceModal from '../../../components/Client/Admin/Places/NewPlace';
 import Locations from '../../../components/Client/Admin/Places/Listings';
 
 import {
-    fetchLocations,
-    editPlaceData
-} from '../../../util/functions/client/functions';
+    getLocationsAdmin,
+    editPlaceDataAdmin
+} from '../../../util/functions/client/admin/functions';
 
 const AdminPlaces = () => {
 
@@ -26,7 +26,7 @@ const AdminPlaces = () => {
 
         (async () => {
 
-            let rr = await fetchLocations();
+            let rr = await getLocationsAdmin();
 
             if (rr.status) {
 
@@ -50,10 +50,9 @@ const AdminPlaces = () => {
           }
     
         });
-
         
         // Update database here with all values of newData
-        let result = await editPlaceData(formdata);
+        let result = await editPlaceDataAdmin(formdata);
         if (result.status) {
 
             setPlaces((prev) => {

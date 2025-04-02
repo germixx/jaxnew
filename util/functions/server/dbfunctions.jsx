@@ -201,7 +201,7 @@ async function updatePlaceData(locationName, locationAddress, locationCity, loca
 
     let updatedPhone = cleanPhoneNumber(locationPhoneNumber);
 
-    active = active === 'true' ? '1' : '0';
+    active = active === 'true' || true ? 1 : 0;
 
     let [rows] = await con2.execute(
         "UPDATE tblLocations SET locationName = ?, locationAddress = ?, locationCity = ?, locationZipCode = ?, locationPhoneNumber = ?, locationLatitude = ?, locationLongitude = ?, locationCategory = ?, neighborhood = ?, description = ?, active = ?, deleted = ? WHERE id = ?",
@@ -211,6 +211,24 @@ async function updatePlaceData(locationName, locationAddress, locationCity, loca
     return;
 }
 
+/* Admin Functions Below */
+async function getPlacesAdmin() {
+
+    const con2 = await connection2();
+
+    let [rows] = await con2.execute(
+        "SELECT id, room_id, locationName, locationAddress, locationCity, locationState, locationZipCode, locationPhoneNumber, locationLatitude, locationLongitude, locationCategory, locationImage, neighborhood, description, locationRating, active, deleted FROM tblLocations",
+        []
+    );
+
+    // if (rows.length > 0) {
+    //     return { status: false, errorMessage: 'Unable to get location data.' };
+    // }
+    
+    return {status: true, rows};
+
+}
+
 module.exports = {
     getAllPlaces,
     getPlaceData,
@@ -218,6 +236,7 @@ module.exports = {
     addNewPlace,
     registerUser,
     checkUser,
-    sanitizeIdentifier
+    sanitizeIdentifier,
+    getPlacesAdmin
 }
 

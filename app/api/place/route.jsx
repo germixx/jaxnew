@@ -51,7 +51,7 @@ export async function POST(request, res) {
         const locationDescription = formData.get('locationDescription');
         const locationCategory = formData.get('locationCategory');
         const active = formData.get('active');
-
+        
         const file = formData.get("image");
 
         if(file) {
@@ -128,7 +128,7 @@ export async function PUT(request, res) {
     const locationRating = formdata.get('locationRating');
     const active = formdata.get('active');
     const deleted = formdata.get('deleted');
-
+    
     const file = formdata.get("image");
     
     if(file) {
