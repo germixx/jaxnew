@@ -33,9 +33,6 @@ const SortBy = (props) => {
             </div>
         </div>
         
-        
-
-
     </div>
   
 }

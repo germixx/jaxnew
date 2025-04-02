@@ -11,21 +11,21 @@ import { fetchLocations } from '../../../util/functions/client/functions';
 const Places = () => {
 
   const [isLoading, SetIsLoading] = useState(true);
-  const [placess, setPlaces] = useState([]);
+  const [locations, setLocations] = useState([]);
 
   useEffect(() => {
 
-
     (async () => {
 
-      setPlaces(await fetchLocations());
+      setLocations(await fetchLocations());
       SetIsLoading(false);
 
-    })()
+    })();
+
     let x = sessionStorage.getItem("accessToken");
     
   }, [])
-
+  console.log(locations.locations, ' is page locations')
   return (
     <div>
       {isLoading ? (
@@ -38,7 +38,7 @@ const Places = () => {
         <div className="antialiased">
           <div className="p-4 md:ml-64 h-auto pt-20">
             <BreadCrumb />
-            <Locations places={placess} />
+            <Locations places={locations.locations} />
           </div>
         </div>
       )}
