@@ -7,7 +7,7 @@ function getLocationsAdmin() {
             credentials: 'include'
         }).then(res => res.json())
             .then((json) => {
-
+                
                 if (json.status) {
                     resolve({ locations: json.rows, status: true })
                 } else {

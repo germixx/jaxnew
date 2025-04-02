@@ -8,7 +8,9 @@ import { cookies } from 'next/headers';
 const ADMIN_ROUTES = ['/admin', '/admin/dashboard', '/admin/settings'];
 
 export async function middleware(req) {
+    
     const { pathname } = req.nextUrl;
+
     console.log('Middleware triggered for:', pathname); // Debugging
     // console.log(`Middleware running on: ${process.env.NEXT_RUNTIME}`);
     const maintenanceMode = process.env.NEXT_PUBLIC_MAINTENANCE_MODE === 'true';
