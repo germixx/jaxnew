@@ -16,8 +16,6 @@ const corsHeaders = {
   'Access-Control-Allow-Credentials': 'true',
 };
 
-
-
 export async function GET(request, res) {
     
     const placeData = await getPlacesAdmin();
@@ -28,7 +26,6 @@ export async function GET(request, res) {
       });
 
 }
-
 
 export async function POST(request, res) {
     return Response.json({ message: 'Method Not Allowed' }, { status: 405});

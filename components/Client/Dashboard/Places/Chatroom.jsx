@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 // import { socket } from "../../../../util/socket";
 import { io } from "socket.io-client";
 
-const ENDPOINT = "https://new.jacksonvillians.com";
+const ENDPOINT = "https://jacksonvillians.com";
 
 const Chatroom = (props) => {
  
@@ -63,7 +63,7 @@ const Chatroom = (props) => {
             
             <div className="flex items-center justify-between p-4 border-b dark:border-gray-600">
                 <h2 className="text-lg font-semibold text-gray-900 dark:text-white">{props.placeData.locationName}</h2>
-                <button onClick={() => closeModal()} className="text-gray-500 hover:text-gray-900 dark:hover:text-white">
+                <button onClick={() => closeModal()} className="text-gray-500 hover:text-gray-900 dark:hover:text-white text-2xl">
                     &times;
                 </button>
             </div>

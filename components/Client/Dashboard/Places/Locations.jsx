@@ -10,7 +10,7 @@ import JsonData from '../../../../data.json';
 
 const Locations = (locations) => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [locationsPerPage] = useState(3);
+  const [locationsPerPage] = useState(6);
   const [filteredLocations, setFilteredLocations] = useState(locations.places);
 
   // Pagination calculation

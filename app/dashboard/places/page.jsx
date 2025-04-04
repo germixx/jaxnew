@@ -25,7 +25,7 @@ const Places = () => {
     let x = sessionStorage.getItem("accessToken");
     
   }, [])
-  console.log(locations.locations, ' is page locations')
+  
   return (
     <div>
       {isLoading ? (

@@ -6,6 +6,10 @@ import { useParams } from 'next/navigation'
 
 import Loading from '../../../../components/Loading';
 import ChatRoom from '../../../../components/Client/Dashboard/Places/Chatroom';
+import Reviews from '../../../../components/Client/Dashboard/Places/Reviews';
+import Events from '../../../../components/Client/Dashboard/Places/Events';
+import Ratings from '../../../../components/Client/Dashboard/Places/Rating';
+import AsSeenIn from '../../../../components/Client/Dashboard/Places/AsSeenIn';
 
 import { fetchPlaceData } from '../../../../util/functions/client/functions';
 
@@ -19,6 +23,8 @@ export default function Place () {
    const [placeData, setPlaceData] = useState({});
    const [imageLoaded, setImageLoaded] = useState(false);
    const [chatOpen, setChatOpen] = useState(false);
+   const [reviewsOpen, setReviewsOpen] = useState(false);
+   const [eventsModal, setEventsModal] = useState(false);
 
     useEffect(() => {
         
@@ -49,18 +55,147 @@ export default function Place () {
         setChatOpen(true);
     }
 
+    const openReviewsModal = () => {
+        document.getElementById('reviewsModal').style.display = 'flex';
+        setReviewsOpen(true);
+    }
+
+    const openEventsModal = () => {
+        document.getElementById('eventsModal').style.display = 'flex'; 
+    }
+
+    const openRatingsModal = () => {
+        document.getElementById('ratingsModal').style.display = 'flex'; 
+    }
+
+    const openMediaModal = () => {
+        document.getElementById('AsSeenInModal').style.display = 'flex'; 
+    }
+
     const disconnectChat = () => {
         setChatOpen(false);
     }
+
+    // delete below
+
+    const ratings = [
+        {
+          name: 'Sarah Lee',
+          avatar: 'https://randomuser.me/api/portraits/women/52.jpg',
+          time: 'April 2, 2025 – 3:00 PM',
+          stars: 5,
+          comment: 'Fantastic experience! Clean venue and excellent staff.',
+          location: 'Green Valley Spa',
+          cost: 85,
+        },
+        {
+          name: 'Tommy K.',
+          avatar: '',
+          time: 'March 29, 2025 – 6:15 PM',
+          stars: 3,
+          comment: 'Service was okay but definitely overpriced for what you get.',
+          location: 'Metro Car Wash',
+          cost: 40,
+        },
+        {
+          name: 'Amira Patel',
+          avatar: 'https://randomuser.me/api/portraits/women/25.jpg',
+          time: 'March 25, 2025 – 11:10 AM',
+          stars: 4,
+          comment: 'Good overall, would recommend with some minor improvements.',
+          location: 'Downtown Yoga Lounge',
+          cost: 20,
+        },
+      ];
+
+    const reviews = [
+        {
+          name: 'Jane Doe',
+          avatar: 'https://randomuser.me/api/portraits/women/45.jpg',
+          time: 'March 20, 2025 – 5:15 PM',
+          text: 'Excellent service and super friendly staff! I’ll definitely be coming back.',
+          location: 'Maple Street Deli',
+          cost: 42.75,
+        },
+        {
+          name: 'Mike V.',
+          avatar: 'https://randomuser.me/api/portraits/men/33.jpg',
+          time: 'March 18, 2025 – 12:30 PM',
+          text: 'Not impressed. Took too long and the place was crowded.',
+          location: 'Joe’s Coffee Corner',
+          cost: 8,
+        },
+        {
+          name: 'Ashley Rose',
+          avatar: '',
+          time: 'March 15, 2025 – 10:45 AM',
+          text: 'Affordable and reliable! Great experience overall.',
+          location: 'Bright Car Wash',
+          cost: 15,
+        },
+      ];
+
+      const events = [
+        {
+          title: 'Summer Music Festival',
+          description: 'Join us for live music, food trucks, and fun.',
+          time: 'July 10, 2025 • 4:00 PM - 10:00 PM',
+          location: 'Downtown Park, Springfield',
+          cost: 25,
+          image: 'https://via.placeholder.com/150',
+        },
+        {
+          title: 'Community Yoga',
+          description: 'Outdoor morning yoga session for all levels.',
+          time: 'Every Saturday • 9:00 AM',
+          location: 'Lakeside Pavilion',
+          cost: 0,
+          image: '',
+        },
+      ];
+
+      const serviceData = {
+        name: 'Premium Plumbing Service',
+        imageUrl: 'https://via.placeholder.com/150',
+        description: 'We provide high-quality plumbing services for residential and commercial clients.',
+      };
+
+      const handlePressLogo = () => {
+        // Open link or modal with media mentions
+        window.open('/media', '_blank');
+      };
+
+      const mediaData = [
+        {
+          name: 'TechCrunch',
+          logo: 'https://techcrunch.com/favicon.ico',
+          description: 'Featured article about our latest product launch.',
+          link: 'https://techcrunch.com/article/tech-news',
+        },
+        {
+          name: 'The Verge',
+          logo: 'https://www.theverge.com/favicon.ico',
+          description: 'Our company was mentioned in a round-up of the best startups.',
+          link: 'https://www.theverge.com/startups-roundup',
+        },
+        {
+          name: 'Forbes',
+          logo: 'https://www.forbes.com/favicon.ico',
+          description: 'We were highlighted as one of the top 50 companies to watch.',
+          link: 'https://www.forbes.com/top-companies-to-watch',
+        },
+      ];
+
+      // Delete ABOVE
     
     return (
 
         <div>
             {isLoading ? (
                     <div className="antialiased flex flex-row min-h-screen justify-center items-center">
-                    <div className=" md:ml-64 h-auto">
-                            <Loading />
-                    </div>
+                        <div className=" md:ml-64 h-auto">
+                                <Loading />
+                        </div>
                     </div>
             ) : (
                 <div className="antialiased">
@@ -88,13 +223,11 @@ export default function Place () {
                             </div>
                         </div>
 
-                    
-        
                         <hr className="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700"></hr>
                         
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 p-6">
 
-                        <div className="max-w-sm bg-white shadow-lg rounded-2xl p-6 border border-gray-400 text-center flex flex-col h-full">
+                        <div className="max-w-sm bg-blue-50 shadow-lg rounded-2xl p-6 border border-gray-400 text-center flex flex-col h-full">
                             <div className="flex justify-center">
                                 <div className="bg-blue-100 p-4 rounded-full">
                                 <svg
@@ -121,9 +254,39 @@ export default function Place () {
                                 Join Chat
                             </button>
                         </div>
+                    
+                        <div className="max-w-sm bg-green-50 shadow-lg rounded-2xl p-6 border border-gray-400 text-center flex flex-col h-full">
+                            <div className="flex justify-center">
+                                <div className="bg-green-100 p-4 rounded-full">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    strokeWidth={2}
+                                    stroke="currentColor"
+                                    className="w-12 h-12 text-green-500"
+                                >
+                                    <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M19.5 13.5l-7.5 4.5-7.5-4.5M4.5 9l7.5 4.5L19.5 9m-15-4.5h15a1.5 1.5 0 011.5 1.5v9a1.5 1.5 0 01-1.5 1.5h-15A1.5 1.5 0 013 15V6a1.5 1.5 0 011.5-1.5z"
+                                    />
+                                </svg>
+                                </div>
+                            </div>
+                            <h2 className="text-xl font-semibold text-gray-800 mt-4">As Seen In</h2>
+                            <p className="text-gray-600 mt-2 flex-grow">
+                                We've been featured in top publications and trusted by industry leaders.
+                            </p>
+                            <button
+                                onClick={openMediaModal}
+                                className="mt-auto w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg transition"
+                            >
+                                View Press
+                            </button>
+                        </div>
 
-
-                        <div className="max-w-sm bg-white shadow-lg rounded-2xl p-6 border border-gray-400 text-center flex flex-col h-full">
+                        {/* <div className="max-w-sm bg-white shadow-lg rounded-2xl p-6 border border-gray-400 text-center flex flex-col h-full">
                             <div className="flex justify-center">
                                 <div className="bg-orange-100 p-4 rounded-full">
                                 <svg
@@ -146,22 +309,21 @@ export default function Place () {
                             <p className="text-gray-600 mt-2 flex-grow">
                                 Read what our customers have to say and share your own experience with us!
                             </p>
-                            <button className="mt-auto w-full bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-lg transition">
+                            <button onClick={() => openReviewsModal()} className="mt-auto w-full bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-lg transition">
                                 Read Reviews
                             </button>
-                        </div>
+                        </div> */}
 
-
-                        <div className="max-w-sm bg-white shadow-lg rounded-2xl p-6 border border-gray-400 text-center flex flex-col h-full">
+                        <div className="max-w-sm bg-red-50 shadow-lg rounded-2xl p-6 border border-gray-400 text-center flex flex-col h-full">
                             <div className="flex justify-center">
-                                <div className="bg-blue-100 p-4 rounded-full">
+                                <div className="bg-red-100 p-4 rounded-full">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     fill="none"
                                     viewBox="0 0 24 24"
                                     strokeWidth={2}
                                     stroke="currentColor"
-                                    className="w-12 h-12 text-blue-500"
+                                    className="w-12 h-12 text-red-500"
                                 >
                                     <path
                                     strokeLinecap="round"
@@ -175,13 +337,13 @@ export default function Place () {
                             <p className="text-gray-600 mt-2">
                                 Stay updated with the latest events. Join us for exciting experiences and networking opportunities!
                             </p>
-                            <button className="mt-auto w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg transition">
+                            <button onClick={openEventsModal} className="mt-auto w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg transition">
                                 View Events
                             </button>
                         </div>
 
 
-                        <div className="max-w-sm bg-white shadow-lg rounded-2xl p-6 border border-gray-400 text-center flex flex-col h-full">
+                        <div className="max-w-sm bg-yellow-50 shadow-lg rounded-2xl p-6 border border-gray-400 text-center flex flex-col h-full">
                             <div className="flex justify-center">
                                 <div className="bg-yellow-100 p-4 rounded-full">
                                 <svg
@@ -194,16 +356,23 @@ export default function Place () {
                                 </svg>
                                 </div>
                             </div>
-                            <h2 className="text-xl font-semibold text-gray-800 mt-4">Rate Our Service</h2>
+                            <h2 className="text-xl font-semibold text-gray-800 mt-4">Rate the Biz</h2>
                             <p className="text-gray-600 mt-2">
                                 Your feedback helps us improve! Give us a rating and share your experience with everyone.
                             </p>
-                            <button className="mt-6 w-full bg-yellow-500 hover:bg-yellow-600 text-white py-2 rounded-lg transition">
+                            <button onClick={openRatingsModal} className="mt-6 w-full bg-yellow-500 hover:bg-yellow-600 text-white py-2 rounded-lg transition">
                                 Give a Rating
                             </button>
                         </div>
+
+                        
                     </div>
                     <ChatRoom placeData={placeData} chatIsOpen={chatOpen} disconnectChat={disconnectChat} />
+                    {/* <Reviews placeData={placeData} reviews={reviews}  /> */}
+                    <AsSeenIn mediaData={mediaData} />
+                    <Events placeData={placeData} events={events} />
+                    <Ratings placeData={placeData} ratings={ratings} serviceData={serviceData} />
+                    
                 </div>
 
 

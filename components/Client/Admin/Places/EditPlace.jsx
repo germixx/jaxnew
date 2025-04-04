@@ -111,16 +111,29 @@ export default function EditLocationModal({ location, onClose, onSave }) {
             Edit Details
           </button>
           <button
-            className={`text-black px-4 py-2 ${activeTab === "map" ? "border-b-2 border-blue-500 font-bold" : "text-gray-500"}`}
-            onClick={() => setActiveTab("map")}
-          >
-            View on Map
-          </button>
-          <button
             className={` text-black px-4 py-2 ${activeTab === "chat" ? "border-b-2 border-blue-500 font-bold" : "text-gray-500"}`}
             onClick={() => setActiveTab("chat")}
           >
             Chatroom
+          </button>
+          <button
+            className={` text-black px-4 py-2 ${activeTab === "reviews" ? "border-b-2 border-blue-500 font-bold" : "text-gray-500"}`}
+            onClick={() => setActiveTab("reviews")}
+          >
+            Reviews
+          </button>
+          <button
+            className={` text-black px-4 py-2 ${activeTab === "events" ? "border-b-2 border-blue-500 font-bold" : "text-gray-500"}`}
+            onClick={() => setActiveTab("events")}
+          >
+            Events
+          </button>
+    
+          <button
+            className={`text-black px-4 py-2 ${activeTab === "map" ? "border-b-2 border-blue-500 font-bold" : "text-gray-500"}`}
+            onClick={() => setActiveTab("map")}
+          >
+            View on Map
           </button>
         </div>
 
@@ -170,7 +183,18 @@ export default function EditLocationModal({ location, onClose, onSave }) {
               </label>
             </div>
           </div>
-        ) : activeTab === "map" ? (
+        ) : activeTab === 'reviews' ? (
+          
+            <div className="h-72 w-full bg-gray-200 rounded-md overflow-hidden">
+              reviewsasdasd
+            </div>
+        ) : activeTab === 'events' ? (
+          
+              <div className="h-72 w-full bg-gray-200 rounded-md overflow-hidden">
+                Eventsss
+              </div>
+          )
+         : activeTab === "map" ? (
           <div className="h-72 w-full bg-gray-200 rounded-md overflow-hidden">
             <iframe
               className="w-full h-full"
