@@ -12,8 +12,8 @@ const Rating = ({serviceData, ratings}) => {
     }
 
   return (
-    <div id="ratingsModal" className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 hidden">
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-full max-w-2xl h-1/2 flex flex-col">
+    <div id="ratingsModal" className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 hidden" onClick={closeModal}>
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-full max-w-2xl h-1/2 flex flex-col"  onClick={(e)=> e.stopPropagation()}>
         
         <div className="flex items-center justify-between p-4 border-b dark:border-gray-600">
             <h2 className="text-lg font-semibold text-gray-900 dark:text-white">{serviceData.name}</h2>

@@ -227,7 +227,7 @@ export default function Place () {
                         
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 p-6">
 
-                        <div className="max-w-sm bg-blue-50 shadow-lg rounded-2xl p-6 border border-gray-400 text-center flex flex-col h-full">
+                        <div className="max-w-sm bg-blue-50 shadow-lg rounded-2xl p-6 border border-gray-400 text-center flex flex-col h-full m-auto">
                             <div className="flex justify-center">
                                 <div className="bg-blue-100 p-4 rounded-full">
                                 <svg
@@ -255,7 +255,7 @@ export default function Place () {
                             </button>
                         </div>
                     
-                        <div className="max-w-sm bg-green-50 shadow-lg rounded-2xl p-6 border border-gray-400 text-center flex flex-col h-full">
+                        <div className="max-w-sm bg-green-50 shadow-lg rounded-2xl p-6 border border-gray-400 text-center flex flex-col h-full m-auto">
                             <div className="flex justify-center">
                                 <div className="bg-green-100 p-4 rounded-full">
                                 <svg
@@ -314,7 +314,7 @@ export default function Place () {
                             </button>
                         </div> */}
 
-                        <div className="max-w-sm bg-red-50 shadow-lg rounded-2xl p-6 border border-gray-400 text-center flex flex-col h-full">
+                        <div className="max-w-sm bg-red-50 shadow-lg rounded-2xl p-6 border border-gray-400 text-center flex flex-col h-full m-auto">
                             <div className="flex justify-center">
                                 <div className="bg-red-100 p-4 rounded-full">
                                 <svg
@@ -343,7 +343,7 @@ export default function Place () {
                         </div>
 
 
-                        <div className="max-w-sm bg-yellow-50 shadow-lg rounded-2xl p-6 border border-gray-400 text-center flex flex-col h-full">
+                        <div className="max-w-sm bg-yellow-50 shadow-lg rounded-2xl p-6 border border-gray-400 text-center flex flex-col h-full m-auto">
                             <div className="flex justify-center">
                                 <div className="bg-yellow-100 p-4 rounded-full">
                                 <svg

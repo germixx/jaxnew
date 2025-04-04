@@ -71,8 +71,8 @@ const Reviews = ({ placeData, reviews, isOpen  }) => {
   ).toFixed(1);
 
   return (
-    <div id="reviewsModal" className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 hidden">
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-full max-w-2xl h-4/5 flex flex-col">
+    <div id="reviewsModal" className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 hidden" onClick={closeModal}>
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-full max-w-2xl h-4/5 flex flex-col" onClick={(e)=> e.stopPropagation()}>
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b dark:border-gray-600">
           <div>
