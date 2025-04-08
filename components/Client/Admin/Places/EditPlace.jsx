@@ -6,6 +6,7 @@ import placeNeighborhoods from '../../../../public/data/placeNeighborhoods.json'
 import MediaManager from './MediaManager';
 import ReviewManager from './ReviewManager';
 import EventManager from './EventManager';
+import ChatRoomManager from './ChatroomManager';
 
 export default function EditLocationModal({ location, onClose, onSave }) {
 
@@ -57,7 +58,7 @@ export default function EditLocationModal({ location, onClose, onSave }) {
       description: 'Featured article about our launch.',
       link: 'https://techcrunch.com/article',
     },
-    
+
   ]);
 
   const handleChange = (e) => {
@@ -194,7 +195,7 @@ export default function EditLocationModal({ location, onClose, onSave }) {
     },
 
   ];
-  
+
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 p-4" onClick={(e) => onClose()}>
       <div className="bg-white p-6 rounded-lg shadow-lg max-w-2xl w-full" onClick={(e) => e.stopPropagation()}>
@@ -262,7 +263,7 @@ export default function EditLocationModal({ location, onClose, onSave }) {
             <input type="text" name="locationLongitude" value={formData.locationLongitude} onChange={handleChange} placeholder="Longitude" className="p-2 border rounded text-black" />
             <textarea name="description" value={formData.description} onChange={handleChange} placeholder="Description" className="p-2 border rounded col-span-1 md:col-span-2 text-black"></textarea>
             <div className="col-span-1 md:col-span-2">
-              <input type="file" name="image" onChange={handleImageChange} className="p-2 border rounded w-full" accept="image/*"  />
+              <input type="file" name="image" onChange={handleImageChange} className="p-2 border rounded w-full" accept="image/*" />
               {formData.locationImage && <img src={formData.locationImage} alt="Preview" className="mt-2 w-full h-32 object-cover rounded" />}
             </div>
             <div className="flex gap-4 col-span-1 md:col-span-2">
@@ -275,18 +276,18 @@ export default function EditLocationModal({ location, onClose, onSave }) {
             </div>
           </div>
         ) : activeTab === 'reviews' ? (
-          
-            // <div className="h-72 w-full bg-gray-200 rounded-md overflow-hidden">
-            <ReviewManager />
-            // </div>
+
+          // <div className="h-72 w-full bg-gray-200 rounded-md overflow-hidden">
+          <ReviewManager />
+          // </div>
         ) : activeTab === 'media' ? (
-            <MediaManager  mediaData={mediaData} setMediaData={setMediaData}  />
+          <MediaManager mediaData={mediaData} setMediaData={setMediaData} />
         ) : activeTab === 'events' ? (
-          
-              <div className="h-72 w-full bg-gray-200 rounded-md overflow-hidden">
-                <EventManager />
-              </div>
-          ) : activeTab === "map" ? (
+
+          <div className="h-72 w-full bg-gray-200 rounded-md overflow-hidden">
+            <EventManager />
+          </div>
+        ) : activeTab === "map" ? (
           <div className="h-72 w-full bg-gray-200 rounded-md overflow-hidden">
             <iframe
               className="w-full h-full"
@@ -295,53 +296,54 @@ export default function EditLocationModal({ location, onClose, onSave }) {
               allowFullScreen
             />
           </div>) : (
-          <div className="flex flex-col h-72">
-            <div className="flex-1 overflow-y-auto bg-gray-100 p-4 rounded-md">
-              {chatMessages.length === 0 ? (
-                <p className="text-gray-500 text-center">No messages yet.</p>
-              ) : (
-                chatMessages.map((msg, index) => (
-                  <div
-                    key={index}
-                    className={`p-2 my-1 rounded-lg ${msg.sender === "You" ? "bg-blue-500 text-white self-end" : "bg-gray-300 text-black"}`}
-                  >
-                    <strong>{msg.sender}:</strong> {msg.text}
-                  </div>
-                ))
-              )}
-            </div>
-            <div className="mt-4 flex">
-              <input
-                type="text"
-                value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
-                placeholder="Type a message..."
-                className="flex-1 p-2 border rounded-l-md text-black"
-              />
-              <button
-                onClick={handleSendMessage}
-                className="px-4 bg-blue-500 text-white rounded-r-md"
-              >
-                Send
-              </button>
-            </div>
-          </div>
+          <ChatRoomManager />
+          // <div className="flex flex-col h-72">
+          //   <div className="flex-1 overflow-y-auto bg-gray-100 p-4 rounded-md">
+          //     {chatMessages.length === 0 ? (
+          //       <p className="text-gray-500 text-center">No messages yet.</p>
+          //     ) : (
+          //       chatMessages.map((msg, index) => (
+          //         <div
+          //           key={index}
+          //           className={`p-2 my-1 rounded-lg ${msg.sender === "You" ? "bg-blue-500 text-white self-end" : "bg-gray-300 text-black"}`}
+          //         >
+          //           <strong>{msg.sender}:</strong> {msg.text}
+          //         </div>
+          //       ))
+          //     )}
+          //   </div>
+          //   <div className="mt-4 flex">
+          //     <input
+          //       type="text"
+          //       value={newMessage}
+          //       onChange={(e) => setNewMessage(e.target.value)}
+          //       placeholder="Type a message..."
+          //       className="flex-1 p-2 border rounded-l-md text-black"
+          //     />
+          //     <button
+          //       onClick={handleSendMessage}
+          //       className="px-4 bg-blue-500 text-white rounded-r-md"
+          //     >
+          //       Send
+          //     </button>
+          //   </div>
+          // </div>
         )}
 
-      <div className="flex border-t mt-6 pt-4 justify-center flex-wrap gap-2">
+        <div className="flex border-t mt-6 pt-4 justify-center flex-wrap gap-2">
           <button
             className={` text-black px-4 py-2 ${activeTab === "media" ? "border-b-2 border-blue-500 font-bold" : "text-gray-500"}`}
             onClick={() => setActiveTab("media")}
           >
             Media
           </button>
-        <button
-          className={`text-black px-4 py-2 ${activeTab === "map" ? "border-b-2 border-blue-500 font-bold" : "text-gray-500"}`}
-          onClick={() => setActiveTab("map")}
-        >
-          View on Map
-        </button>
-      </div>
+          <button
+            className={`text-black px-4 py-2 ${activeTab === "map" ? "border-b-2 border-blue-500 font-bold" : "text-gray-500"}`}
+            onClick={() => setActiveTab("map")}
+          >
+            View on Map
+          </button>
+        </div>
 
         <div className="flex justify-between items-center mt-4">
           {/* Room ID on the left */}
@@ -359,9 +361,9 @@ export default function EditLocationModal({ location, onClose, onSave }) {
                   Save
                 </button>
               ) : ('')
-            
+
             }
-          
+
 
 
           </div>
