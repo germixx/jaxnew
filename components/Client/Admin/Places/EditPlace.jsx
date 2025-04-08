@@ -3,11 +3,62 @@ import { useState } from 'react';
 import placeCategories from '../../../../public/data/placeCategories.json';
 import placeNeighborhoods from '../../../../public/data/placeNeighborhoods.json';
 
+import MediaManager from './MediaManager';
+import ReviewManager from './ReviewManager';
+import EventManager from './EventManager';
+
 export default function EditLocationModal({ location, onClose, onSave }) {
+
   const [formData, setFormData] = useState({ ...location });
   const [activeTab, setActiveTab] = useState("form");
   const [chatMessages, setChatMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+
+  const [mediaData, setMediaData] = useState([
+    {
+      id: 1,
+      name: "The Verge",
+      logo: "https://www.theverge.com/favicon.ico",
+      description: "Interviewed about our beta product launch.",
+      link: "https://www.theverge.com/article",
+    },
+    {
+      id: 6,
+      name: 'TechCrunch',
+      logo: 'https://techcrunch.com/favicon.ico',
+      description: 'Featured article about our launch.',
+      link: 'https://techcrunch.com/article',
+    },
+    {
+      id: 2,
+      name: 'TechCrunch',
+      logo: 'https://techcrunch.com/favicon.ico',
+      description: 'Featured article about our launch.',
+      link: 'https://techcrunch.com/article',
+    },
+    {
+      id: 3,
+      name: 'TechCrunch',
+      logo: 'https://techcrunch.com/favicon.ico',
+      description: 'Featured article about our launch.',
+      link: 'https://techcrunch.com/article',
+    },
+    {
+      id: 4,
+      name: 'TechCrunch',
+      logo: 'https://techcrunch.com/favicon.ico',
+      description: 'Featured article about our launch.',
+      link: 'https://techcrunch.com/article',
+    },
+    {
+      id: 5,
+      name: 'TechCrunch',
+      logo: 'https://techcrunch.com/favicon.ico',
+      description: 'Featured article about our launch.',
+      link: 'https://techcrunch.com/article',
+    },
+    
+  ]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -97,6 +148,52 @@ export default function EditLocationModal({ location, onClose, onSave }) {
       };
     };
   };
+
+  const mediaDatas = [
+    {
+      id: 1,
+      name: 'TechCrunch',
+      logo: 'https://techcrunch.com/favicon.ico',
+      description: 'Featured article about our launch.',
+      link: 'https://techcrunch.com/article',
+    },
+    {
+      id: 6,
+      name: 'TechCrunch',
+      logo: 'https://techcrunch.com/favicon.ico',
+      description: 'Featured article about our launch.',
+      link: 'https://techcrunch.com/article',
+    },
+    {
+      id: 2,
+      name: 'TechCrunch',
+      logo: 'https://techcrunch.com/favicon.ico',
+      description: 'Featured article about our launch.',
+      link: 'https://techcrunch.com/article',
+    },
+    {
+      id: 3,
+      name: 'TechCrunch',
+      logo: 'https://techcrunch.com/favicon.ico',
+      description: 'Featured article about our launch.',
+      link: 'https://techcrunch.com/article',
+    },
+    {
+      id: 4,
+      name: 'TechCrunch',
+      logo: 'https://techcrunch.com/favicon.ico',
+      description: 'Featured article about our launch.',
+      link: 'https://techcrunch.com/article',
+    },
+    {
+      id: 5,
+      name: 'TechCrunch',
+      logo: 'https://techcrunch.com/favicon.ico',
+      description: 'Featured article about our launch.',
+      link: 'https://techcrunch.com/article',
+    },
+
+  ];
   
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 p-4" onClick={(e) => onClose()}>
@@ -128,13 +225,7 @@ export default function EditLocationModal({ location, onClose, onSave }) {
           >
             Events
           </button>
-    
-          <button
-            className={`text-black px-4 py-2 ${activeTab === "map" ? "border-b-2 border-blue-500 font-bold" : "text-gray-500"}`}
-            onClick={() => setActiveTab("map")}
-          >
-            View on Map
-          </button>
+
         </div>
 
         {/* Tab Content */}
@@ -185,16 +276,17 @@ export default function EditLocationModal({ location, onClose, onSave }) {
           </div>
         ) : activeTab === 'reviews' ? (
           
-            <div className="h-72 w-full bg-gray-200 rounded-md overflow-hidden">
-              reviewsasdasd
-            </div>
+            // <div className="h-72 w-full bg-gray-200 rounded-md overflow-hidden">
+            <ReviewManager />
+            // </div>
+        ) : activeTab === 'media' ? (
+            <MediaManager  mediaData={mediaData} setMediaData={setMediaData}  />
         ) : activeTab === 'events' ? (
           
               <div className="h-72 w-full bg-gray-200 rounded-md overflow-hidden">
-                Eventsss
+                <EventManager />
               </div>
-          )
-         : activeTab === "map" ? (
+          ) : activeTab === "map" ? (
           <div className="h-72 w-full bg-gray-200 rounded-md overflow-hidden">
             <iframe
               className="w-full h-full"
@@ -236,6 +328,21 @@ export default function EditLocationModal({ location, onClose, onSave }) {
           </div>
         )}
 
+      <div className="flex border-t mt-6 pt-4 justify-center flex-wrap gap-2">
+          <button
+            className={` text-black px-4 py-2 ${activeTab === "media" ? "border-b-2 border-blue-500 font-bold" : "text-gray-500"}`}
+            onClick={() => setActiveTab("media")}
+          >
+            Media
+          </button>
+        <button
+          className={`text-black px-4 py-2 ${activeTab === "map" ? "border-b-2 border-blue-500 font-bold" : "text-gray-500"}`}
+          onClick={() => setActiveTab("map")}
+        >
+          View on Map
+        </button>
+      </div>
+
         <div className="flex justify-between items-center mt-4">
           {/* Room ID on the left */}
           <div className='text-black'>#{formData.room_id}</div>
@@ -245,9 +352,18 @@ export default function EditLocationModal({ location, onClose, onSave }) {
             <button onClick={onClose} className="px-4 py-2 bg-gray-500 text-white rounded">
               Cancel
             </button>
-            <button onClick={() => onSave(formData)} className="px-4 py-2 bg-blue-600 text-white rounded">
-              Save
-            </button>
+
+            {
+              activeTab === "form" ? (
+                <button onClick={() => onSave(formData)} className="px-4 py-2 bg-blue-600 text-white rounded">
+                  Save
+                </button>
+              ) : ('')
+            
+            }
+          
+
+
           </div>
         </div>
       </div>

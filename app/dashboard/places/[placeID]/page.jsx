@@ -255,37 +255,6 @@ export default function Place () {
                             </button>
                         </div>
                     
-                        <div className="max-w-sm bg-green-50 shadow-lg rounded-2xl p-6 border border-gray-400 text-center flex flex-col h-full m-auto">
-                            <div className="flex justify-center">
-                                <div className="bg-green-100 p-4 rounded-full">
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    strokeWidth={2}
-                                    stroke="currentColor"
-                                    className="w-12 h-12 text-green-500"
-                                >
-                                    <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="M19.5 13.5l-7.5 4.5-7.5-4.5M4.5 9l7.5 4.5L19.5 9m-15-4.5h15a1.5 1.5 0 011.5 1.5v9a1.5 1.5 0 01-1.5 1.5h-15A1.5 1.5 0 013 15V6a1.5 1.5 0 011.5-1.5z"
-                                    />
-                                </svg>
-                                </div>
-                            </div>
-                            <h2 className="text-xl font-semibold text-gray-800 mt-4">As Seen In</h2>
-                            <p className="text-gray-600 mt-2 flex-grow">
-                                We've been featured in top publications and trusted by industry leaders.
-                            </p>
-                            <button
-                                onClick={openMediaModal}
-                                className="mt-auto w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg transition"
-                            >
-                                View Press
-                            </button>
-                        </div>
-
                         {/* <div className="max-w-sm bg-white shadow-lg rounded-2xl p-6 border border-gray-400 text-center flex flex-col h-full">
                             <div className="flex justify-center">
                                 <div className="bg-orange-100 p-4 rounded-full">
@@ -339,6 +308,37 @@ export default function Place () {
                             </p>
                             <button onClick={openEventsModal} className="mt-auto w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg transition">
                                 View Events
+                            </button>
+                        </div>
+
+                        <div className="max-w-sm bg-green-50 shadow-lg rounded-2xl p-6 border border-gray-400 text-center flex flex-col h-full m-auto">
+                            <div className="flex justify-center">
+                                <div className="bg-green-100 p-4 rounded-full">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    strokeWidth={2}
+                                    stroke="currentColor"
+                                    className="w-12 h-12 text-green-500"
+                                >
+                                    <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M19.5 13.5l-7.5 4.5-7.5-4.5M4.5 9l7.5 4.5L19.5 9m-15-4.5h15a1.5 1.5 0 011.5 1.5v9a1.5 1.5 0 01-1.5 1.5h-15A1.5 1.5 0 013 15V6a1.5 1.5 0 011.5-1.5z"
+                                    />
+                                </svg>
+                                </div>
+                            </div>
+                            <h2 className="text-xl font-semibold text-gray-800 mt-4">As Seen In</h2>
+                            <p className="text-gray-600 mt-2 flex-grow">
+                                We've been featured in top publications and trusted by industry leaders.
+                            </p>
+                            <button
+                                onClick={openMediaModal}
+                                className="mt-auto w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg transition"
+                            >
+                                View Press
                             </button>
                         </div>
 
