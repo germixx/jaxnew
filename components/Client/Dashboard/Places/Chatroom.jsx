@@ -12,6 +12,21 @@ import data from '@emoji-mart/data';
 
 const ENDPOINT = "https://jacksonvillians.com";
 
+const usersInRoom = [
+  { id: 1, name: 'Chloes' },
+  { id: 2, name: 'Maya' },
+  { id: 3, name: 'Tylers' },
+  { id: 4, name: 'Admin' },
+  { id: 5, name: 'Chloez' },
+  { id: 6, name: 'Mayaz' },
+  { id: 7, name: 'Tylerz' },
+  { id: 8, name: 'Adminz' },
+  { id: 9, name: 'Chloer' },
+  { id: 10, name: 'Mayas' },
+  { id: 11, name: 'Tyler' },
+  { id: 12, name: 'Admins' },
+];
+
 const mockMessages = [
   {
     id: 1,
@@ -65,37 +80,39 @@ export default function ChatModal(props) {
     '#D8BFD8', '#FF6347', '#4682B4', '#008080', '#00BFFF', '#FF8C00', '#ADD8E6', '#B0E0E6', '#FF1493', '#F08080', '#0000CD', '#A0522D', '#DC143C'
   ]);
 
-    useEffect( ()=>{
+    // useEffect( ()=>{
     // socket = socketIOClient.io(ENDPOINT + "?username=" + (props.user ? props.user.username : '') + "&roomID=" + router.query.id + "&business_name=" + router.query.name, { secure: true })
     // socket = socketIOClient.io(ENDPOINT + "?username=test" , { secure: true })
-      setSocket((prev) => {
-        return socketIOClient.io(ENDPOINT + "?username=test" , { secure: true });
-      })
-    if (props.chatIsOpen && !socket) {
-        
-        const newSocket = io(ENDPOINT+"?username=testy" + "&roomID=" + props.placeData.room_id + "&business_name=" + props.placeData.locationName, {
-          transports: ["websocket"],
-        });
-  
-        newSocket.on("connect", () => {
-          console.log("Connected to WebSocket");
-        });
-  
-        newSocket.on("message", (data) => {
-          console.log("New message:", data);
-        });
-  
-        setSocket(newSocket);
-        setIsOpen(props.chatIsOpen);
-  
-        return () => {
-          newSocket.disconnect();
-          setSocket(null);
-          console.log(socket, ' is socket disecon')
-        };
-    }
 
-  }, [props.chatIsOpen]);
+    // if (props.chatIsOpen && !socket) {
+      
+      // setSocket((prev) => {
+      //   return socketIOClient.io(ENDPOINT + "?username=test" , { secure: true });
+      // })
+
+  //     const newSocket = io(ENDPOINT+"?username=testy" + "&roomID=" + props.placeData.room_id + "&business_name=" + props.placeData.locationName, {
+  //         transports: ["websocket"],
+  //     });
+  
+  //     newSocket.on("connect", () => {
+  //         console.log("Connected to WebSocket");
+  //     });
+  
+  //     newSocket.on("message", (data) => {
+  //         console.log("New message:", data);
+  //     });
+  
+  //     setSocket(newSocket);
+  //     setIsOpen(props.chatIsOpen);
+  
+  //       return () => {
+  //         newSocket.disconnect();
+  //         setSocket(null);
+  //         console.log(socket, ' is socket disecon')
+  //       };
+  //   }
+
+  // }, [props.chatIsOpen]);
 
   const closeModal = () => {
     props.disconnectChat();
