@@ -1,16 +1,61 @@
 'use client';
 
+import * as socketIOClient from "socket.io-client";
+
+// // import { socket } from "../../../../util/socket";
+// import { io } from "socket.io-client";
+
 import { useEffect, useState } from "react";
-
-// import * as socketIOClient from "socket.io-client";
-
-// import { socket } from "../../../../util/socket";
-import { io } from "socket.io-client";
+import Picker from '@emoji-mart/react';
+// import 'emoji-mart/css/emoji-mart.css'
+import data from '@emoji-mart/data';
 
 const ENDPOINT = "https://jacksonvillians.com";
 
-const Chatroom = (props) => {
- 
+const mockMessages = [
+  {
+    id: 1,
+    user: 'Chloe',
+    content: 'Morning everyone! ☀️',
+    time: '10:01 AM',
+    image: 'https://flowbite.com/docs/images/people/profile-picture-1.jpg',
+    reactions: [
+      { emoji: '🔥', users: ['Chloe'] },
+      { emoji: '😂', users: ['Tyler', 'Maya'] }
+    ]
+  },
+  {
+    id: 2,
+    user: 'Tyler',
+    content: 'Working on the dashboard today!',
+    time: '10:05 AM',
+    image: 'https://flowbite.com/docs/images/people/profile-picture-2.jpg',
+    reactions: []
+  },
+  {
+    id: 4,
+    user: 'Admin',
+    content: 'Yo wtf is going on kiddos!',
+    time: '11:22 AM',
+    image: 'https://flowbite.com/docs/images/people/profile-picture-4.jpg',
+    reactions: [
+      { emoji: '🔥', users: ['Tyler'] },
+      { emoji: '😂', users: ['Chloe', 'Maya'] }
+    ]
+  },
+];
+
+export default function ChatModal(props) {
+  const [newMessage, setNewMessage] = useState('');
+  const [messages, setMessages] = useState(mockMessages);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [filteredCommands, setFilteredCommands] = useState([]);
+  const [mentionSuggestions, setMentionSuggestions] = useState([]);
+  const [showMentions, setShowMentions] = useState(false);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [emojiPickerFor, setEmojiPickerFor] = useState(null);
+  const [currentUser, setCurrentUser] = useState('Admin');
+
   const [isOpen, setIsOpen] = useState(false);
   const [socket, setSocket] = useState(null);
 
@@ -20,10 +65,12 @@ const Chatroom = (props) => {
     '#D8BFD8', '#FF6347', '#4682B4', '#008080', '#00BFFF', '#FF8C00', '#ADD8E6', '#B0E0E6', '#FF1493', '#F08080', '#0000CD', '#A0522D', '#DC143C'
   ]);
 
-  useEffect( ()=>{
+    useEffect( ()=>{
     // socket = socketIOClient.io(ENDPOINT + "?username=" + (props.user ? props.user.username : '') + "&roomID=" + router.query.id + "&business_name=" + router.query.name, { secure: true })
     // socket = socketIOClient.io(ENDPOINT + "?username=test" , { secure: true })
-
+      setSocket((prev) => {
+        return socketIOClient.io(ENDPOINT + "?username=test" , { secure: true });
+      })
     if (props.chatIsOpen && !socket) {
         
         const newSocket = io(ENDPOINT+"?username=testy" + "&roomID=" + props.placeData.room_id + "&business_name=" + props.placeData.locationName, {
@@ -50,57 +97,217 @@ const Chatroom = (props) => {
 
   }, [props.chatIsOpen]);
 
-
   const closeModal = () => {
     props.disconnectChat();
     document.getElementById('chatModal').style.display = 'none';
   }
 
+  const handleEmojiSelect = (emoji) => {
+    console.log(emoji);
+  };
+
+  const handleInputChange = (e) => {
+    const value = e.target.value
+    setNewMessage(value)
+
+    if (value.startsWith('/')) {
+      const query = value.slice(1).toLowerCase()
+      const matches = slashCommands.filter((cmd) =>
+        cmd.name.slice(1).startsWith(query)
+      )
+      setFilteredCommands(matches)
+      setShowSuggestions(matches.length > 0)
+    } else {
+      setShowSuggestions(false)
+    }
+
+    const atMatch = value.match(/@(\w*)$/)
+    if (atMatch) {
+      const query = atMatch[1].toLowerCase()
+      const matches = usersInRoom.filter((u) =>
+        u.name.toLowerCase().startsWith(query)
+      )
+      setMentionSuggestions(matches)
+      setShowMentions(matches.length > 0)
+    } else {
+      setShowMentions(false)
+    }
+  }
+
+  const sendMessage = () => {
+    if (!newMessage.trim()) return
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: Date.now(),
+        user: currentUser,
+        content: newMessage,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        reactions: []
+      }
+    ])
+    setNewMessage('')
+    setShowSuggestions(false)
+    setShowMentions(false)
+  }
+
+  const toggleReaction = (msgId, emoji) => {
+    setMessages((prev) =>
+      prev.map((msg) => {
+        if (msg.id !== msgId) return msg
+        const r = msg.reactions.find((r) => r.emoji === emoji)
+        if (r) {
+          if (r.users.includes(currentUser)) {
+            r.users = r.users.filter((u) => u !== currentUser)
+          } else {
+            r.users.push(currentUser)
+          }
+          return { ...msg, reactions: [...msg.reactions] }
+        } else {
+          return {
+            ...msg,
+            reactions: [...msg.reactions, { emoji, users: [currentUser] }]
+          }
+        }
+      })
+    )
+  }
+
+  const addReaction = (msgId, emoji) => {
+    setEmojiPickerFor(null)
+    toggleReaction(msgId, emoji)
+  }
+
   return (
     <div id="chatModal" className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 hidden" onClick={closeModal}>
-        
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-full max-w-2xl h-3/4 flex flex-col" onClick={(e)=> e.stopPropagation()}>
-            
-            <div className="flex items-center justify-between p-4 border-b dark:border-gray-600">
-                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">{props.placeData.locationName}</h2>
-                <button onClick={() => closeModal()} className="text-gray-500 hover:text-gray-900 dark:hover:text-white text-2xl">
-                    &times;
-                </button>
-            </div>
-            
-            <div className="p-4 space-y-4 flex-1 overflow-y-auto">
-                
-                <div className="flex items-start gap-2.5">
-                    <img className="w-8 h-8 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-4.jpg" alt="Jese image"/>
-                    <div className="flex flex-col w-full max-w-[480px] leading-1.5 p-4 border-gray-200 bg-gray-100 rounded-e-xl rounded-es-xl dark:bg-gray-700">
-                        <div className="flex items-center space-x-2 rtl:space-x-reverse">
-                            <span className="text-sm font-semibold text-gray-900 dark:text-white">Bonnie Green</span>
-                            <span className="text-sm font-normal text-gray-500 dark:text-gray-400">11:46</span>
-                        </div>
-                        <p className="text-sm font-normal py-2.5 text-gray-900 dark:text-white">That's awesome. I think our users will really appreciate the improvements.</p>
-                        <span className="text-sm font-normal text-gray-500 dark:text-gray-400">Delivered</span>
-                    </div>
-                </div>
-                
-                <div className="flex items-start gap-2.5 justify-end">
-                    <div className="flex flex-col w-full max-w-[480px] leading-1.5 p-4 border-gray-200 bg-blue-500 text-white rounded-s-xl rounded-ee-xl">
-                        <div className="flex items-center space-x-2 rtl:space-x-reverse justify-end">
-                            <span className="text-sm font-semibold">You</span>
-                            <span className="text-sm font-normal">11:47</span>
-                        </div>
-                        <p className="text-sm font-normal py-2.5">Absolutely! Looking forward to seeing the response.</p>
-                        <span className="text-sm font-normal">Sent</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div className="p-4 border-t dark:border-gray-600 flex items-center space-x-2 mt-auto">
-                <input type="text" className="w-full p-2 border rounded-lg dark:bg-gray-700 dark:text-white" placeholder="Type a message..."/>
-                <button className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Send</button>
-            </div>
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-full max-w-2xl h-3/4 flex flex-col" onClick={(e) => e.stopPropagation()}>
+        <div className="flex items-center justify-between p-4 border-b dark:border-gray-600">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">{props ? props.placeData.locationName : ''}</h2>
+          <button onClick={closeModal} className="text-gray-500 hover:text-gray-900 dark:hover:text-white text-2xl">&times;</button>
         </div>
+
+        <div className="p-4 flex-1 overflow-y-auto space-y-4">
+          {messages.map((msg) => (
+            currentUser === msg.user ? (       
+            <div className="flex items-start gap-2.5 justify-end" key={msg.id}>
+              <div className="flex flex-col w-full max-w-[480px] leading-1.5 p-4 border-gray-200 bg-blue-500 text-white rounded-s-xl rounded-ee-xl">
+                 <div className="flex items-center space-x-2 rtl:space-x-reverse justify-end">
+                   <span className="text-sm font-semibold">You</span>
+                   <span className="text-sm font-normal">{msg.time}</span>
+                 </div>
+                 <p className="text-sm font-normal py-2.5">{msg.content}</p>
+                 <div className="flex flex-wrap items-center gap-1">
+                  {msg.reactions.map((r) => (
+                    <button
+                      key={r.emoji}
+                      onClick={() => toggleReaction(msg.id, r.emoji)}
+                      className="text-sm px-2 py-1 bg-gray-200 rounded-full hover:bg-gray-300 text-black"
+                    >
+                      {r.emoji} <span className="text-xs text-gray-600">{r.users.length}</span>
+                    </button>
+                  ))}
+                  <button onClick={() => setEmojiPickerFor(msg.id)} className="text-gray-400 hover:text-gray-600 text-sm">➕</button>
+                  {emojiPickerFor === msg.id && (
+                    <div className="z-40 absolute">
+                      <Picker
+                        data={data}
+                        onEmojiSelect={(e) => addReaction(msg.id, e.native)}
+                        theme="light"
+                      />
+                    </div>
+                  )}
+                </div>
+                 
+              </div>
+           </div>
+           ) : (
+              <div key={msg.id} className={`flex items-start gap-2.5 ${msg.user === currentUser ? 'justify-end' : ''}`}>
+              {msg.user !== currentUser && (
+                <img className="w-8 h-8 rounded-full" src={msg.image} alt={msg.user} />
+              )}
+              <div className={`flex flex-col w-full max-w-[480px] leading-1.5 p-4 ${msg.user === currentUser ? 'bg-blue-500 text-white rounded-s-xl rounded-ee-xl' : 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white rounded-e-xl rounded-es-xl'}`}>
+                <div className={`flex items-center space-x-2 rtl:space-x-reverse ${msg.user === currentUser ? 'justify-end' : ''}`}>
+                  <span className="text-sm font-semibold">{msg.user === currentUser ? 'You' : msg.user}</span>
+                  <span className="text-sm font-normal">{msg.time}</span>
+                </div>
+                <p className="text-sm font-normal py-2.5">{msg.content}</p>
+                <div className="flex flex-wrap items-center gap-1">
+                  {msg.reactions.map((r) => (
+                    <button
+                      key={r.emoji}
+                      onClick={() => toggleReaction(msg.id, r.emoji)}
+                      className="text-sm px-2 py-1 bg-gray-200 rounded-full hover:bg-gray-300 text-black"
+                    >
+                      {r.emoji} <span className="text-xs text-gray-600">{r.users.length}</span>
+                    </button>
+                  ))}
+                  <button onClick={() => setEmojiPickerFor(msg.id)} className="text-gray-400 hover:text-gray-600 text-sm">➕</button>
+                  {emojiPickerFor === msg.id && (
+                    <div className="z-40 absolute">
+                      <Picker
+                        data={data}
+                        onEmojiSelect={(e) => addReaction(msg.id, e.native)}
+                        theme="light"
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+            )
+          ))}
+
+        </div>
+
+        <div className="p-4 border-t dark:border-gray-600 relative">
+          <div className="relative">
+            <input
+              type="text"
+              value={newMessage}
+              onChange={handleInputChange}
+              className="w-full p-2 border rounded-lg dark:bg-gray-700 dark:text-white"
+              placeholder="Type a message..."
+            />
+            <button onClick={sendMessage} className="absolute top-1/2 -translate-y-1/2 right-2 px-4 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Send</button>
+          </div>
+
+          {showSuggestions && (
+            <ul className="absolute bottom-16 left-0 bg-white border w-64 shadow-md rounded z-20">
+              {filteredCommands.map((cmd) => (
+                <li
+                  key={cmd.name}
+                  onClick={() => {
+                    setNewMessage(cmd.name + ' ')
+                    setShowSuggestions(false)
+                  }}
+                  className="px-3 py-2 cursor-pointer hover:bg-gray-100 text-sm"
+                >
+                  <span className="text-blue-600 font-mono">{cmd.name}</span>
+                  <span className="ml-2 text-gray-500">{cmd.description}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+
+          {showMentions && (
+            <ul className="absolute bottom-16 left-0 bg-white border w-64 shadow-md rounded z-30">
+              {mentionSuggestions.map((user) => (
+                <li
+                  key={user.id}
+                  onClick={() => {
+                    const updated = newMessage.replace(/@(\w*)$/, `@${user.name} `)
+                    setNewMessage(updated)
+                    setShowMentions(false)
+                  }}
+                  className="px-3 py-2 cursor-pointer hover:bg-gray-100 text-sm"
+                >
+                  <span className="text-blue-600 font-semibold">@{user.name}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </div>
     </div>
   )
 }
-
-export default Chatroom;
