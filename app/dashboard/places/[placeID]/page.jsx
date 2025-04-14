@@ -191,7 +191,7 @@ export default function Place () {
       ];
 
       // Delete ABOVE
-    console.log(user, ' is da usernames')
+ 
     return (
 
         <div>

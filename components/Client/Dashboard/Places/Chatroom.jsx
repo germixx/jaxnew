@@ -71,6 +71,7 @@ export default function ChatModal(props) {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [emojiPickerFor, setEmojiPickerFor] = useState(null);
   const [currentUser, setCurrentUser] = useState('');
+  const [userData, setUserData] = useState('');
   const chatEndRef = useRef(null);
 
   const [isOpen, setIsOpen] = useState(false);
@@ -90,6 +91,7 @@ export default function ChatModal(props) {
   useEffect( () => {
     if(props.user) {
       setCurrentUser(props.user.username);
+      setUserData(props.user);
     }
     
   }, [props]);
@@ -99,10 +101,6 @@ export default function ChatModal(props) {
     // socket = socketIOClient.io(ENDPOINT + "?username=test" , { secure: true })
 
     if (props.chatIsOpen && !socket) {
-      
-      // setSocket((prev) => {
-      //   return socketIOClient.io(ENDPOINT + "?username=test" , { secure: true });
-      // })
 
       const newSocket = io(ENDPOINT+`?username=${props.user.username}` + "&roomID=" + props.placeData.room_id + "&business_name=" + props.placeData.locationName, {
           transports: ["websocket"],
@@ -117,19 +115,11 @@ export default function ChatModal(props) {
       });
 
       newSocket.on(`message-${props.placeData.room_id}`, (data) => {
-        console.log("Room Message:", data);
-        
-        // if(data.user === currentUser) {
-        //   return;
-        // }
+        // console.log("Room Message:", data);
         setMessages((prev) => [
           ...prev,
           data
         ]);
-      });
-
-      newSocket.on(`room ${props.placeData.room_id}`, (data) => {
-        newSocket.broadcast.emit(`message ${props.placeData.room_id}`, data)
       });
 
       newSocket.on(`emoji-${props.placeData.room_id}`, (data) => {        
@@ -154,8 +144,12 @@ export default function ChatModal(props) {
         )
       });
 
-      newSocket.on(`intro-${props.placeData.room_id}`, (data) => {
-        newSocket.broadcast.emit(`message-${props.placeData.room_id}`, data)
+      newSocket.on(`intro`, (data) => {
+        setMessages(prev => [...prev,  {...data, content: `${data.username} has joined the chat`} ]);
+      });
+
+      newSocket.on(`onExit`, (data) => {
+        setMessages(prev => [...prev,  {...data, content: `${data.username} has left the chat`} ]);
       });
   
       setSocket(newSocket);
@@ -163,6 +157,7 @@ export default function ChatModal(props) {
   
         return () => {
           newSocket.disconnect();
+          newSocket.emit('onLeave', {status:true});
           setSocket(null);
         };
     }
@@ -213,6 +208,7 @@ export default function ChatModal(props) {
       id: Date.now(),
       user: currentUser,
       content: newMessage,
+      role: props.user.role,
       time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       reactions: []
     });
@@ -242,79 +238,87 @@ export default function ChatModal(props) {
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-full max-w-2xl h-3/4 flex flex-col" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between p-4 border-b dark:border-gray-600">
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white">{props ? props.placeData.locationName : ''}</h2>
+          <span className="float-left">Users Chatting: {usersInRoom.length}</span>
           <button onClick={closeModal} className="text-gray-500 hover:text-gray-900 dark:hover:text-white text-2xl">&times;</button>
         </div>
 
         <div className="p-4 flex-1 overflow-y-auto space-y-4">
           {messages.map((msg) => (
-            currentUser === msg.user ? (       
-            <div className="flex items-start gap-2.5 justify-end" key={msg.id}>
-              <div className="flex flex-col w-full max-w-[480px] leading-1.5 p-4 border-gray-200 bg-blue-500 text-white rounded-s-xl rounded-ee-xl">
-                 <div className="flex items-center space-x-2 rtl:space-x-reverse justify-end">
-                   <span className="text-sm font-semibold">You</span>
-                   <span className="text-sm font-normal">{msg.time}</span>
-                 </div>
-                 <p className="text-sm font-normal py-2.5">{msg.content}</p>
-                 <div className="flex flex-wrap items-center gap-1">
-                  {msg.reactions.map((r) => (
-                    <button
-                      key={r.emoji}
-                      onClick={() => toggleReaction(msg.id, r.emoji)}
-                      className="text-sm px-2 py-1 bg-gray-200 rounded-full hover:bg-gray-300 text-black"
-                    >
-                      {r.emoji} <span className="text-xs text-gray-600">{r.users.length}</span>
-                    </button>
-                  ))}
-                  <button onClick={() => setEmojiPickerFor(msg.id)} className="text-gray-400 hover:text-gray-600 text-sm">➕</button>
-                  {emojiPickerFor === msg.id && (
-                    <div className="z-40 absolute">
-                      <Picker
-                        data={data}
-                        onEmojiSelect={(e) => addReaction(msg.id, e.native)}
-                        theme="light"
-                      />
+            msg.type === 'SYSTEM' ? (
+              <div key={Date.now()} className="text-red text-center">{msg.content}</div>
+            ) : (
+              currentUser === msg.user ? (       
+                <div className="flex items-start gap-2.5 justify-end" key={msg.id}>
+                  <div className="flex flex-col w-full max-w-[480px] leading-1.5 p-4 border-gray-200 bg-blue-500 text-white rounded-s-xl rounded-ee-xl">
+                     <div className="flex items-center space-x-2 rtl:space-x-reverse justify-end">
+                       <span className="text-sm font-semibold">You</span>
+                       <span className="text-sm font-normal">{msg.time}</span>
+                     </div>
+                     <p className="text-sm font-normal py-2.5">{msg.content}</p>
+                     <div className="flex flex-wrap items-center gap-1">
+                      {msg.reactions.map((r) => (
+                        <button
+                          key={r.emoji}
+                          onClick={() => toggleReaction(msg.id, r.emoji)}
+                          className="text-sm px-2 py-1 bg-gray-200 rounded-full hover:bg-gray-300 text-black"
+                        >
+                          {r.emoji} <span className="text-xs text-gray-600">{r.users.length}</span>
+                        </button>
+                      ))}
+                      <button onClick={() => setEmojiPickerFor(msg.id)} className="text-gray-400 hover:text-gray-600 text-sm">➕</button>
+                      {emojiPickerFor === msg.id && (
+                        <div className="z-40 absolute">
+                          <Picker
+                            data={data}
+                            onEmojiSelect={(e) => addReaction(msg.id, e.native)}
+                            theme="light"
+                          />
+                        </div>
+                      )}
                     </div>
+                     
+                  </div>
+               </div>
+               ) : ( 
+                  <div key={msg.id} className={`flex items-start gap-2.5 ${msg.user === currentUser ? 'justify-end' : ''}`}>
+                  {msg.user !== currentUser && (
+                    <img className="w-8 h-8 rounded-full" src={msg.image} alt={msg.user} />
                   )}
-                </div>
-                 
-              </div>
-           </div>
-           ) : (
-              <div key={msg.id} className={`flex items-start gap-2.5 ${msg.user === currentUser ? 'justify-end' : ''}`}>
-              {msg.user !== currentUser && (
-                <img className="w-8 h-8 rounded-full" src={msg.image} alt={msg.user} />
-              )}
-              <div className={`flex flex-col w-full max-w-[480px] leading-1.5 p-4 ${msg.user === currentUser ? 'bg-blue-500 text-white rounded-s-xl rounded-ee-xl' : 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white rounded-e-xl rounded-es-xl'}`}>
-                <div className={`flex items-center space-x-2 rtl:space-x-reverse ${msg.user === currentUser ? 'justify-end' : ''}`}>
-                  <span className="text-sm font-semibold">{msg.user === currentUser ? 'You' : msg.user}</span>
-                  <span className="text-sm font-normal">{msg.time}</span>
-                </div>
-                <p className="text-sm font-normal py-2.5">{msg.content}</p>
-                <div className="flex flex-wrap items-center gap-1">
-                  {msg.reactions.map((r) => (
-                    <button
-                      key={r.emoji}
-                      onClick={() => toggleReaction(msg.id, r.emoji)}
-                      className="text-sm px-2 py-1 bg-gray-200 rounded-full hover:bg-gray-300 text-black"
-                    >
-                      {r.emoji} <span className="text-xs text-gray-600">{r.users.length}</span>
-                    </button>
-                  ))}
-                  <button onClick={() => setEmojiPickerFor(msg.id)} className="text-gray-400 hover:text-gray-600 text-sm">➕</button>
-                  {emojiPickerFor === msg.id && (
-                    <div className="z-40 absolute">
-                      <Picker
-                        data={data}
-                        onEmojiSelect={(e) => addReaction(msg.id, e.native)}
-                        theme="light"
-                      />
+                  <div className={`flex flex-col w-full max-w-[480px] leading-1.5 p-4 ${msg.user === currentUser ? 'bg-blue-500 text-white rounded-s-xl rounded-ee-xl' : 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white rounded-e-xl rounded-es-xl'}`}>
+                    <div className={`flex items-center space-x-2 rtl:space-x-reverse ${msg.user === currentUser ? 'justify-end' : ''}`}>
+                      <span className="text-sm font-semibold">{msg.user === currentUser ? 'You' : msg.user}</span>
+                      <span className="text-sm font-normal">{msg.time}</span>
                     </div>
-                  )}
+                    <p className="text-sm font-normal py-2.5">{msg.content}</p>
+                    <div className="flex flex-wrap items-center gap-1">
+                      {msg.reactions.map((r) => (
+                        
+                        <button
+                          key={r.emoji}
+                          onClick={() => toggleReaction(msg.id, r.emoji)}
+                          className="text-sm px-2 py-1 bg-gray-200 rounded-full hover:bg-gray-300 text-black"
+                        >
+                          {r.emoji} <span className="text-xs text-gray-600">{r.users.length}</span>
+                        </button>
+                      ))}
+                      <button onClick={() => setEmojiPickerFor(msg.id)} className="text-gray-400 hover:text-gray-600 text-sm">➕</button>
+                      {emojiPickerFor === msg.id && (
+                        <div className="z-40 absolute">
+                          <Picker
+                            data={data}
+                            onEmojiSelect={(e) => addReaction(msg.id, e.native)}
+                            theme="light"
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
+                )
             )
-          ))}
+
+          ))
+          }
           <div ref={chatEndRef} />
 
         </div>

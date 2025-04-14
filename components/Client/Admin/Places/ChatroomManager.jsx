@@ -67,7 +67,7 @@ const mockMessages = [
     },
 ]
 export default function AdminChatroomInnerModal(props) {
-    
+    console.log(props, 'is chatroomamanager props')
     const [users, setUsers] = useState([
         { id: 1, name: 'Chloe' },
         { id: 2, name: 'Maya' },
@@ -88,6 +88,8 @@ export default function AdminChatroomInnerModal(props) {
     const [showUsers, setShowUsers] = useState(false);
     const [toast, setToast] = useState('');
     const [socket, setSocket] = useState(null);
+    const [currentUser, setCurrentUser] = useState('');
+    const [userData, setUserData] = useState('');
     const chatEndRef = useRef(null);
 
     // Auto-scroll to latest message
@@ -95,11 +97,24 @@ export default function AdminChatroomInnerModal(props) {
         chatEndRef.current?.scrollIntoView({ behavior: 'smooth' })
     }, [messages]);
 
+    useEffect( () => {
+        if(props.user) {
+          setCurrentUser(props.user.username);
+          setUserData(props.user);
+        }
+        
+    }, [props]);
+
     useEffect(() => {
         setMessages(mockMessages);
         const newSocket = io(ENDPOINT+`?username=${props.user.username}` + "&roomID=" + props.location.room_id + "&business_name="+props.location.locationName, {
             transports: ["websocket"],
         });
+
+        newSocket.on(`intro`, (data) => {
+            console.log(data,' i s intro')
+            // newSocket.broadcast.emit(`message-${props.placeData.room_id}`, data)
+          });
 
         newSocket.on("connect", () => {
             console.log("Connected to WebSocket");
@@ -184,8 +199,8 @@ export default function AdminChatroomInnerModal(props) {
         
         socket.emit(`room-${props.location.room_id}`, {
             id: Date.now(),
-            // user: currentUser,
             user: props.user.username,
+            role: props.user.role,
             content: trimmed,
             time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
             reactions: []

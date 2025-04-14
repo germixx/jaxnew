@@ -58,12 +58,7 @@ export function setupSocket(server) {
     // addToChatArray(socket.handshake.query.username, socket.handshake.query.roomID, socket.handshake.query.business_name)
 
     // Alert channel that new user joined the room
-    io.sockets.in(socket.room).emit('intro', { username: socket.username, date: socket.date_joined });
-
-    socket.on("message", (data) => {
-      console.log("Message received:", data);
-      io.emit("message", data); // Broadcast message to all clients
-    });
+    io.sockets.in(socket.room).emit('intro', { type: 'SYSTEM', username: socket.username, date: socket.date_joined });
 
     socket.on(`room-${socket.handshake.query.roomID}`, (data) => {
       io.emit(`message-${socket.handshake.query.roomID}`, data)
@@ -75,6 +70,11 @@ export function setupSocket(server) {
 
     socket.onAny((event, data) => {
       console.log(`📥 Received event "${event}" with data:`, data);
+    });
+
+    socket.on("message", (data) => {
+      console.log("Message received:", data);
+      io.emit("message", data); // Broadcast message to all clients
     });
 
   //   socket.on('message-received', (e) => {
@@ -104,16 +104,23 @@ export function setupSocket(server) {
 
   // });
 
+    socket.on('onLeave', (data) => {
+      socket.to(socket.room).emit('onExit', { type: 'SYSTEM', username: socket.username, date: socket.date_joined });
+    });
+
     socket.on('disconnect', (daata) => {
       console.log("User disconnected:", socket.id);
       // socket.rooms === {}
+      // io.sockets.in(socket.room).emit('onExit', { type: 'SYSTEM', username: socket.username, date: socket.date_joined });
+      // socket.to(socket.room).emit('onExit', { type: 'SYSTEM', username: socket.username, date: socket.date_joined });
       if (chatUsers[socket.room] !== undefined) {
           chatUsers[socket.room].userCount = chatUsers[socket.room].userCount - 1;
           chatUsers[socket.room].users.remove(socket.username);
           io.sockets.in(socket.room).emit(`users ${socket.room}`, { users: chatUsers[socket.room] });
       }
 
-  });
+    });
+
   });
 
   return io;
