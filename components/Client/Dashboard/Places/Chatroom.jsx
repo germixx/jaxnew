@@ -116,7 +116,7 @@ export default function ChatModal(props) {
         console.log("New message:", data);
       });
 
-      newSocket.on(`message ${props.placeData.locationName}`, (data) => {
+      newSocket.on(`message-${props.placeData.room_id}`, (data) => {
         console.log("Room Message:", data);
         
         // if(data.user === currentUser) {
@@ -128,11 +128,11 @@ export default function ChatModal(props) {
         ]);
       });
 
-      newSocket.on(`room ${props.placeData.locationName}`, (data) => {
-        newSocket.broadcast.emit(`message ${props.placeData.locationName}`, data)
+      newSocket.on(`room ${props.placeData.room_id}`, (data) => {
+        newSocket.broadcast.emit(`message ${props.placeData.room_id}`, data)
       });
 
-      newSocket.on(`emoji ${props.placeData.locationName}`, (data) => {        
+      newSocket.on(`emoji-${props.placeData.room_id}`, (data) => {        
           setMessages((prev) =>
             prev.map((msg) => {
               if (msg.id !== data.msgID) return msg
@@ -154,8 +154,8 @@ export default function ChatModal(props) {
         )
       });
 
-      newSocket.on(`intro ${props.placeData.locationName}`, (data) => {
-        newSocket.broadcast.emit(`message ${props.placeData.locationName}`, data)
+      newSocket.on(`intro-${props.placeData.room_id}`, (data) => {
+        newSocket.broadcast.emit(`message-${props.placeData.room_id}`, data)
       });
   
       setSocket(newSocket);
@@ -164,7 +164,6 @@ export default function ChatModal(props) {
         return () => {
           newSocket.disconnect();
           setSocket(null);
-          console.log(socket, ' is socket disecon')
         };
     }
 
@@ -210,7 +209,7 @@ export default function ChatModal(props) {
   const sendMessage = () => {
     if (!newMessage.trim()) return
     
-    socket.emit(`room ${props.placeData.locationName}`, {
+    socket.emit(`room-${props.placeData.room_id}`, {
       id: Date.now(),
       user: currentUser,
       content: newMessage,
@@ -223,7 +222,7 @@ export default function ChatModal(props) {
   }
 
   const toggleReaction = (msgId, emoji) => {
-    socket.emit(`emoji ${props.placeData.locationName}`, {
+    socket.emit(`emoji-${props.placeData.room_id}`, {
       id: Date.now(),
       msgID: msgId,
       user: currentUser,

@@ -65,14 +65,16 @@ export function setupSocket(server) {
       io.emit("message", data); // Broadcast message to all clients
     });
 
-    socket.on(`room ${socket.handshake.query.business_name}`, (data) => {
-      console.log(socket.handshake.query.business_name,' i s biz name')
-      console.log(data, ' is dthe asdasdada')
-      io.emit(`message ${socket.handshake.query.business_name}`, data)
+    socket.on(`room-${socket.handshake.query.roomID}`, (data) => {
+      io.emit(`message-${socket.handshake.query.roomID}`, data)
     });
 
-    socket.on(`emoji ${socket.handshake.query.business_name}`, (data) => {
-      io.emit(`emoji ${socket.handshake.query.business_name}`, data)
+    socket.on(`emoji-${socket.handshake.query.roomID}`, (data) => {
+      io.emit(`emoji-${socket.handshake.query.roomID}`, data)
+    });
+
+    socket.onAny((event, data) => {
+      console.log(`📥 Received event "${event}" with data:`, data);
     });
 
   //   socket.on('message-received', (e) => {

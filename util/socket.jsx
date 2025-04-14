@@ -8,10 +8,12 @@ import { io } from 'socket.io-client';
 
 let socket;
 
-export const getSocket = () => {
+export const getSocket = (username, roomID) => {
+ 
   if (!socket && typeof window !== 'undefined') {
-    socket = io('https://jacksonvillians.com', {
-      withCredentials: true,
+    socket = io(`https://jacksonvillians.com?username=${username}&roomID=${roomID}`, {
+      // withCredentials: true,
+      transports: ["websocket"]
     });
   }
   return socket;

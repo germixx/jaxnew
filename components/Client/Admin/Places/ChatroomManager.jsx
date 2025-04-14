@@ -1,9 +1,10 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react';
-import * as socketIOClient from "socket.io-client";
 import { marked } from 'marked';
 import { io } from "socket.io-client";
+
+// import { getSocket } from '@/util/socket';
 
 const ENDPOINT = "https://jacksonvillians.com";
 
@@ -15,7 +16,6 @@ const slashCommands = [
     { name: '/clear', description: 'Clear the chat history' }
 ];
 
-// const socket = io('http://localhost:3001') // Replace with your server
 const mockMessages = [
     {
         id: 1,
@@ -67,7 +67,7 @@ const mockMessages = [
     },
 ]
 export default function AdminChatroomInnerModal(props) {
-    console.log(props, ' s orpospospops')
+    
     const [users, setUsers] = useState([
         { id: 1, name: 'Chloe' },
         { id: 2, name: 'Maya' },
@@ -93,12 +93,11 @@ export default function AdminChatroomInnerModal(props) {
     // Auto-scroll to latest message
     useEffect(() => {
         chatEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-    }, [messages])
+    }, [messages]);
 
     useEffect(() => {
         setMessages(mockMessages);
-        // const newSocket = io(ENDPOINT+`?username=${props.user.username}` + "&roomID=" + props.placeData.room_id + "&business_name=" + props.placeData.locationName, {
-         const newSocket = io(ENDPOINT+`?username=${props.user.username}`, {
+        const newSocket = io(ENDPOINT+`?username=${props.user.username}` + "&roomID=" + props.location.room_id + "&business_name="+props.location.locationName, {
             transports: ["websocket"],
         });
 
@@ -106,7 +105,7 @@ export default function AdminChatroomInnerModal(props) {
             console.log("Connected to WebSocket");
         });
 
-        newSocket.on(`message ${props.location.locationName}`, (data) => {
+        newSocket.on(`message-${props.location.room_id}`, (data) => {
             console.log("Room Message:", data);
             
             setMessages((prev) => [
@@ -122,15 +121,28 @@ export default function AdminChatroomInnerModal(props) {
             setSocket(null);
         };
 
-    }, [props])
+    }, []);
 
-    // Listen for messages from socket
     // useEffect(() => {
-    //     socket.on('chat-message', (data) => {
-    //         setMessages((prev) => [...prev, data])
-    //     })
-    //     return () => socket.off('chat-message')
-    // }, [])
+    //     // Client-side only
+    //     if (typeof window !== 'undefined') {
+    //       const s = getSocket(props.user.username, props.location.room_id);
+           
+
+    //     s.on(`message-${props.location.room_id}`, (data) => {
+    //         console.log("Room Messagez:", data);
+            
+    //         setMessages((prev) => [
+    //           ...prev,
+    //           data
+    //         ]);
+    //     });
+
+    //       setSocket(s);
+    //     }
+
+    // return () => socket.off('chat-message')
+    //   }, []);
 
     const showToast = (msg) => {
         setToast(msg);
@@ -155,7 +167,7 @@ export default function AdminChatroomInnerModal(props) {
             return true;
         }
 
-        return false
+        return false;
     }
 
     const sendMessage = () => {
@@ -169,20 +181,16 @@ export default function AdminChatroomInnerModal(props) {
                 return;
             }
         }
-
-        console.log(props.location.locationName, ' is the namer');
-        console.log(socket, ' is sock s');
-        console.log(trimmed, ' is trimmed');
-        socket.emit(`room ${props.location.locationName}`, {
+        
+        socket.emit(`room-${props.location.room_id}`, {
             id: Date.now(),
             // user: currentUser,
-            user: 'Admin',
+            user: props.user.username,
             content: trimmed,
             time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
             reactions: []
           });
-        
-        // setMessages((prev) => [...prev, messageData])
+
         setNewMessage('');
         showToast('Message sent!');
     }
@@ -279,230 +287,3 @@ export default function AdminChatroomInnerModal(props) {
         </div>
     )
 }
-
-
-// import { useState } from 'react'
-// import { Picker } from 'emoji-mart'
-// // import 'emoji-mart/css/emoji-mart.css'
-
-// const slashCommands = [
-//     { name: '/kick', description: 'Kick a user from the chat' },
-//     { name: '/ban', description: 'Ban a user permanently' },
-//     { name: '/assign', description: 'Assign a task to a user' },
-//     { name: '/status', description: 'Set a custom status' },
-//     { name: '/clear', description: 'Clear the chat history' }
-// ]
-
-// const usersInRoom = [
-//     { id: 1, name: 'Chloe' },
-//     { id: 2, name: 'Maya' },
-//     { id: 3, name: 'Tyler' },
-//     { id: 4, name: 'Admin' }
-// ]
-
-// const currentUser = 'Admin'
-
-// const mockMessages = [
-//     {
-//         id: 1,
-//         user: 'Chloe',
-//         content: 'Morning everyone! ☀️',
-//         time: '10:01 AM',
-//         reactions: [
-//             { emoji: '🔥', users: ['Maya'] },
-//             { emoji: '😂', users: ['Admin', 'Maya'] }
-//         ]
-//     },
-//     {
-//         id: 2,
-//         user: 'Tyler',
-//         content: 'Working on the dashboard today!',
-//         time: '10:05 AM',
-//         reactions: []
-//     }
-// ]
-
-// export default function AdminChatroomInner() {
-//     const [newMessage, setNewMessage] = useState('')
-//     const [messages, setMessages] = useState(mockMessages)
-//     const [showSuggestions, setShowSuggestions] = useState(false)
-//     const [filteredCommands, setFilteredCommands] = useState([])
-//     const [mentionSuggestions, setMentionSuggestions] = useState([])
-//     const [showMentions, setShowMentions] = useState(false)
-//     const [showEmojiPicker, setShowEmojiPicker] = useState(false)
-//     const [emojiPickerFor, setEmojiPickerFor] = useState(null)
-
-//     const handleInputChange = (e) => {
-//         const value = e.target.value
-//         setNewMessage(value)
-
-//         if (value.startsWith('/')) {
-//             const query = value.slice(1).toLowerCase()
-//             const matches = slashCommands.filter((cmd) =>
-//                 cmd.name.slice(1).startsWith(query)
-//             )
-//             setFilteredCommands(matches)
-//             setShowSuggestions(matches.length > 0)
-//         } else {
-//             setShowSuggestions(false)
-//         }
-
-//         const atMatch = value.match(/@(\w*)$/)
-//         if (atMatch) {
-//             const query = atMatch[1].toLowerCase()
-//             const matches = usersInRoom.filter((u) =>
-//                 u.name.toLowerCase().startsWith(query)
-//             )
-//             setMentionSuggestions(matches)
-//             setShowMentions(matches.length > 0)
-//         } else {
-//             setShowMentions(false)
-//         }
-//     }
-
-//     const sendMessage = () => {
-//         if (!newMessage.trim()) return
-//         setMessages((prev) => [
-//             ...prev,
-//             {
-//                 id: Date.now(),
-//                 user: currentUser,
-//                 content: newMessage,
-//                 time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-//                 reactions: []
-//             }
-//         ])
-//         setNewMessage('')
-//         setShowSuggestions(false)
-//         setShowMentions(false)
-//     }
-
-//     const toggleReaction = (msgId, emoji) => {
-//         setMessages((prev) =>
-//             prev.map((msg) => {
-//                 if (msg.id !== msgId) return msg
-//                 const r = msg.reactions.find((r) => r.emoji === emoji)
-//                 if (r) {
-//                     if (r.users.includes(currentUser)) {
-//                         r.users = r.users.filter((u) => u !== currentUser)
-//                     } else {
-//                         r.users.push(currentUser)
-//                     }
-//                     return { ...msg, reactions: [...msg.reactions] }
-//                 } else {
-//                     return {
-//                         ...msg,
-//                         reactions: [...msg.reactions, { emoji, users: [currentUser] }]
-//                     }
-//                 }
-//             })
-//         )
-//     }
-
-//     const addReaction = (msgId, emoji) => {
-//         setEmojiPickerFor(null)
-//         toggleReaction(msgId, emoji)
-//     }
-
-//     return (
-//         <div className="space-y-4">
-//             {/* USERS LIST */}
-//             <div className="flex flex-wrap gap-2 text-sm">
-//                 {usersInRoom.map((user) => (
-//                     <div key={user.id} className="bg-gray-200 px-3 py-1 rounded-full flex items-center gap-1">
-//                         {user.name}
-//                         <button className="text-xs text-red-500 ml-1">Ban</button>
-//                         <button className="text-xs text-yellow-500">Kick</button>
-//                     </div>
-//                 ))}
-//             </div>
-
-//             {/* CHAT MESSAGES */}
-//             <div className="bg-gray-100 p-3 rounded-md h-72 overflow-y-auto space-y-3">
-//                 {messages.map((msg) => (
-//                     <div key={msg.id} className="relative">
-//                         <div className="text-sm">
-//                             <strong>{msg.user}</strong>: {msg.content}
-//                             <div className="text-xs text-gray-500">{msg.time}</div>
-//                         </div>
-//                         <div className="flex items-center gap-2 mt-1">
-//                             {msg.reactions.map((r) => (
-//                                 <button
-//                                     key={r.emoji}
-//                                     onClick={() => toggleReaction(msg.id, r.emoji)}
-//                                     className="text-sm px-2 py-1 bg-gray-200 rounded-full hover:bg-gray-300"
-//                                 >
-//                                     {r.emoji} <span className="text-xs text-gray-600">{r.users.length}</span>
-//                                 </button>
-//                             ))}
-//                             <button
-//                                 onClick={() => setEmojiPickerFor(msg.id)}
-//                                 className="text-gray-400 hover:text-gray-600 text-sm"
-//                             >
-//                                 ➕
-//                             </button>
-//                             {emojiPickerFor === msg.id && (
-//                                 <div className="absolute z-40">
-//                                     <Picker onSelect={(e) => addReaction(msg.id, e.native)} theme="light" />
-//                                 </div>
-//                             )}
-//                         </div>
-//                     </div>
-//                 ))}
-//             </div>
-
-//             {/* TEXTAREA + AUTOCOMPLETE */}
-//             <div className="relative w-full">
-//                 <textarea
-//                     className="w-full p-2 text-sm rounded border resize-none focus:outline-none"
-//                     placeholder="Type a message, or / for commands"
-//                     rows={2}
-//                     value={newMessage}
-//                     onChange={handleInputChange}
-//                 />
-//                 <button
-//                     onClick={sendMessage}
-//                     className="absolute bottom-2 right-2 bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700"
-//                 >
-//                     Send
-//                 </button>
-
-//                 {showSuggestions && (
-//                     <ul className="absolute bottom-14 left-0 bg-white border w-64 shadow-md rounded z-20">
-//                         {filteredCommands.map((cmd) => (
-//                             <li
-//                                 key={cmd.name}
-//                                 onClick={() => {
-//                                     setNewMessage(cmd.name + ' ')
-//                                     setShowSuggestions(false)
-//                                 }}
-//                                 className="px-3 py-2 cursor-pointer hover:bg-gray-100 text-sm"
-//                             >
-//                                 <span className="text-blue-600 font-mono">{cmd.name}</span>
-//                                 <span className="ml-2 text-gray-500">{cmd.description}</span>
-//                             </li>
-//                         ))}
-//                     </ul>
-//                 )}
-
-//                 {showMentions && (
-//                     <ul className="absolute bottom-14 left-0 bg-white border w-64 shadow-md rounded z-30">
-//                         {mentionSuggestions.map((user) => (
-//                             <li
-//                                 key={user.id}
-//                                 onClick={() => {
-//                                     const updated = newMessage.replace(/@(\w*)$/, `@${user.name} `)
-//                                     setNewMessage(updated)
-//                                     setShowMentions(false)
-//                                 }}
-//                                 className="px-3 py-2 cursor-pointer hover:bg-gray-100 text-sm"
-//                             >
-//                                 <span className="text-blue-600 font-semibold">@{user.name}</span>
-//                             </li>
-//                         ))}
-//                     </ul>
-//                 )}
-//             </div>
-//         </div>
-//     )
-// }
