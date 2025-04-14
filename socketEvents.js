@@ -35,7 +35,7 @@ export function setupSocket(server) {
   io.on("connection", (socket) => {
 
     // console.log(socket, ' is the socket', socket.handshake.query)
-    console.log("A user connected:", socket.id, socket.handshake.query.username);
+    console.log("A user connected:", socket.id, socket.handshake.query.username, socket.handshake.query.roomID, socket.handshake.query.business_name);
 
     // Add Socket ID to array for specific messaging
     socketUserIDs[socket.handshake.query.username] = socket.id;
@@ -63,6 +63,16 @@ export function setupSocket(server) {
     socket.on("message", (data) => {
       console.log("Message received:", data);
       io.emit("message", data); // Broadcast message to all clients
+    });
+
+    socket.on(`room ${socket.handshake.query.business_name}`, (data) => {
+      console.log(socket.handshake.query.business_name,' i s biz name')
+      console.log(data, ' is dthe asdasdada')
+      io.emit(`message ${socket.handshake.query.business_name}`, data)
+    });
+
+    socket.on(`emoji ${socket.handshake.query.business_name}`, (data) => {
+      io.emit(`emoji ${socket.handshake.query.business_name}`, data)
     });
 
   //   socket.on('message-received', (e) => {

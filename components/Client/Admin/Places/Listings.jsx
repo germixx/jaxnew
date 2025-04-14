@@ -5,7 +5,7 @@ import { useState } from 'react';
 import EditListing from './EditPlace';
 
 const Listings = (props) => {
-
+    console.log(props , ' is da propssys')
     const [selectedBusiness, setSelectedBusiness] = useState(props.selectedBusiness);
 
     if (props.places) {
@@ -46,6 +46,7 @@ const Listings = (props) => {
             {props.selectedBusiness && (
                 <EditListing
                     location={props.selectedBusiness}
+                    user={props.user}
                     onClose={() => props.setSelectedBusiness(null)}
                     onSave={props.updatePlaces}
                 />

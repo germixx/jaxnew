@@ -7,13 +7,17 @@ import Loading from '../../../components/Loading';
 import NewPlaceModal from '../../../components/Client/Admin/Places/NewPlace';
 import Locations from '../../../components/Client/Admin/Places/Listings';
 
+import { useUser } from "@/context/UserContext";
+
 import {
     getLocationsAdmin,
     editPlaceDataAdmin
 } from '../../../util/functions/client/admin/functions';
 
-const AdminPlaces = () => {
+const AdminPlaces = (props) => {
 
+    const { user, login, logout } = useUser();
+    
     const [isLoading, SetIsLoading] = useState(true);
     const [placess, setPlaces] = useState([]);
     const [selectedBusiness, setSelectedBusiness] = useState(null);
@@ -85,6 +89,7 @@ const AdminPlaces = () => {
                         />
                         <Locations
                             places={placess}
+                            user={user}
                             updatePlaces={updatePlacesData}
                             setPlaces={setPlaces}
                             selectedBusiness={selectedBusiness}

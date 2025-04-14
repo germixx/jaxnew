@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 
 import { useParams } from 'next/navigation'
 
+import { useUser } from "@/context/UserContext";
+
 import Loading from '../../../../components/Loading';
 import ChatRoom from '../../../../components/Client/Dashboard/Places/Chatroom';
 import Reviews from '../../../../components/Client/Dashboard/Places/Reviews';
@@ -17,7 +19,9 @@ export default function Place () {
 
    const params = useParams();
    
-   const ids = (params).placeID
+   const ids = (params).placeID;
+
+   const { user, login, logout } = useUser();
 
    const [isLoading, setIsLoading] = useState(false);
    const [placeData, setPlaceData] = useState({});
@@ -187,7 +191,7 @@ export default function Place () {
       ];
 
       // Delete ABOVE
-    
+    console.log(user, ' is da usernames')
     return (
 
         <div>
@@ -367,7 +371,7 @@ export default function Place () {
 
                         
                     </div>
-                    <ChatRoom placeData={placeData} chatIsOpen={chatOpen} disconnectChat={disconnectChat} />
+                    <ChatRoom placeData={placeData} chatIsOpen={chatOpen} disconnectChat={disconnectChat} user={user} />
                     {/* <Reviews placeData={placeData} reviews={reviews}  /> */}
                     <AsSeenIn mediaData={mediaData} />
                     <Events placeData={placeData} events={events} />

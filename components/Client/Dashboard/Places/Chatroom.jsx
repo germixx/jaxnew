@@ -3,9 +3,9 @@
 import * as socketIOClient from "socket.io-client";
 
 // // import { socket } from "../../../../util/socket";
-// import { io } from "socket.io-client";
+import { io } from "socket.io-client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Picker from '@emoji-mart/react';
 // import 'emoji-mart/css/emoji-mart.css'
 import data from '@emoji-mart/data';
@@ -61,6 +61,7 @@ const mockMessages = [
 ];
 
 export default function ChatModal(props) {
+  
   const [newMessage, setNewMessage] = useState('');
   const [messages, setMessages] = useState(mockMessages);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -69,7 +70,8 @@ export default function ChatModal(props) {
   const [showMentions, setShowMentions] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [emojiPickerFor, setEmojiPickerFor] = useState(null);
-  const [currentUser, setCurrentUser] = useState('Admin');
+  const [currentUser, setCurrentUser] = useState('');
+  const chatEndRef = useRef(null);
 
   const [isOpen, setIsOpen] = useState(false);
   const [socket, setSocket] = useState(null);
@@ -80,39 +82,93 @@ export default function ChatModal(props) {
     '#D8BFD8', '#FF6347', '#4682B4', '#008080', '#00BFFF', '#FF8C00', '#ADD8E6', '#B0E0E6', '#FF1493', '#F08080', '#0000CD', '#A0522D', '#DC143C'
   ]);
 
-    // useEffect( ()=>{
+  // Auto-scroll to latest message
+  useEffect(() => {
+        chatEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [messages])
+
+  useEffect( () => {
+    if(props.user) {
+      setCurrentUser(props.user.username);
+    }
+    
+  }, [props]);
+
+  useEffect( () => {
     // socket = socketIOClient.io(ENDPOINT + "?username=" + (props.user ? props.user.username : '') + "&roomID=" + router.query.id + "&business_name=" + router.query.name, { secure: true })
     // socket = socketIOClient.io(ENDPOINT + "?username=test" , { secure: true })
 
-    // if (props.chatIsOpen && !socket) {
+    if (props.chatIsOpen && !socket) {
       
       // setSocket((prev) => {
       //   return socketIOClient.io(ENDPOINT + "?username=test" , { secure: true });
       // })
 
-  //     const newSocket = io(ENDPOINT+"?username=testy" + "&roomID=" + props.placeData.room_id + "&business_name=" + props.placeData.locationName, {
-  //         transports: ["websocket"],
-  //     });
+      const newSocket = io(ENDPOINT+`?username=${props.user.username}` + "&roomID=" + props.placeData.room_id + "&business_name=" + props.placeData.locationName, {
+          transports: ["websocket"],
+      });
   
-  //     newSocket.on("connect", () => {
-  //         console.log("Connected to WebSocket");
-  //     });
+      newSocket.on("connect", () => {
+          console.log("Connected to WebSocket");
+      });
   
-  //     newSocket.on("message", (data) => {
-  //         console.log("New message:", data);
-  //     });
-  
-  //     setSocket(newSocket);
-  //     setIsOpen(props.chatIsOpen);
-  
-  //       return () => {
-  //         newSocket.disconnect();
-  //         setSocket(null);
-  //         console.log(socket, ' is socket disecon')
-  //       };
-  //   }
+      newSocket.on("message", (data) => {
+        console.log("New message:", data);
+      });
 
-  // }, [props.chatIsOpen]);
+      newSocket.on(`message ${props.placeData.locationName}`, (data) => {
+        console.log("Room Message:", data);
+        
+        // if(data.user === currentUser) {
+        //   return;
+        // }
+        setMessages((prev) => [
+          ...prev,
+          data
+        ]);
+      });
+
+      newSocket.on(`room ${props.placeData.locationName}`, (data) => {
+        newSocket.broadcast.emit(`message ${props.placeData.locationName}`, data)
+      });
+
+      newSocket.on(`emoji ${props.placeData.locationName}`, (data) => {        
+          setMessages((prev) =>
+            prev.map((msg) => {
+              if (msg.id !== data.msgID) return msg
+              const r = msg.reactions.find((r) => r.emoji === data.reactions)
+              if (r) {
+                if (r.users.includes(data.user)) {
+                  r.users = r.users.filter((u) => u !== data.user)
+                } else {
+                  r.users.push(currentUser)
+                }
+                return { ...msg, reactions: [...msg.reactions] }
+              } else {
+                return {
+                  ...msg,
+                  reactions: [...msg.reactions, { emoji: data.reactions, users: [data.user] }]
+                }
+              }
+            })
+        )
+      });
+
+      newSocket.on(`intro ${props.placeData.locationName}`, (data) => {
+        newSocket.broadcast.emit(`message ${props.placeData.locationName}`, data)
+      });
+  
+      setSocket(newSocket);
+      setIsOpen(props.chatIsOpen);
+  
+        return () => {
+          newSocket.disconnect();
+          setSocket(null);
+          console.log(socket, ' is socket disecon')
+        };
+    }
+
+  }, [props.chatIsOpen]);
 
   const closeModal = () => {
     props.disconnectChat();
@@ -153,41 +209,28 @@ export default function ChatModal(props) {
 
   const sendMessage = () => {
     if (!newMessage.trim()) return
-    setMessages((prev) => [
-      ...prev,
-      {
-        id: Date.now(),
-        user: currentUser,
-        content: newMessage,
-        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        reactions: []
-      }
-    ])
+    
+    socket.emit(`room ${props.placeData.locationName}`, {
+      id: Date.now(),
+      user: currentUser,
+      content: newMessage,
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      reactions: []
+    });
     setNewMessage('')
     setShowSuggestions(false)
     setShowMentions(false)
   }
 
   const toggleReaction = (msgId, emoji) => {
-    setMessages((prev) =>
-      prev.map((msg) => {
-        if (msg.id !== msgId) return msg
-        const r = msg.reactions.find((r) => r.emoji === emoji)
-        if (r) {
-          if (r.users.includes(currentUser)) {
-            r.users = r.users.filter((u) => u !== currentUser)
-          } else {
-            r.users.push(currentUser)
-          }
-          return { ...msg, reactions: [...msg.reactions] }
-        } else {
-          return {
-            ...msg,
-            reactions: [...msg.reactions, { emoji, users: [currentUser] }]
-          }
-        }
-      })
-    )
+    socket.emit(`emoji ${props.placeData.locationName}`, {
+      id: Date.now(),
+      msgID: msgId,
+      user: currentUser,
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      reactions: emoji
+    });
+
   }
 
   const addReaction = (msgId, emoji) => {
@@ -273,6 +316,7 @@ export default function ChatModal(props) {
             </div>
             )
           ))}
+          <div ref={chatEndRef} />
 
         </div>
 
@@ -328,3 +372,4 @@ export default function ChatModal(props) {
     </div>
   )
 }
+ 

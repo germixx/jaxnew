@@ -1,8 +1,11 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react';
-import { io } from 'socket.io-client';
+import * as socketIOClient from "socket.io-client";
 import { marked } from 'marked';
+import { io } from "socket.io-client";
+
+const ENDPOINT = "https://jacksonvillians.com";
 
 const slashCommands = [
     { name: '/kick', description: 'Kick a user from the chat' },
@@ -12,7 +15,7 @@ const slashCommands = [
     { name: '/clear', description: 'Clear the chat history' }
 ];
 
-const socket = io('http://localhost:3001') // Replace with your server
+// const socket = io('http://localhost:3001') // Replace with your server
 const mockMessages = [
     {
         id: 1,
@@ -63,7 +66,8 @@ const mockMessages = [
         time: '10:19 AM',
     },
 ]
-export default function AdminChatroomInnerModal() {
+export default function AdminChatroomInnerModal(props) {
+    console.log(props, ' s orpospospops')
     const [users, setUsers] = useState([
         { id: 1, name: 'Chloe' },
         { id: 2, name: 'Maya' },
@@ -79,11 +83,12 @@ export default function AdminChatroomInnerModal() {
         { id: 12, name: 'Admin' },
     ])
 
-    const [messages, setMessages] = useState([])
-    const [newMessage, setNewMessage] = useState('')
-    const [showUsers, setShowUsers] = useState(false)
-    const [toast, setToast] = useState('')
-    const chatEndRef = useRef(null)
+    const [messages, setMessages] = useState([]);
+    const [newMessage, setNewMessage] = useState('');
+    const [showUsers, setShowUsers] = useState(false);
+    const [toast, setToast] = useState('');
+    const [socket, setSocket] = useState(null);
+    const chatEndRef = useRef(null);
 
     // Auto-scroll to latest message
     useEffect(() => {
@@ -91,66 +96,95 @@ export default function AdminChatroomInnerModal() {
     }, [messages])
 
     useEffect(() => {
-        setMessages(mockMessages)
-    }, [])
+        setMessages(mockMessages);
+        // const newSocket = io(ENDPOINT+`?username=${props.user.username}` + "&roomID=" + props.placeData.room_id + "&business_name=" + props.placeData.locationName, {
+         const newSocket = io(ENDPOINT+`?username=${props.user.username}`, {
+            transports: ["websocket"],
+        });
+
+        newSocket.on("connect", () => {
+            console.log("Connected to WebSocket");
+        });
+
+        newSocket.on(`message ${props.location.locationName}`, (data) => {
+            console.log("Room Message:", data);
+            
+            setMessages((prev) => [
+              ...prev,
+              data
+            ]);
+        });
+
+        setSocket(newSocket);
+        
+        return () => {
+            newSocket.disconnect();
+            setSocket(null);
+        };
+
+    }, [props])
 
     // Listen for messages from socket
-    useEffect(() => {
-        socket.on('chat-message', (data) => {
-            setMessages((prev) => [...prev, data])
-        })
-        return () => socket.off('chat-message')
-    }, [])
+    // useEffect(() => {
+    //     socket.on('chat-message', (data) => {
+    //         setMessages((prev) => [...prev, data])
+    //     })
+    //     return () => socket.off('chat-message')
+    // }, [])
 
     const showToast = (msg) => {
-        setToast(msg)
-        setTimeout(() => setToast(''), 3000)
+        setToast(msg);
+        setTimeout(() => setToast(''), 3000);
     }
 
     // Slash command parser
     const handleSlashCommand = (msg) => {
-        const parts = msg.trim().split(' ')
-        const cmd = parts[0]
-        const target = parts[1]
+        const parts = msg.trim().split(' ');
+        const cmd = parts[0];
+        const target = parts[1];
 
         if (cmd === '/kick') {
             setUsers((prev) => prev.filter((u) => u.name !== target))
-            showToast(`User "${target}" has been kicked.`)
-            return true
+            showToast(`User "${target}" has been kicked.`);
+            return true;
         }
 
         if (cmd === '/ban') {
             setUsers((prev) => prev.filter((u) => u.name !== target))
-            showToast(`User "${target}" has been banned.`)
-            return true
+            showToast(`User "${target}" has been banned.`);
+            return true;
         }
 
         return false
     }
 
     const sendMessage = () => {
-        const trimmed = newMessage.trim()
-        if (!trimmed) return
+        const trimmed = newMessage.trim();
+        if (!trimmed) return;
 
         if (trimmed.startsWith('/')) {
             const handled = handleSlashCommand(trimmed)
             if (handled) {
-                setNewMessage('')
-                return
+                setNewMessage('');
+                return;
             }
         }
 
-        const messageData = {
+        console.log(props.location.locationName, ' is the namer');
+        console.log(socket, ' is sock s');
+        console.log(trimmed, ' is trimmed');
+        socket.emit(`room ${props.location.locationName}`, {
             id: Date.now(),
+            // user: currentUser,
             user: 'Admin',
             content: trimmed,
             time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        }
-
-        socket.emit('chat-message', messageData)
-        setMessages((prev) => [...prev, messageData])
-        setNewMessage('')
-        showToast('Message sent!')
+            reactions: []
+          });
+        
+        // setMessages((prev) => [...prev, messageData])
+        setNewMessage('');
+        showToast('Message sent!');
     }
 
     return (
