@@ -44,6 +44,20 @@ async function banUser(roomID, username, duration = 300) {
   await redis.set(key, '1', 'EX', duration)
 }
 
+async function getUserSocketFromRedisDB (roomID, username) {
+    return await redis.get(`user_socket:${roomID}:${username}`);
+}
+
+async function isUserKicked(roomID, username) {
+  const key = `kick:${roomID}:${username}`
+  return await redis.exists(key)
+}
+
+async function kickUser(roomID, username, duration = 300) {
+  const key = `kick:${roomID}:${username}`;
+  await redis.set(key, 'true', 'EX', duration);
+}
+
 async function getOnlineUsers(roomId) {
   return await redis.smembers(`online:${roomId}`)
 }
@@ -53,58 +67,73 @@ async function userLeave(roomId, username) {
 }
 
   io.on("connection", async (socket) => {
-
-    // console.log(socket, ' is the socket', socket.handshake.query)
     console.log("A user connected:", socket.id, socket.handshake.query.username, socket.handshake.query.roomID, socket.handshake.query.business_name);
 
     const {username, roomID, business_name} = socket.handshake.query;
 
+    // check is parameters are set
     if (!username || !roomID) {
-      console.log('Missing username or roomID, disconnecting.')
-      return socket.disconnect()
+      console.log('Missing username or roomID, disconnecting.');
+      return socket.disconnect();
     }
 
-    const banned = await isUserBanned(roomID, username)
+    // Check if user is banned
+    const banned = await isUserBanned(roomID, username);
     if (banned) {
-      console.log(`🚫 ${username} is banned from room ${roomID}`)
-      socket.emit('banned', 'You are banned from this room.')
-      return socket.disconnect()
+      console.log(`🚫 ${username} is banned from room ${roomID}`);
+      socket.emit('join-denied', 'You have been banned from this room');
+      return socket.disconnect();
     }
 
-    socket.join(socket.handshake.query.roomID);
+    const kicked = await isUserKicked(roomID, username);
+    if(kicked) {
+      console.log(`🚫 ${username} is kicked from room ${roomID}`);
+      socket.emit('join-denied', 'You have been kicked from this room');
+      return socket.disconnect();
+    }
+
+    const isUsers = await redis.smembers(`online:${roomID}`);
+    let res = isUsers.includes(username);
+    if(res) {
+      socket.emit(`already-in-chat`, 'already in chat')
+      return socket.disconnect();
+    }
+
+    const userSocketKey = `user_socket:${roomID}:${username}`;
+    const existingSocketId = await redis.get(userSocketKey);
+
+      // Kick old socket if needed
+    if (existingSocketId && existingSocketId !== socket.id) {
+      const oldSocket = io.sockets.sockets.get(existingSocketId);
+      if (oldSocket) oldSocket.disconnect(true);
+    }
+
+     // Save socket -> user info
+    await redis.set(userSocketKey, socket.id);
+    await redis.hset(`socket:${socket.id}`, {
+      username,
+      roomID
+    });
+
+    // Joins room by ID
+    socket.join(roomID);
 
     // Add user to Redis Online room users list
     await redis.sadd(`online:${roomID}`, `${username}`);
-
-    // Add Socket ID to array for specific messaging
-    socketUserIDs[socket.handshake.query.username] = socket.id;
-
-    // Assign username to socket
-    socket.username = socket.handshake.query.username;
-
-    // Assign requested room ID
-    socket.room = socket.handshake.query.roomID;
-
-    // Assign request room name
-    socket.roomName = socket.handshake.query.business_name;
-
-    // Date Joined
+  
+    // Save for local memory use
+    socket.data.username = username;
+    socket.data.roomID = roomID;
+    socket.data.business_name = business_name;
     socket.date_joined = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
-    // User socket joins room
-    // socket.join(socket.handshake.query.roomID);
-
-    // addToChatArray(socket.handshake.query.username, socket.handshake.query.roomID, socket.handshake.query.business_name)
-
     // Alert channel that new user joined the room
-    io.sockets.in(socket.room).emit('intro', { type: 'SYSTEM', username: socket.username, date: socket.date_joined });
+    io.sockets.in(roomID).emit('intro', { type: 'SYSTEM', username: socket.data.username, date: socket.date_joined });
     
     // Get online users list
     const users = await redis.smembers(`online:${roomID}`);
-    console.log(users, ' is da users')
-    io.sockets.in(socket.room).emit('online-users',  users );
- 
-  
+    io.sockets.in(roomID).emit('online-users',  users );
+    
     socket.on(`room-${socket.handshake.query.roomID}`, (data) => {
       io.emit(`message-${socket.handshake.query.roomID}`, data)
     });
@@ -113,10 +142,23 @@ async function userLeave(roomId, username) {
       io.emit(`emoji-${socket.handshake.query.roomID}`, data)
     });
 
+    socket.on('kick_user', async ({ targetUser, duration, roomID }) => {
+      console.log(targetUser,  duration, ' is duration', roomID);
+      
+      let targetSocketID = await getUserSocketFromRedisDB(roomID, targetUser);
+      let targetID = await io.sockets.sockets.get(targetSocketID);
+      if (targetID) {
+        targetID.emit('join-denied', 'You have been kicked from this room');
+        targetID.disconnect(true);
+      }
+      await kickUser(roomID, targetUser, duration);
+      io.to(roomID).emit('message', `${targetUser} has been kicked.`)
+    });
+
     socket.on('ban_user', async ({ targetUser, duration }) => {
       await banUser(roomID, targetUser, duration || 300)
       io.to(roomID).emit('message', `${targetUser} has been banned.`)
-    })
+    });
 
     socket.onAny((event, data) => {
       console.log(`📥 Received event "${event}" with data:`, data);
@@ -126,6 +168,42 @@ async function userLeave(roomId, username) {
       console.log("Message received:", data);
       io.emit("message", data); // Broadcast message to all clients
     });
+
+    socket.on('onLeave', async (data) => { 
+      socket.to(socket.room).emit('onExit', { type: 'SYSTEM', username: socket.data.username, date: socket.data.date_joined });
+    });
+
+    socket.on('disconnect', async (daata) => {
+
+      const { username, roomID } = await redis.hgetall(`socket:${socket.id}`);
+      if (!username || !roomID) return;
+
+      const userSocketKey = `user_socket:${roomID}:${username}`;
+      const savedSocketId = await redis.get(userSocketKey);
+
+      if (savedSocketId === socket.id) {
+        await redis.del(userSocketKey);
+        await redis.srem(`online:${roomID}`, username);
+        await redis.del(`socket:${socket.id}`);
+    
+        const users = await redis.smembers(`online:${roomID}`);
+        io.to(roomID).emit('online-users', users);
+      }
+
+      console.log("User disconnected:", socket.id);
+      // await redis.srem(`online:${roomID}`, username)
+      // io.sockets.in(socket.room).emit('online-users', await redis.smembers(`online:${roomID}`));
+
+    });
+
+  });
+
+  return io;
+}
+
+
+
+
 
   //   socket.on('message-received', (e) => {
   //     console.log(e , ' is message recieves')
@@ -153,25 +231,3 @@ async function userLeave(roomId, username) {
   //     });
 
   // });
-
-    socket.on('onLeave', async (data) => { 
-      socket.to(socket.room).emit('onExit', { type: 'SYSTEM', username: socket.username, date: socket.date_joined });
-    });
-
-    socket.on('disconnect', async (daata) => {
-      console.log("User disconnected:", socket.id);
-      await redis.srem(`online:${roomID}`, username)
-      io.sockets.in(socket.room).emit('online-users', await redis.smembers(`online:${roomID}`));
- 
-      if (chatUsers[socket.room] !== undefined) {
-          chatUsers[socket.room].userCount = chatUsers[socket.room].userCount - 1;
-          chatUsers[socket.room].users.remove(socket.username);
-          io.sockets.in(socket.room).emit(`users ${socket.room}`, { users: chatUsers[socket.room] });
-      }
-
-    });
-
-  });
-
-  return io;
-}

@@ -68,20 +68,6 @@ const mockMessages = [
 ]
 export default function AdminChatroomInnerModal(props) {
     
-    // const [users, setUsers] = useState([
-    //     { id: 1, name: 'Chloe' },
-    //     { id: 2, name: 'Maya' },
-    //     { id: 3, name: 'Tyler' },
-    //     { id: 4, name: 'Admin' },
-    //     { id: 5, name: 'Chloe' },
-    //     { id: 6, name: 'Maya' },
-    //     { id: 7, name: 'Tyler' },
-    //     { id: 8, name: 'Admin' },
-    //     { id: 9, name: 'Chloe' },
-    //     { id: 10, name: 'Maya' },
-    //     { id: 11, name: 'Tyler' },
-    //     { id: 12, name: 'Admin' },
-    // ])
     const [users, setUsers] = useState([]);
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
@@ -124,6 +110,10 @@ export default function AdminChatroomInnerModal(props) {
         newSocket.on(`online-users`, (data) => {
             console.log(data,'is usersres');
             setUsers(data);
+        });
+
+        newSocket.on(`message`, (data) => {
+            console.log(data,' is messagez data')
         });
 
         newSocket.on(`message-${props.location.room_id}`, (data) => {
@@ -172,19 +162,22 @@ export default function AdminChatroomInnerModal(props) {
 
     // Slash command parser
     const handleSlashCommand = (msg) => {
+        
         const parts = msg.trim().split(' ');
         const cmd = parts[0];
-        const target = parts[1];
+        const targetUser = parts[1];
+        const duration = parts[2] || 900;
 
         if (cmd === '/kick') {
-            setUsers((prev) => prev.filter((u) => u.name !== target))
-            showToast(`User "${target}" has been kicked.`);
+            
+            socket.emit('kick_user', {targetUser, duration, roomID: props.location.room_id});
+            showToast(`User "${targetUser}" has been kicked.`);
             return true;
         }
 
         if (cmd === '/ban') {
-            setUsers((prev) => prev.filter((u) => u.name !== target))
-            showToast(`User "${target}" has been banned.`);
+            setUsers((prev) => prev.filter((u) => u.name !== targetUser))
+            showToast(`User "${targetUser}" has been banned.`);
             return true;
         }
 
@@ -273,8 +266,7 @@ export default function AdminChatroomInnerModal(props) {
                 <div className="absolute right-4 top-16 w-64 bg-white border rounded shadow-lg p-4 z-10 space-y-3 overflow-auto max-h-80">
                     <h4 className="font-semibold text-gray-700 mb-2">Users in Chat</h4>
                     {users.map((user, index) => (
-                        console.log(index, ' is indexx'),
-                        console.log(user),
+                    
                         <div
                             key={index}
                             className="flex justify-between items-center border-b pb-2 last:border-none overflow-auto"

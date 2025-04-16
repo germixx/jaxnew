@@ -109,6 +109,11 @@ export default function ChatModal(props) {
       newSocket.on("connect", () => {
           console.log("Connected to WebSocket");
       });
+
+      newSocket.on("join-denied", (data) => {
+        console.log(data);
+        alert(data)
+      });
   
       newSocket.on("message", (data) => {
         console.log("New message:", data);
@@ -142,6 +147,10 @@ export default function ChatModal(props) {
               }
             })
         )
+      });
+
+      newSocket.on(`already-in-chat`, (data) => {
+        console.log(data, ' is already in chat')
       });
 
       newSocket.on(`intro`, (data) => {
