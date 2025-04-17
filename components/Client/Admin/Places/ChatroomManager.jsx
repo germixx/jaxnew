@@ -67,7 +67,7 @@ const mockMessages = [
     },
 ]
 export default function AdminChatroomInnerModal(props) {
-    
+   
     const [users, setUsers] = useState([]);
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
@@ -87,13 +87,14 @@ export default function AdminChatroomInnerModal(props) {
         if(props.user) {
           setCurrentUser(props.user.username);
           setUserData(props.user);
+          
         }
         
     }, [props]);
 
     useEffect(() => {
         setMessages(mockMessages);
-        const newSocket = io(ENDPOINT+`?username=${props.user.username}` + "&roomID=" + props.location.room_id + "&business_name="+props.location.locationName, {
+        const newSocket = io(ENDPOINT+`?username=${props.user.username}` + "&roomID=" + props.location.room_id + "&business_name="+props.location.locationName+ "&user_role=" + props.user.role, {
             transports: ["websocket"],
         });
         
@@ -176,7 +177,7 @@ export default function AdminChatroomInnerModal(props) {
         }
 
         if (cmd === '/ban') {
-            setUsers((prev) => prev.filter((u) => u.name !== targetUser))
+            socket.emit('ban_user', {targetUser, roomID: props.location.room_id });
             showToast(`User "${targetUser}" has been banned.`);
             return true;
         }
@@ -266,27 +267,64 @@ export default function AdminChatroomInnerModal(props) {
                 <div className="absolute right-4 top-16 w-64 bg-white border rounded shadow-lg p-4 z-10 space-y-3 overflow-auto max-h-80">
                     <h4 className="font-semibold text-gray-700 mb-2">Users in Chat</h4>
                     {users.map((user, index) => (
-                    
                         <div
                             key={index}
                             className="flex justify-between items-center border-b pb-2 last:border-none overflow-auto"
                         >
-                            <p className="text-sm font-medium text-gray-800">{user}</p>
+                            <p className="text-sm font-medium text-gray-800">{user.username}</p>
                             <div className="flex gap-1">
-                                <button
+                                {user.role === 'admin' ? (
+                                    <div>
+                                        <button
+                                            onClick={() => handleSlashCommand(`/kick ${user.username}`)}
+                                            className="text-orange-500 hover:text-orange-700 text-xs"
+                                            title="Kick"
+                                            disabled
+                                        >
+                                            <span style={{ opacity: 0.3 }}>🦶</span>
+                                        </button>
+                                        <button
+                                            onClick={() => handleSlashCommand(`/ban ${user.username}`)}
+                                            className="text-red-500 hover:text-red-700 text-xs"
+                                            title="Ban"
+                                            disabled
+                                        >
+                                            <span style={{ opacity: 0.3, marginLeft: '0.5rem' }}>🚫</span>
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <div>
+                                    <button
+                                        onClick={() => handleSlashCommand(`/kick ${user.username}`)}
+                                        className="text-orange-500 hover:text-orange-700 text-xs cursor-pointer"
+                                        title="Kick"
+                                    >
+                                    🦶
+                                    </button>
+                                    <button
+                                        onClick={() => handleSlashCommand(`/ban ${user.username}`)}
+                                        className="text-red-500 hover:text-red-700 text-xs cursor-pointer"
+                                        title="Ban"
+                                    >
+                                    🚫
+                                    </button>
+                                </div>
+                                )}
+
+                                {/* <button
                                     onClick={() => handleSlashCommand(`/kick ${user}`)}
-                                    className="text-orange-500 hover:text-orange-700 text-xs"
+                                    className="text-orange-500 hover:text-orange-700 text-xs cursor-pointer"
                                     title="Kick"
                                 >
-                                    🦶
+                                🦶
                                 </button>
                                 <button
                                     onClick={() => handleSlashCommand(`/ban ${user}`)}
-                                    className="text-red-500 hover:text-red-700 text-xs"
+                                    className="text-red-500 hover:text-red-700 text-xs cursor-pointer"
                                     title="Ban"
                                 >
-                                    🚫
-                                </button>
+                                🚫
+                                </button> */}
                             </div>
                         </div>
                     ))}

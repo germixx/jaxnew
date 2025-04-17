@@ -61,7 +61,7 @@ const mockMessages = [
 ];
 
 export default function ChatModal(props) {
-  
+  console.log(props, ' is props chatroom')
   const [newMessage, setNewMessage] = useState('');
   const [messages, setMessages] = useState(mockMessages);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -72,8 +72,9 @@ export default function ChatModal(props) {
   const [emojiPickerFor, setEmojiPickerFor] = useState(null);
   const [currentUser, setCurrentUser] = useState('');
   const [userData, setUserData] = useState('');
+  const [isBanned, SetIsBanned] = useState(false);
   const chatEndRef = useRef(null);
-
+  
   const [isOpen, setIsOpen] = useState(false);
   const [socket, setSocket] = useState(null);
 
@@ -85,36 +86,38 @@ export default function ChatModal(props) {
 
   // Auto-scroll to latest message
   useEffect(() => {
-        chatEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
-  useEffect( () => {
-    if(props.user) {
+  useEffect(() => {
+    if (props.user) {
       setCurrentUser(props.user.username);
       setUserData(props.user);
     }
-    
+
   }, [props]);
 
-  useEffect( () => {
-    // socket = socketIOClient.io(ENDPOINT + "?username=" + (props.user ? props.user.username : '') + "&roomID=" + router.query.id + "&business_name=" + router.query.name, { secure: true })
-    // socket = socketIOClient.io(ENDPOINT + "?username=test" , { secure: true })
+  useEffect(() => {
 
     if (props.chatIsOpen && !socket) {
 
-      const newSocket = io(ENDPOINT+`?username=${props.user.username}` + "&roomID=" + props.placeData.room_id + "&business_name=" + props.placeData.locationName, {
-          transports: ["websocket"],
+      const newSocket = io(ENDPOINT + `?username=${props.user.username}` + "&roomID=" + props.placeData.room_id 
+        + "&business_name=" + props.placeData.locationName + "&user_role=" + props.user.role, {
+        transports: ["websocket"],
       });
-  
+
       newSocket.on("connect", () => {
-          console.log("Connected to WebSocket");
+        console.log("Connected to WebSocket");
       });
 
       newSocket.on("join-denied", (data) => {
         console.log(data);
-        alert(data)
+        if(data.type === 'ban'){
+          SetIsBanned(true);
+        }
+        alert(data.message)
       });
-  
+
       newSocket.on("message", (data) => {
         console.log("New message:", data);
       });
@@ -127,25 +130,25 @@ export default function ChatModal(props) {
         ]);
       });
 
-      newSocket.on(`emoji-${props.placeData.room_id}`, (data) => {        
-          setMessages((prev) =>
-            prev.map((msg) => {
-              if (msg.id !== data.msgID) return msg
-              const r = msg.reactions.find((r) => r.emoji === data.reactions)
-              if (r) {
-                if (r.users.includes(data.user)) {
-                  r.users = r.users.filter((u) => u !== data.user)
-                } else {
-                  r.users.push(currentUser)
-                }
-                return { ...msg, reactions: [...msg.reactions] }
+      newSocket.on(`emoji-${props.placeData.room_id}`, (data) => {
+        setMessages((prev) =>
+          prev.map((msg) => {
+            if (msg.id !== data.msgID) return msg
+            const r = msg.reactions.find((r) => r.emoji === data.reactions)
+            if (r) {
+              if (r.users.includes(data.user)) {
+                r.users = r.users.filter((u) => u !== data.user)
               } else {
-                return {
-                  ...msg,
-                  reactions: [...msg.reactions, { emoji: data.reactions, users: [data.user] }]
-                }
+                r.users.push(currentUser)
               }
-            })
+              return { ...msg, reactions: [...msg.reactions] }
+            } else {
+              return {
+                ...msg,
+                reactions: [...msg.reactions, { emoji: data.reactions, users: [data.user] }]
+              }
+            }
+          })
         )
       });
 
@@ -154,21 +157,21 @@ export default function ChatModal(props) {
       });
 
       newSocket.on(`intro`, (data) => {
-        setMessages(prev => [...prev,  {...data, content: `${data.username} has joined the chat`} ]);
+        setMessages(prev => [...prev, { ...data, content: `${data.username} has joined the chat` }]);
       });
 
       newSocket.on(`onExit`, (data) => {
-        setMessages(prev => [...prev,  {...data, content: `${data.username} has left the chat`} ]);
+        setMessages(prev => [...prev, { ...data, content: `${data.username} has left the chat` }]);
       });
-  
+
       setSocket(newSocket);
       setIsOpen(props.chatIsOpen);
-  
-        return () => {
-          newSocket.disconnect();
-          newSocket.emit('onLeave', {status:true});
-          setSocket(null);
-        };
+
+      return () => {
+        newSocket.disconnect();
+        newSocket.emit('onLeave', { status: true });
+        setSocket(null);
+      };
     }
 
   }, [props.chatIsOpen]);
@@ -212,7 +215,7 @@ export default function ChatModal(props) {
 
   const sendMessage = () => {
     if (!newMessage.trim()) return
-    
+
     socket.emit(`room-${props.placeData.room_id}`, {
       id: Date.now(),
       user: currentUser,
@@ -242,6 +245,10 @@ export default function ChatModal(props) {
     toggleReaction(msgId, emoji)
   }
 
+  function getRandomNumber() {
+    return Math.floor(Math.random() * 99) + 1;
+  }
+
   return (
     <div id="chatModal" className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 hidden" onClick={closeModal}>
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-full max-w-2xl h-3/4 flex flex-col" onClick={(e) => e.stopPropagation()}>
@@ -254,17 +261,17 @@ export default function ChatModal(props) {
         <div className="p-4 flex-1 overflow-y-auto space-y-4">
           {messages.map((msg) => (
             msg.type === 'SYSTEM' ? (
-              <div key={Date.now()} className="text-red text-center">{msg.content}</div>
+              <div key={Date.now() + getRandomNumber()} className="text-red text-center">{msg.content}</div>
             ) : (
-              currentUser === msg.user ? (       
+              currentUser === msg.user ? (
                 <div className="flex items-start gap-2.5 justify-end" key={msg.id}>
                   <div className="flex flex-col w-full max-w-[480px] leading-1.5 p-4 border-gray-200 bg-blue-500 text-white rounded-s-xl rounded-ee-xl">
-                     <div className="flex items-center space-x-2 rtl:space-x-reverse justify-end">
-                       <span className="text-sm font-semibold">You</span>
-                       <span className="text-sm font-normal">{msg.time}</span>
-                     </div>
-                     <p className="text-sm font-normal py-2.5">{msg.content}</p>
-                     <div className="flex flex-wrap items-center gap-1">
+                    <div className="flex items-center space-x-2 rtl:space-x-reverse justify-end">
+                      <span className="text-sm font-semibold">You</span>
+                      <span className="text-sm font-normal">{msg.time}</span>
+                    </div>
+                    <p className="text-sm font-normal py-2.5">{msg.content}</p>
+                    <div className="flex flex-wrap items-center gap-1">
                       {msg.reactions.map((r) => (
                         <button
                           key={r.emoji}
@@ -285,11 +292,11 @@ export default function ChatModal(props) {
                         </div>
                       )}
                     </div>
-                     
+
                   </div>
-               </div>
-               ) : ( 
-                  <div key={msg.id} className={`flex items-start gap-2.5 ${msg.user === currentUser ? 'justify-end' : ''}`}>
+                </div>
+              ) : (
+                <div key={msg.id} className={`flex items-start gap-2.5 ${msg.user === currentUser ? 'justify-end' : ''}`}>
                   {msg.user !== currentUser && (
                     <img className="w-8 h-8 rounded-full" src={msg.image} alt={msg.user} />
                   )}
@@ -301,7 +308,7 @@ export default function ChatModal(props) {
                     <p className="text-sm font-normal py-2.5">{msg.content}</p>
                     <div className="flex flex-wrap items-center gap-1">
                       {msg.reactions.map((r) => (
-                        
+
                         <button
                           key={r.emoji}
                           onClick={() => toggleReaction(msg.id, r.emoji)}
@@ -323,7 +330,7 @@ export default function ChatModal(props) {
                     </div>
                   </div>
                 </div>
-                )
+              )
             )
 
           ))
@@ -333,16 +340,21 @@ export default function ChatModal(props) {
         </div>
 
         <div className="p-4 border-t dark:border-gray-600 relative">
-          <div className="relative">
-            <input
-              type="text"
-              value={newMessage}
-              onChange={handleInputChange}
-              className="w-full p-2 border rounded-lg dark:bg-gray-700 dark:text-white"
-              placeholder="Type a message..."
-            />
-            <button onClick={sendMessage} className="absolute top-1/2 -translate-y-1/2 right-2 px-4 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Send</button>
-          </div>
+          
+          {isBanned ? (
+            <div className="text-center">You are banned from this room.</div>
+          ) : (
+            <div className="relative">
+              <input
+                type="text"
+                value={newMessage}
+                onChange={handleInputChange}
+                className="w-full p-2 border rounded-lg dark:bg-gray-700 dark:text-white"
+                placeholder="Type a message..."
+              />
+              <button onClick={sendMessage} className="absolute top-1/2 -translate-y-1/2 right-2 px-4 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Send</button>
+            </div>
+          )}
 
           {showSuggestions && (
             <ul className="absolute bottom-16 left-0 bg-white border w-64 shadow-md rounded z-20">
@@ -384,4 +396,3 @@ export default function ChatModal(props) {
     </div>
   )
 }
- 
