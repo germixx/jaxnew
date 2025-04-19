@@ -229,6 +229,19 @@ async function getPlacesAdmin() {
 
 }
 
+const getUsers = async () => {
+
+    const con2 = await connection2();
+
+    let [rows] = await con2.execute(
+        "SELECT id, email, username, fullname, profileImage, timeSignedUp, locationNumber, locationRoad, locationNeighborhood, locationCity, locationCounty, locationState, locationZipCode, locationCountry, locationCountryCode, locationLat, locationLon, locationSet, emlMarketing, deleted, verified, banned, role FROM tblUsers",
+        []
+    );
+
+    return {status: true, rows};
+
+}
+
 module.exports = {
     getAllPlaces,
     getPlaceData,
@@ -237,6 +250,7 @@ module.exports = {
     registerUser,
     checkUser,
     sanitizeIdentifier,
-    getPlacesAdmin
+    getPlacesAdmin,
+    getUsers
 }
 

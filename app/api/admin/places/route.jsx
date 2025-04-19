@@ -1,5 +1,9 @@
 import { NextResponse } from 'next/server';
 
+import { jwtVerify } from 'jose';
+
+import { cookies } from 'next/headers';
+
 const {
     getPlacesAdmin
 } = require('../../../../util/functions/server/dbfunctions');

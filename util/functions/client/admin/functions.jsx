@@ -47,7 +47,32 @@ async function editPlaceDataAdmin (data) {
     }).catch(e => console.log(e))
 }
 
+async function getUsers () {
+    return new Promise((resolve, reject) => {
+        fetch(`${LINKS.ADMINUSERS }`, {
+            method: 'GET',
+            credentials: 'include',
+            // headers: {
+            //     "Content-Type": "multipart/form-data"
+            //   },
+        }).then(res => res.json())
+            .then((json) => {
+
+                if (json.status) {
+                    resolve({ status: true, users: json.rows })
+                } else {
+                    reject({ status: false })
+                    return false;
+                }
+            })
+            .catch(err => {
+                throw err
+            });
+    }).catch(e => console.log(e))
+}
+
 module.exports = { 
     getLocationsAdmin,
-    editPlaceDataAdmin
+    editPlaceDataAdmin,
+    getUsers
 }
